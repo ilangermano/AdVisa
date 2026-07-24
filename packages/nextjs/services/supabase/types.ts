@@ -51,7 +51,12 @@ export type Database = {
       adviser_licence_cache: TableDef<AdviserLicenceCacheRow, "checked_at">;
       engagements: TableDef<
         EngagementRow,
-        "id" | "created_at" | "adviser_licence_ref" | "contract_engagement_id" | "agreement_pdf_path" | "lumin_document_id"
+        | "id"
+        | "created_at"
+        | "adviser_licence_ref"
+        | "contract_engagement_id"
+        | "agreement_pdf_path"
+        | "lumin_document_id"
       >;
       documents: TableDef<DocumentRow, "id" | "created_at" | "extracted_json">;
     };

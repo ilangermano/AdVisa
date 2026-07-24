@@ -44,9 +44,7 @@ export const AddressInfoDropdown = ({ address, blockExplorerAddressLink }: Addre
       <details ref={dropdownRef} className="dropdown dropdown-end leading-3">
         <summary className="btn btn-secondary btn-sm pl-0 pr-2 dropdown-toggle gap-0 h-auto!">
           <BlockieAvatar address={checkSumAddress} size={30} />
-          <span className="ml-2 mr-1">
-            {checkSumAddress?.slice(0, 6) + "..." + checkSumAddress?.slice(-4)}
-          </span>
+          <span className="ml-2 mr-1">{checkSumAddress?.slice(0, 6) + "..." + checkSumAddress?.slice(-4)}</span>
           <ChevronDownIcon className="h-6 w-4 ml-2 sm:ml-0" />
         </summary>
         <ul className="dropdown-content menu z-2 p-2 mt-2 shadow-lg bg-base-200 gap-1">
@@ -102,11 +100,7 @@ export const AddressInfoDropdown = ({ address, blockExplorerAddressLink }: Addre
             </li>
           ) : null}
           <li className={selectingNetwork ? "hidden" : ""}>
-            <button
-              className="menu-item text-error h-8 btn-sm flex gap-3 py-3"
-              type="button"
-              onClick={() => logout()}
-            >
+            <button className="menu-item text-error h-8 btn-sm flex gap-3 py-3" type="button" onClick={() => logout()}>
               <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" /> <span>Sign out</span>
             </button>
           </li>

@@ -1,5 +1,5 @@
-import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
+import { createClient } from "@supabase/supabase-js";
 
 /**
  * Browser client using the anon key. RLS denies `anon`/`authenticated` on every table

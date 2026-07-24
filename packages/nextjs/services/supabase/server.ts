@@ -1,6 +1,6 @@
-import "server-only";
-import { createClient } from "@supabase/supabase-js";
 import type { Database } from "./types";
+import { createClient } from "@supabase/supabase-js";
+import "server-only";
 
 /**
  * Service-role client — bypasses RLS entirely. Every Supabase read/write the frontend
