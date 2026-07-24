@@ -1,7 +1,6 @@
-import { wagmiConnectors } from "./wagmiConnectors";
+import { createConfig } from "@privy-io/wagmi";
 import { Chain, createClient, fallback, http } from "viem";
 import { hardhat, mainnet } from "viem/chains";
-import { createConfig } from "wagmi";
 import scaffoldConfig, { DEFAULT_ALCHEMY_API_KEY, ScaffoldConfig } from "~~/scaffold.config";
 import { getAlchemyHttpUrl } from "~~/utils/scaffold-eth";
 
@@ -12,9 +11,12 @@ export const enabledChains = targetNetworks.find((network: Chain) => network.id 
   ? targetNetworks
   : ([...targetNetworks, mainnet] as const);
 
+// Connectors come from PrivyProvider (see app/providers.tsx) — @privy-io/wagmi's
+// createConfig wires the embedded-wallet connector in automatically, so no
+// `connectors` array is passed here (there is no external-wallet picker; the migrant
+// never sees "connect wallet").
 export const wagmiConfig = createConfig({
   chains: enabledChains,
-  connectors: wagmiConnectors(),
   ssr: true,
   client: ({ chain }) => {
     const mainnetFallbackWithDefaultRPC = [http("https://mainnet.rpc.buidlguidl.com")];

@@ -44,8 +44,8 @@ Filled in after `yarn deploy --network sepolia` / `yarn deploy --network fuji`.
 
 | Network | Chain ID | VisaEscrow | MockNZDD |
 |---|---|---|---|
-| Ethereum Sepolia | 11155111 | _pending_ | _pending_ |
-| Avalanche Fuji | 43113 | _pending_ | _pending_ |
+| Ethereum Sepolia | 11155111 | `0x0ff3d7aff507d96a085cc1e0b707b48973a3bf50` | `0x4e81c7b074c0cdf3176f4294f5f699a8cd823253` |
+| Avalanche Fuji | 43113 | `0x0ff3d7aff507d96a085cc1e0b707b48973a3bf50` | `0x4e81c7b074c0cdf3176f4294f5f699a8cd823253` |
 
 ## License
 MIT — see [`LICENCE`](./LICENCE).

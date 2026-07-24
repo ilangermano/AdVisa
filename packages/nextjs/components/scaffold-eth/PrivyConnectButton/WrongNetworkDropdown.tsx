@@ -1,9 +1,9 @@
 import { NetworkOptions } from "./NetworkOptions";
-import { useDisconnect } from "wagmi";
+import { usePrivy } from "@privy-io/react-auth";
 import { ArrowLeftOnRectangleIcon, ChevronDownIcon } from "@heroicons/react/24/outline";
 
 export const WrongNetworkDropdown = () => {
-  const { disconnect } = useDisconnect();
+  const { logout } = usePrivy();
 
   return (
     <div className="dropdown dropdown-end mr-2">
@@ -14,9 +14,9 @@ export const WrongNetworkDropdown = () => {
       <ul tabIndex={0} className="dropdown-content menu p-2 mt-1 shadow-lg bg-base-200 gap-1">
         <NetworkOptions />
         <li>
-          <button className="menu-item text-error btn-sm flex gap-3 py-3" type="button" onClick={() => disconnect()}>
+          <button className="menu-item text-error btn-sm flex gap-3 py-3" type="button" onClick={() => logout()}>
             <ArrowLeftOnRectangleIcon className="h-6 w-4 ml-2 sm:ml-0" />
-            <span>Disconnect</span>
+            <span>Sign out</span>
           </button>
         </li>
       </ul>
