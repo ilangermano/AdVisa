@@ -25,9 +25,14 @@ create extension if not exists pgcrypto;
 create table if not exists adviser_licence_cache (
   licence_ref text primary key,
   name text not null,
-  status text not null check (status in ('licensed', 'not_licensed', 'suspended', 'cancelled')),
+  status text not null,
   checked_at timestamptz not null default now()
 );
+
+alter table adviser_licence_cache drop constraint if exists adviser_licence_cache_status_check;
+alter table adviser_licence_cache
+  add constraint adviser_licence_cache_status_check
+  check (status in ('licensed', 'not_licensed', 'unknown', 'suspended', 'cancelled'));
 
 -- One row per VisaEscrow engagement. `contract_engagement_id` is the on-chain uint256
 -- id from VisaEscrow.createEngagement — nullable until the on-chain engagement exists.
@@ -64,3 +69,5 @@ create index if not exists documents_engagement_id_idx on documents (engagement_
 alter table adviser_licence_cache enable row level security;
 alter table engagements enable row level security;
 alter table documents enable row level security;
+
+grant select, insert, update on table adviser_licence_cache to service_role;
