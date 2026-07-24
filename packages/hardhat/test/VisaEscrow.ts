@@ -62,7 +62,7 @@ describe("VisaEscrow", function () {
       await token.connect(migrant).approve(await escrow.getAddress(), amounts[0]);
 
       // State is still `Created` — anchorAgreement was never called, so agreementHash is zero.
-      await expect(escrow.connect(migrant).fund(1)).to.be.reverted;
+      await expect(escrow.connect(migrant).fund(1)).to.revert(ethers);
     });
   });
 
@@ -83,7 +83,7 @@ describe("VisaEscrow", function () {
   describe("reclaimTranche()", function () {
     it("reverts before deadline + grace has passed", async function () {
       const { escrow, migrant, id } = await createFundedEngagement();
-      await expect(escrow.connect(migrant).reclaimTranche(id)).to.be.reverted;
+      await expect(escrow.connect(migrant).reclaimTranche(id)).to.revert(ethers);
     });
 
     it("succeeds after deadline + grace and returns ALL unreleased funds", async function () {
@@ -105,8 +105,8 @@ describe("VisaEscrow", function () {
       const { escrow, adviser, other, id, deadlines } = await createFundedEngagement();
       await networkHelpers.time.increaseTo(deadlines[0] + GRACE_PERIOD + 1);
 
-      await expect(escrow.connect(other).reclaimTranche(id)).to.be.reverted;
-      await expect(escrow.connect(adviser).reclaimTranche(id)).to.be.reverted;
+      await expect(escrow.connect(other).reclaimTranche(id)).to.revert(ethers);
+      await expect(escrow.connect(adviser).reclaimTranche(id)).to.revert(ethers);
     });
   });
 
@@ -134,7 +134,7 @@ describe("VisaEscrow", function () {
       await escrow.connect(relayer).pauseClock(id);
       await networkHelpers.time.increase(UNRESPONSIVE_PERIOD + 1);
 
-      await expect(escrow.connect(other).claimUnresponsive(id)).to.be.reverted;
+      await expect(escrow.connect(other).claimUnresponsive(id)).to.revert(ethers);
     });
 
     it("pays the adviser once the clock has sat paused for the unresponsive period", async function () {
@@ -192,7 +192,7 @@ describe("VisaEscrow", function () {
       // The evil token's transfer() tries to call back into completeMilestone() mid-payout.
       // Without the ReentrancyGuard this would double-release the tranche; with it, the
       // reentrant call reverts and drags the whole transaction down with it.
-      await expect(escrow.connect(relayer).completeMilestone(1)).to.be.reverted;
+      await expect(escrow.connect(relayer).completeMilestone(1)).to.revert(ethers);
     });
   });
 });
