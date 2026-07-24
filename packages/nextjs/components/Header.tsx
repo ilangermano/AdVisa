@@ -60,6 +60,7 @@ export const HeaderMenuLinks = () => {
 export const Header = () => {
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
+  const hasPrivyAppId = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID);
 
   const burgerMenuRef = useRef<HTMLDetailsElement>(null);
   useOutsideClick(burgerMenuRef, () => {
@@ -96,8 +97,14 @@ export const Header = () => {
         </ul>
       </div>
       <div className="navbar-end grow mr-4">
-        <PrivyConnectButton />
-        {isLocalNetwork && <FaucetButton />}
+        {hasPrivyAppId ? (
+          <PrivyConnectButton />
+        ) : (
+          <button className="btn btn-primary btn-sm" disabled type="button">
+            Sign in
+          </button>
+        )}
+        {hasPrivyAppId && isLocalNetwork && <FaucetButton />}
       </div>
     </div>
   );

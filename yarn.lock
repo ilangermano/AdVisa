@@ -4960,6 +4960,7 @@ __metadata:
     "@scaffold-ui/components": "npm:^0.1.12"
     "@scaffold-ui/debug-contracts": "npm:^0.1.11"
     "@scaffold-ui/hooks": "npm:^0.1.8"
+    "@solana-program/system": "npm:^0.13.0"
     "@solana/kit": "npm:^7.0.0"
     "@supabase/supabase-js": "npm:^2.110.7"
     "@tailwindcss/postcss": "npm:4.2.4"
@@ -4967,6 +4968,7 @@ __metadata:
     "@trivago/prettier-plugin-sort-imports": "npm:~6.0.2"
     "@types/node": "npm:~18.19.130"
     "@types/react": "npm:~19.2.14"
+    "@types/ws": "npm:^8"
     "@x402/core": "npm:^2.18.0"
     "@x402/evm": "npm:^2.18.0"
     "@x402/svm": "npm:^2.18.0"
@@ -4996,6 +4998,7 @@ __metadata:
     vercel: "npm:~52.0.0"
     viem: "npm:2.55.5"
     wagmi: "npm:2.19.5"
+    ws: "npm:^8.21.1"
     zustand: "npm:~5.0.12"
   languageName: unknown
   linkType: soft
@@ -5124,6 +5127,15 @@ __metadata:
   peerDependencies:
     "@solana/kit": ^5.0
   checksum: 10/f26304d3e7e178651b4d55f88261556f17720b82f70490fab7b6a575d4e34ded1744bf174e952b025d6e0b61e82b5496addd676eacebd37fc87cdf73ffc9a47b
+  languageName: node
+  linkType: hard
+
+"@solana-program/system@npm:^0.13.0":
+  version: 0.13.0
+  resolution: "@solana-program/system@npm:0.13.0"
+  peerDependencies:
+    "@solana/kit": ^7.0.0
+  checksum: 10/ff2539d42075f6ce81ddef217c5822c1a40d3f6bf8244f2c2002a3672d266253765545f5a7fdb9faa020a37bfc9b4eab05545d5cecf2b4628357767d9d3c09d2
   languageName: node
   linkType: hard
 
@@ -7276,6 +7288,15 @@ __metadata:
   version: 3.0.0
   resolution: "@types/wrap-ansi@npm:3.0.0"
   checksum: 10/8aa644946ca4e859668c36b8e2bcf2ac4bdee59dac760414730ea57be8a93ae9166ebd40a088f2ab714843aaea2a2a67f0e6e6ec11cfc9c8701b2466ca1c4089
+  languageName: node
+  linkType: hard
+
+"@types/ws@npm:^8":
+  version: 8.18.1
+  resolution: "@types/ws@npm:8.18.1"
+  dependencies:
+    "@types/node": "npm:*"
+  checksum: 10/1ce05e3174dcacf28dae0e9b854ef1c9a12da44c7ed73617ab6897c5cbe4fccbb155a20be5508ae9a7dde2f83bd80f5cf3baa386b934fc4b40889ec963e94f3a
   languageName: node
   linkType: hard
 
@@ -20414,7 +20435,7 @@ __metadata:
   languageName: node
   linkType: hard
 
-"ws@npm:^8.18.0, ws@npm:^8.19.0, ws@npm:^8.21.0, ws@npm:~8.21.0":
+"ws@npm:^8.18.0, ws@npm:^8.19.0, ws@npm:^8.21.0, ws@npm:^8.21.1, ws@npm:~8.21.0":
   version: 8.21.1
   resolution: "ws@npm:8.21.1"
   peerDependencies:
