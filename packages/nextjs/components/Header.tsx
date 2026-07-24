@@ -5,7 +5,7 @@ import Image from "next/image";
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { hardhat } from "viem/chains";
-import { Bars3Icon, BugAntIcon } from "@heroicons/react/24/outline";
+import { Bars3Icon, BugAntIcon, ShieldCheckIcon } from "@heroicons/react/24/outline";
 import { FaucetButton, PrivyConnectButton } from "~~/components/scaffold-eth";
 import { useOutsideClick, useTargetNetwork } from "~~/hooks/scaffold-eth";
 
@@ -17,8 +17,9 @@ type HeaderMenuLink = {
 
 export const menuLinks: HeaderMenuLink[] = [
   {
-    label: "Home",
+    label: "Licence Check",
     href: "/",
+    icon: <ShieldCheckIcon className="h-4 w-4" />,
   },
   {
     label: "Upload Agreement",
@@ -63,6 +64,7 @@ export const HeaderMenuLinks = () => {
 export const Header = () => {
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
+  const hasPrivyAppId = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID);
 
   const burgerMenuRef = useRef<HTMLDetailsElement>(null);
   useOutsideClick(burgerMenuRef, () => {
@@ -87,11 +89,11 @@ export const Header = () => {
         </details>
         <Link href="/" passHref className="hidden lg:flex items-center gap-2 ml-4 mr-6 shrink-0">
           <div className="flex relative w-10 h-10">
-            <Image alt="SE2 logo" className="cursor-pointer" fill src="/logo.svg" />
+            <Image alt="AdVisa logo" className="cursor-pointer" fill src="/logo.svg" />
           </div>
           <div className="flex flex-col">
-            <span className="font-bold leading-tight">Scaffold-ETH</span>
-            <span className="text-xs">Ethereum dev stack</span>
+            <span className="font-bold leading-tight">AdVisa</span>
+            <span className="text-xs">Escrow rails</span>
           </div>
         </Link>
         <ul className="hidden lg:flex lg:flex-nowrap h-full m-0 p-0 list-none">
@@ -99,8 +101,14 @@ export const Header = () => {
         </ul>
       </div>
       <div className="navbar-end grow mr-4">
-        <PrivyConnectButton />
-        {isLocalNetwork && <FaucetButton />}
+        {hasPrivyAppId ? (
+          <PrivyConnectButton />
+        ) : (
+          <button className="btn btn-primary btn-sm" disabled type="button">
+            Sign in
+          </button>
+        )}
+        {hasPrivyAppId && isLocalNetwork && <FaucetButton />}
       </div>
     </div>
   );

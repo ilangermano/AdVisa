@@ -15,6 +15,7 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 export const Footer = () => {
   const { targetNetwork } = useTargetNetwork();
   const isLocalNetwork = targetNetwork.id === hardhat.id;
+  const hasPrivyAppId = Boolean(process.env.NEXT_PUBLIC_PRIVY_APP_ID);
   const { price: nativeCurrencyPrice } = useFetchNativeCurrencyPrice();
 
   return (
@@ -30,7 +31,7 @@ export const Footer = () => {
                 </div>
               </div>
             )}
-            {isLocalNetwork && (
+            {hasPrivyAppId && isLocalNetwork && (
               <>
                 <Faucet />
                 <Link href="/blockexplorer" passHref className="btn btn-primary btn-sm font-normal gap-1">

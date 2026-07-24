@@ -2,11 +2,12 @@
 
 import { useEffect, useState } from "react";
 import { PrivyProvider } from "@privy-io/react-auth";
-import { WagmiProvider } from "@privy-io/wagmi";
+import { WagmiProvider as PrivyWagmiProvider } from "@privy-io/wagmi";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { useTheme } from "next-themes";
 import { Toaster } from "react-hot-toast";
+import { WagmiProvider } from "wagmi";
 import { Footer } from "~~/components/Footer";
 import { Header } from "~~/components/Header";
 import { enabledChains, wagmiConfig } from "~~/services/web3/wagmiConfig";
@@ -41,14 +42,26 @@ export const queryClient = new QueryClient({
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
+  const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
+  if (!privyAppId) {
+    return (
+      <QueryClientProvider client={queryClient}>
+        <WagmiProvider config={wagmiConfig}>
+          <ProgressBar height="3px" color="#2299dd" />
+          <ScaffoldEthApp>{children}</ScaffoldEthApp>
+        </WagmiProvider>
+      </QueryClientProvider>
+    );
+  }
+
   return (
     <PrivyProvider
-      appId={process.env.NEXT_PUBLIC_PRIVY_APP_ID ?? ""}
+      appId={privyAppId}
       config={{
         loginMethods: ["email", "sms"],
         embeddedWallets: {
@@ -65,10 +78,10 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
       }}
     >
       <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={wagmiConfig}>
+        <PrivyWagmiProvider config={wagmiConfig}>
           <ProgressBar height="3px" color="#2299dd" />
           <ScaffoldEthApp>{children}</ScaffoldEthApp>
-        </WagmiProvider>
+        </PrivyWagmiProvider>
       </QueryClientProvider>
     </PrivyProvider>
   );
