@@ -1,5 +1,9 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
+import { Hex } from "viem";
+import { sepolia } from "viem/chains";
+import { createAdvisaPublicClient, createRelayerWalletClient, getAdvisaContract } from "~~/services/advisa/chain";
+import { getSupabaseAdmin } from "~~/services/supabase/server";
 
 // Force the Node.js runtime — `node:crypto`'s `timingSafeEqual` is not available on
 // the Edge runtime, and HMAC verification here must not be reimplemented insecurely.
@@ -23,6 +27,70 @@ function verifySignature(rawBody: string, signatureHex: string | null, secret: s
 
   if (provided.length !== expected.length) return false;
   return crypto.timingSafeEqual(expected, provided);
+}
+
+type LuminWebhookPayload = {
+  documentId?: string;
+  document_id?: string;
+  downloadUrl?: string;
+  download_url?: string;
+  metadata?: {
+    chainId?: string | number;
+    engagementId?: string | number;
+    engagementRowId?: string;
+  };
+  document?: {
+    id?: string;
+    documentId?: string;
+    downloadUrl?: string;
+    download_url?: string;
+  };
+  data?: {
+    documentId?: string;
+    document_id?: string;
+    downloadUrl?: string;
+    download_url?: string;
+    metadata?: LuminWebhookPayload["metadata"];
+  };
+};
+
+function getWebhookDocumentId(payload: LuminWebhookPayload) {
+  return (
+    payload.documentId ??
+    payload.document_id ??
+    payload.document?.id ??
+    payload.document?.documentId ??
+    payload.data?.documentId ??
+    payload.data?.document_id
+  );
+}
+
+function getWebhookDownloadUrl(payload: LuminWebhookPayload) {
+  return (
+    payload.downloadUrl ??
+    payload.download_url ??
+    payload.document?.downloadUrl ??
+    payload.document?.download_url ??
+    payload.data?.downloadUrl ??
+    payload.data?.download_url
+  );
+}
+
+function getWebhookMetadata(payload: LuminWebhookPayload) {
+  return payload.metadata ?? payload.data?.metadata;
+}
+
+async function readEngagementState(chainId: number, engagementId: bigint) {
+  const publicClient = createAdvisaPublicClient(chainId);
+  const visaEscrow = getAdvisaContract(chainId, "VisaEscrow");
+  const engagement = await publicClient.readContract({
+    address: visaEscrow.address,
+    abi: visaEscrow.abi,
+    functionName: "engagements",
+    args: [engagementId],
+  });
+
+  return Number((engagement as readonly unknown[])[8]);
 }
 
 /**
@@ -53,49 +121,107 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "invalid signature" }, { status: 401 });
   }
 
-  // TODO: confirm Lumin's actual webhook payload shape (event type, document id,
-  // download URL, and however we round-trip our own engagement id through Lumin —
-  // e.g. as signing-request metadata set when we created the request).
-  const payload = JSON.parse(rawBody) as {
-    documentId?: string;
-    downloadUrl?: string;
-    metadata?: { engagementId?: string };
-  };
+  const db = getSupabaseAdmin() as any;
 
-  const luminDocumentId = payload.documentId;
-  const engagementId = payload.metadata?.engagementId;
-
-  if (!luminDocumentId || !engagementId) {
-    return NextResponse.json({ error: "missing documentId or engagementId" }, { status: 400 });
+  let payload: LuminWebhookPayload;
+  try {
+    payload = JSON.parse(rawBody) as LuminWebhookPayload;
+  } catch {
+    return NextResponse.json({ error: "invalid JSON" }, { status: 400 });
   }
 
-  // TODO: idempotency check — look up luminDocumentId in Supabase; if we've already
-  // anchored this document, return 200 immediately (no-op) instead of re-anchoring.
+  const metadata = getWebhookMetadata(payload);
+  const luminDocumentId = getWebhookDocumentId(payload);
+  const engagementId = metadata?.engagementId;
+  const chainId = Number(metadata?.chainId ?? process.env.NEXT_PUBLIC_CHAIN_ID ?? sepolia.id);
 
-  // TODO: download the final signed PDF from Lumin using LUMIN_API_KEY:
-  //   const pdfRes = await fetch(payload.downloadUrl, {
-  //     headers: { Authorization: `Bearer ${process.env.LUMIN_API_KEY}` },
-  //   });
-  //   const pdfBytes = new Uint8Array(await pdfRes.arrayBuffer());
-  const pdfBytes = new Uint8Array();
+  if (!luminDocumentId || !engagementId || !Number.isInteger(chainId)) {
+    return NextResponse.json({ error: "missing documentId or engagementId" }, { status: 400 });
+  }
+  if (!/^\d+$/.test(String(engagementId))) {
+    return NextResponse.json({ error: "invalid engagementId" }, { status: 400 });
+  }
 
-  const agreementHash = `0x${crypto.createHash("sha256").update(pdfBytes).digest("hex")}`;
+  const contractEngagementId = BigInt(engagementId);
+  const existingEngagement = await db
+    .from("engagements")
+    .select("id, contract_engagement_id, agreement_pdf_path, lumin_document_id")
+    .eq("lumin_document_id", luminDocumentId)
+    .maybeSingle();
 
-  // TODO: store pdfBytes in a private Supabase Storage bucket, keyed by engagementId.
-  // No personal data goes on-chain — the PDF itself lives only in Supabase; only its
-  // hash is anchored below.
+  if (existingEngagement.error) {
+    console.error("Supabase Lumin idempotency lookup failed:", existingEngagement.error);
+    return NextResponse.json({ error: "could not check webhook idempotency" }, { status: 500 });
+  }
 
-  // TODO: call VisaEscrow.anchorAgreement(engagementId, agreementHash) from the
-  // RELAYER_ROLE wallet (RELAYER_PRIVATE_KEY), against the deployed contract address
-  // for the active network (packages/nextjs/contracts/deployedContracts.ts), e.g.:
-  //   const relayer = privateKeyToAccount(process.env.RELAYER_PRIVATE_KEY as `0x${string}`);
-  //   const walletClient = createWalletClient({ account: relayer, chain, transport: http(rpcUrl) });
-  //   await walletClient.writeContract({
-  //     address: visaEscrowAddress,
-  //     abi: visaEscrowAbi,
-  //     functionName: "anchorAgreement",
-  //     args: [BigInt(engagementId), agreementHash],
-  //   });
+  const state = await readEngagementState(chainId, contractEngagementId);
+  if (existingEngagement.data?.agreement_pdf_path && state !== 0) {
+    return NextResponse.json({ ok: true, idempotent: true });
+  }
 
-  return NextResponse.json({ ok: true, agreementHash });
+  const luminApiKey = process.env.LUMIN_API_KEY;
+  if (!luminApiKey) {
+    console.error("LUMIN_API_KEY is not set");
+    return NextResponse.json({ error: "server misconfigured" }, { status: 500 });
+  }
+
+  const downloadUrl =
+    getWebhookDownloadUrl(payload) ||
+    `${process.env.LUMIN_API_BASE_URL || "https://api.luminpdf.com/v1"}/documents/${luminDocumentId}/download`;
+
+  const pdfRes = await fetch(downloadUrl, {
+    headers: { authorization: `Bearer ${luminApiKey}` },
+  });
+  if (!pdfRes.ok) {
+    console.error("Lumin signed PDF download failed:", pdfRes.status, await pdfRes.text());
+    return NextResponse.json({ error: "could not download signed PDF" }, { status: 502 });
+  }
+
+  const pdfBytes = new Uint8Array(await pdfRes.arrayBuffer());
+  if (!pdfBytes.length) {
+    return NextResponse.json({ error: "signed PDF was empty" }, { status: 502 });
+  }
+
+  const agreementHash = `0x${crypto.createHash("sha256").update(pdfBytes).digest("hex")}` as Hex;
+
+  const signedBucket = process.env.SUPABASE_SIGNED_AGREEMENTS_BUCKET || "signed-agreements";
+  const signedPath = `engagements/${chainId}-${contractEngagementId.toString()}/signed-${luminDocumentId}.pdf`;
+  const upload = await db.storage.from(signedBucket).upload(signedPath, pdfBytes, {
+    contentType: "application/pdf",
+    upsert: true,
+  });
+  if (upload.error) {
+    console.error("Supabase signed PDF upload failed:", upload.error);
+    return NextResponse.json({ error: "could not store signed PDF" }, { status: 500 });
+  }
+
+  const engagementUpdate = await db
+    .from("engagements")
+    .update({
+      agreement_pdf_path: signedPath,
+      lumin_document_id: luminDocumentId,
+    })
+    .eq("contract_engagement_id", Number(contractEngagementId))
+    .select("id")
+    .maybeSingle();
+
+  if (engagementUpdate.error) {
+    console.error("Supabase engagement signed PDF update failed:", engagementUpdate.error);
+    return NextResponse.json({ error: "could not update engagement" }, { status: 500 });
+  }
+
+  if (state !== 0) {
+    return NextResponse.json({ ok: true, idempotent: true, agreementHash });
+  }
+
+  const visaEscrow = getAdvisaContract(chainId, "VisaEscrow");
+  const relayerClient = createRelayerWalletClient(chainId);
+  const txHash = await relayerClient.writeContract({
+    address: visaEscrow.address,
+    abi: visaEscrow.abi,
+    functionName: "anchorAgreement",
+    args: [contractEngagementId, agreementHash],
+  });
+
+  return NextResponse.json({ ok: true, agreementHash, txHash });
 }

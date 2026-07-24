@@ -18,6 +18,18 @@ import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
  * (docs/INTEGRATIONS.md § 4); the words below are the entire public-facing surface.
  */
 export const PrivyConnectButton = () => {
+  if (!process.env.NEXT_PUBLIC_PRIVY_APP_ID?.trim()) {
+    return (
+      <button className="btn btn-primary btn-sm" disabled>
+        Sign in
+      </button>
+    );
+  }
+
+  return <ConnectedPrivyButton />;
+};
+
+const ConnectedPrivyButton = () => {
   const { ready, authenticated, login } = usePrivy();
   const { address, chain } = useAccount();
   const networkColor = useNetworkColor();

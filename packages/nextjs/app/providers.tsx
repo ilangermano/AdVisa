@@ -33,6 +33,19 @@ export const queryClient = new QueryClient({
   },
 });
 
+const AppProviders = ({ children, withPrivy }: { children: React.ReactNode; withPrivy: boolean }) => {
+  const WalletProvider = withPrivy ? PrivyWagmiProvider : WagmiProvider;
+
+  return (
+    <QueryClientProvider client={queryClient}>
+      <WalletProvider config={wagmiConfig}>
+        <ProgressBar height="3px" color="#2299dd" />
+        <ScaffoldEthApp>{children}</ScaffoldEthApp>
+      </WalletProvider>
+    </QueryClientProvider>
+  );
+};
+
 /**
  * Auth + wallets for the whole app (docs/INTEGRATIONS.md § 4). Email/SMS login only —
  * no "connect wallet" picker — with a Privy-managed embedded wallet created silently
@@ -42,21 +55,14 @@ export const queryClient = new QueryClient({
 export const Providers = ({ children }: { children: React.ReactNode }) => {
   const { resolvedTheme } = useTheme();
   const [mounted, setMounted] = useState(false);
-  const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID;
+  const privyAppId = process.env.NEXT_PUBLIC_PRIVY_APP_ID?.trim();
 
   useEffect(() => {
     setMounted(true);
   }, []);
 
   if (!privyAppId) {
-    return (
-      <QueryClientProvider client={queryClient}>
-        <WagmiProvider config={wagmiConfig}>
-          <ProgressBar height="3px" color="#2299dd" />
-          <ScaffoldEthApp>{children}</ScaffoldEthApp>
-        </WagmiProvider>
-      </QueryClientProvider>
-    );
+    return <AppProviders withPrivy={false}>{children}</AppProviders>;
   }
 
   return (
@@ -77,12 +83,7 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
         },
       }}
     >
-      <QueryClientProvider client={queryClient}>
-        <PrivyWagmiProvider config={wagmiConfig}>
-          <ProgressBar height="3px" color="#2299dd" />
-          <ScaffoldEthApp>{children}</ScaffoldEthApp>
-        </PrivyWagmiProvider>
-      </QueryClientProvider>
+      <AppProviders withPrivy>{children}</AppProviders>
     </PrivyProvider>
   );
 };
