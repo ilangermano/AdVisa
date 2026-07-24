@@ -1,7 +1,7 @@
 // Hand-written to match supabase/schema.sql exactly. If you change a column there,
 // change it here in the same commit — this isn't generated from a live project.
 
-export type AdviserLicenceStatus = "licensed" | "not_licensed" | "suspended" | "cancelled";
+export type AdviserLicenceStatus = "licensed" | "not_licensed" | "unknown" | "suspended" | "cancelled";
 
 export type AdviserLicenceCacheRow = {
   licence_ref: string;
