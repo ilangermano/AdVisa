@@ -407,7 +407,43 @@ button {
 
 .landing-hero__visual {
   position: relative;
-  height: 390px;
+  display: flex;
+  height: 440px;
+  flex-direction: column;
+}
+
+.particle-globe {
+  display: block;
+  width: 100%;
+  min-height: 0;
+  flex: 1;
+  cursor: grab;
+  touch-action: none;
+}
+
+.particle-globe:active {
+  cursor: grabbing;
+}
+
+.particle-globe__caption {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding-top: 8px;
+  color: #767676;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  white-space: nowrap;
+}
+
+.particle-globe__caption span {
+  width: 6px;
+  height: 6px;
+  flex: none;
+  background: #111111;
 }
 
 .hero-advisor-card {
@@ -1938,7 +1974,7 @@ button {
   .landing-hero__visual {
     width: 100%;
     max-width: 470px;
-    height: 360px;
+    height: 420px;
     margin: 0 auto;
   }
 
@@ -2015,23 +2051,7 @@ button {
   }
 
   .landing-hero__visual {
-    height: 350px;
-  }
-
-  .hero-advisor-card {
-    left: 0;
-  }
-
-  .hero-advisor-card__header {
-    gap: 10px;
-  }
-
-  .hero-advisor-card__header .verified-chip {
-    display: none;
-  }
-
-  .hero-escrow-card {
-    width: min(300px, 92%);
+    height: 380px;
   }
 
   .steps-grid {

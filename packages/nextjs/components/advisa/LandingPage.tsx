@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePrivy } from "@privy-io/react-auth";
 import { AdvisaLogo } from "~~/components/advisa/AdvisaLogo";
+import { ParticleGlobe } from "~~/components/advisa/ParticleGlobe";
 import { advisors, getRateColor } from "~~/components/advisa/advisors";
 
 const steps = [
@@ -48,7 +49,7 @@ export const LandingPage = () => {
         </nav>
         <div className="landing-nav__actions">
           {authenticated ? (
-            <Link className="landing-nav__signin" href="/demo">
+            <Link className="landing-nav__signin" href="/advisors">
               Go to app
             </Link>
           ) : (
@@ -75,58 +76,26 @@ export const LandingPage = () => {
               and pay into escrow that releases only as your case moves forward.
             </p>
             <div className="landing-hero__actions">
-              <Link className="pill-button pill-button--hero" href="/advisors">
-                Browse advisors
-              </Link>
+              {authenticated ? (
+                <Link className="pill-button pill-button--hero" href="/advisors">
+                  Browse advisors
+                </Link>
+              ) : (
+                <button className="pill-button pill-button--hero" onClick={login} type="button">
+                  Browse advisors
+                </button>
+              )}
               <Link className="pill-button pill-button--outline pill-button--hero" href="#how-it-works">
                 See how it works
               </Link>
             </div>
           </div>
 
-          <div className="landing-hero__visual" aria-label="Advisor and escrow preview">
-            <div className="hero-advisor-card">
-              <div className="hero-advisor-card__header">
-                <span className="striped-avatar striped-avatar--48" />
-                <div>
-                  <strong>Amara Osei, LL.M.</strong>
-                  <span>Work visas · Canada, UK</span>
-                </div>
-                <span className="verified-chip verified-chip--square">✓ VERIFIED</span>
-              </div>
-              <div className="stat-row">
-                <div>
-                  <strong style={{ color: getRateColor(94) }}>94%</strong>
-                  <span>visas approved</span>
-                </div>
-                <div>
-                  <strong>212</strong>
-                  <span>cases</span>
-                </div>
-                <div>
-                  <strong>4.9★</strong>
-                  <span>rating</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="hero-escrow-card">
-              <span className="sweep-line" />
-              <div className="dark-eyebrow">ESCROW · $1,800</div>
-              <div className="milestone-list">
-                <div>
-                  <span className="milestone-check">✓</span>
-                  Consultation · $360 released
-                </div>
-                <div>
-                  <span className="milestone-check">✓</span>
-                  Filing · $720 released
-                </div>
-                <div className="milestone-list__held">
-                  <span className="milestone-empty" />
-                  Decision · $720 held
-                </div>
-              </div>
+          <div className="landing-hero__visual" role="img" aria-label="Interactive globe centred on New Zealand">
+            <ParticleGlobe />
+            <div className="particle-globe__caption" aria-hidden="true">
+              <span />
+              LICENSED ADVISERS · NEW ZEALAND
             </div>
           </div>
         </section>
