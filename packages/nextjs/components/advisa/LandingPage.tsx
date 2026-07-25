@@ -1,4 +1,7 @@
+"use client";
+
 import Link from "next/link";
+import { usePrivy } from "@privy-io/react-auth";
 import { AdvisaLogo } from "~~/components/advisa/AdvisaLogo";
 import { advisors, getRateColor } from "~~/components/advisa/advisors";
 
@@ -31,6 +34,8 @@ const tickerItems = [
 ];
 
 export const LandingPage = () => {
+  const { login, authenticated } = usePrivy();
+
   return (
     <div className="landing-page">
       <header className="landing-nav">
@@ -42,12 +47,18 @@ export const LandingPage = () => {
           <Link href="/advisors">For advisors</Link>
         </nav>
         <div className="landing-nav__actions">
-          <Link className="landing-nav__signin" href="/advisors">
-            Sign in
-          </Link>
-          <Link className="pill-button pill-button--small" href="/advisors">
+          {authenticated ? (
+            <Link className="landing-nav__signin" href="/demo">
+              Go to app
+            </Link>
+          ) : (
+            <button className="landing-nav__signin" onClick={login} type="button">
+              Sign in
+            </button>
+          )}
+          <button className="pill-button pill-button--small" onClick={login} type="button">
             Get started
-          </Link>
+          </button>
         </div>
       </header>
 
@@ -248,9 +259,9 @@ export const LandingPage = () => {
         <section className="landing-cta">
           <h2>Start with a conversation, not a payment.</h2>
           <p>Browse verified advisors, book a consultation, and only pay once you&apos;ve approved the invoice.</p>
-          <Link className="pill-button pill-button--cta" href="/advisors">
+          <button className="pill-button pill-button--cta" onClick={login} type="button">
             Find your advisor
-          </Link>
+          </button>
         </section>
       </main>
 
