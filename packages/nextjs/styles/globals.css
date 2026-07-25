@@ -314,6 +314,175 @@ button {
   box-shadow: 0 10px 28px rgb(0 0 0 / 22%);
 }
 
+/* Role picker modal */
+.role-modal-backdrop {
+  position: fixed;
+  inset: 0;
+  z-index: 100;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: rgb(0 0 0 / 52%);
+  backdrop-filter: blur(4px);
+  padding: 24px;
+  animation: fadeIn 0.15s ease;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.role-modal {
+  width: 100%;
+  max-width: 520px;
+  border-radius: 20px;
+  background: #ffffff;
+  padding: 32px;
+  box-shadow: 0 24px 64px rgb(0 0 0 / 24%);
+  animation: riseIn 0.2s ease;
+}
+
+.role-modal__header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.role-modal__close {
+  border: 0;
+  border-radius: 50%;
+  background: #f0f0f0;
+  color: #767676;
+  width: 32px;
+  height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 13px;
+  cursor: pointer;
+  transition: background 150ms ease;
+}
+
+.role-modal__close:hover {
+  background: #e4e4e4;
+  color: #111111;
+}
+
+.role-modal__title {
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-size: 26px;
+  font-weight: 600;
+  margin-bottom: 6px;
+}
+
+.role-modal__sub {
+  color: #767676;
+  font-size: 14.5px;
+  margin-bottom: 24px;
+}
+
+.role-modal__cards {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 14px;
+}
+
+.role-card {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 8px;
+  border-radius: 16px;
+  padding: 24px 22px;
+  text-align: left;
+  cursor: pointer;
+  transition:
+    border-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.role-card__icon {
+  font-size: 28px;
+  line-height: 1;
+  margin-bottom: 4px;
+}
+
+.role-card strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  line-height: 1.2;
+}
+
+.role-card > span:not(.role-card__icon):not(.role-card__cta):not(.role-card__coming) {
+  display: block;
+  font-size: 13px;
+  line-height: 1.55;
+  flex: 1;
+}
+
+.role-card__cta {
+  display: inline-block;
+  margin-top: 4px;
+  font-size: 13.5px;
+  font-weight: 700;
+}
+
+.role-card__coming {
+  display: inline-flex;
+  align-items: center;
+  margin-top: 4px;
+  border-radius: 999px;
+  background: #f0f0f0;
+  color: #767676;
+  padding: 4px 10px;
+  font-size: 11.5px;
+  font-weight: 600;
+}
+
+.role-card--migrant {
+  border: 2px solid #1a1a1a;
+  background: #1a1a1a;
+  color: #f7f7f7;
+}
+
+.role-card--migrant > span:not(.role-card__icon):not(.role-card__cta) {
+  color: #a9a9a9;
+}
+
+.role-card--migrant .role-card__cta {
+  color: #ffffff;
+}
+
+.role-card--migrant:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 10px 28px rgb(0 0 0 / 30%);
+}
+
+.role-card--adviser {
+  border: 2px solid #e4e4e4;
+  background: #fafafa;
+  color: #767676;
+  cursor: default;
+}
+
+.role-card--adviser strong {
+  color: #4d4d4d;
+}
+
+@media (max-width: 480px) {
+  .role-modal__cards {
+    grid-template-columns: 1fr;
+  }
+}
+
 .landing-page {
   min-height: 100vh;
   background: #f7f7f7;

@@ -1,5 +1,6 @@
 "use client";
 
+import { useState } from "react";
 import Link from "next/link";
 import { usePrivy } from "@privy-io/react-auth";
 import { AdvisaLogo } from "~~/components/advisa/AdvisaLogo";
@@ -34,11 +35,52 @@ const tickerItems = [
   "CITIZENSHIP",
 ];
 
+const RoleModal = ({ onClose, onMigrant }: { onClose: () => void; onMigrant: () => void }) => (
+  <div className="role-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label="Choose your role">
+    <div className="role-modal" onClick={e => e.stopPropagation()}>
+      <div className="role-modal__header">
+        <AdvisaLogo />
+        <button className="role-modal__close" type="button" onClick={onClose} aria-label="Close">
+          ✕
+        </button>
+      </div>
+      <h2 className="role-modal__title">How are you using Advisa?</h2>
+      <p className="role-modal__sub">Choose your role to continue.</p>
+
+      <div className="role-modal__cards">
+        <button className="role-card role-card--migrant" type="button" onClick={onMigrant}>
+          <span className="role-card__icon">🌏</span>
+          <strong>I&apos;m a migrant</strong>
+          <span>Find a licensed adviser, pay in escrow, and track your visa case end-to-end.</span>
+          <span className="role-card__cta">Continue →</span>
+        </button>
+
+        <div className="role-card role-card--adviser" aria-disabled="true">
+          <span className="role-card__icon">📋</span>
+          <strong>I&apos;m an adviser</strong>
+          <span>Manage client engagements, upload documents, and receive milestone payments.</span>
+          <span className="role-card__coming">Coming soon</span>
+        </div>
+      </div>
+    </div>
+  </div>
+);
+
 export const LandingPage = () => {
   const { login, authenticated } = usePrivy();
+  const [showRoleModal, setShowRoleModal] = useState(false);
+
+  const openRoleModal = () => setShowRoleModal(true);
+  const closeRoleModal = () => setShowRoleModal(false);
+  const handleMigrantLogin = () => {
+    closeRoleModal();
+    login();
+  };
 
   return (
     <div className="landing-page">
+      {showRoleModal && <RoleModal onClose={closeRoleModal} onMigrant={handleMigrantLogin} />}
+
       <header className="landing-nav">
         <AdvisaLogo />
         <nav className="landing-nav__links" aria-label="Main navigation">
@@ -53,11 +95,15 @@ export const LandingPage = () => {
               Go to app
             </Link>
           ) : (
-            <button className="landing-nav__signin" onClick={login} type="button">
+            <button className="landing-nav__signin" onClick={openRoleModal} type="button">
               Sign in
             </button>
           )}
-          <button className="pill-button pill-button--small" onClick={login} type="button">
+          <button
+            className="pill-button pill-button--small"
+            onClick={authenticated ? undefined : openRoleModal}
+            type="button"
+          >
             Get started
           </button>
         </div>
@@ -81,7 +127,7 @@ export const LandingPage = () => {
                   Browse advisors
                 </Link>
               ) : (
-                <button className="pill-button pill-button--hero" onClick={login} type="button">
+                <button className="pill-button pill-button--hero" onClick={openRoleModal} type="button">
                   Browse advisors
                 </button>
               )}
@@ -228,7 +274,11 @@ export const LandingPage = () => {
         <section className="landing-cta">
           <h2>Start with a conversation, not a payment.</h2>
           <p>Browse verified advisors, book a consultation, and only pay once you&apos;ve approved the invoice.</p>
-          <button className="pill-button pill-button--cta" onClick={login} type="button">
+          <button
+            className="pill-button pill-button--cta"
+            onClick={authenticated ? undefined : openRoleModal}
+            type="button"
+          >
             Find your advisor
           </button>
         </section>
