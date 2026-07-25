@@ -315,18 +315,20 @@ export const useOnchainAdvisaFlow = (advisor: Advisor) => {
       } else {
         if (needsMint) {
           setPaymentStatus("Issuing hackathon test dNZD");
-          await tokenWrite.writeContractAsync({
+          const mintTxHash = await tokenWrite.writeContractAsync({
             functionName: "mint",
             args: [ready.address, latestTotal - currentBalance],
           });
+          if (mintTxHash) await ready.publicClient.waitForTransactionReceipt({ hash: mintTxHash });
           await refetchBalance();
         }
         if (needsApproval) {
           setPaymentStatus("Approving the escrow contract");
-          await tokenWrite.writeContractAsync({
+          const approvalTxHash = await tokenWrite.writeContractAsync({
             functionName: "approve",
             args: [ready.escrowContract.address, latestTotal],
           });
+          if (approvalTxHash) await ready.publicClient.waitForTransactionReceipt({ hash: approvalTxHash });
           await refetchAllowance();
         }
 

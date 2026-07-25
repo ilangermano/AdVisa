@@ -11,6 +11,7 @@ export type Advisor = {
   rating: number;
   cases: number;
   reviewCount: number;
+  photoUrl: string;
   reply: string;
   fee: number;
   licenceRef: string;
@@ -41,6 +42,7 @@ export const advisors: Advisor[] = [
     rating: 4.8,
     cases: 148,
     reviewCount: 121,
+    photoUrl: "https://images.unsplash.com/photo-1560250097-0b93528c311a?auto=format&fit=crop&w=256&q=85",
     reply: "~2h",
     fee: 1450,
     licenceRef: "IAA-2024001",
@@ -70,6 +72,7 @@ export const advisors: Advisor[] = [
     rating: 4.9,
     cases: 212,
     reviewCount: 187,
+    photoUrl: "https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?auto=format&fit=crop&w=256&q=85",
     reply: "~1h",
     fee: 1800,
     licenceRef: "IAA-2024002",
@@ -99,6 +102,7 @@ export const advisors: Advisor[] = [
     rating: 4.7,
     cases: 176,
     reviewCount: 143,
+    photoUrl: "https://images.unsplash.com/photo-1580489944761-15a19d654956?auto=format&fit=crop&w=256&q=85",
     reply: "~4h",
     fee: 1200,
     licenceRef: "IAA-2024003",
@@ -128,6 +132,7 @@ export const advisors: Advisor[] = [
     rating: 4.8,
     cases: 231,
     reviewCount: 198,
+    photoUrl: "https://images.unsplash.com/photo-1568602471122-7832951cc4c5?auto=format&fit=crop&w=256&q=85",
     reply: "~3h",
     fee: 2400,
     licenceRef: "IAA-2024004",
@@ -157,6 +162,7 @@ export const advisors: Advisor[] = [
     rating: 4.6,
     cases: 94,
     reviewCount: 71,
+    photoUrl: "https://images.unsplash.com/photo-1580894732444-8ecded7900cd?auto=format&fit=crop&w=256&q=85",
     reply: "~2h",
     fee: 650,
     licenceRef: "IAA-2024005",
@@ -186,6 +192,7 @@ export const advisors: Advisor[] = [
     rating: 4.7,
     cases: 165,
     reviewCount: 139,
+    photoUrl: "https://images.unsplash.com/photo-1531384441138-2736e62e0919?auto=format&fit=crop&w=256&q=85",
     reply: "~5h",
     fee: 1600,
     licenceRef: "IAA-2024006",

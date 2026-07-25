@@ -170,14 +170,17 @@ const formatExpiry = (value: string) => {
   return digits.length > 2 ? `${digits.slice(0, 2)}/${digits.slice(2)}` : digits;
 };
 
-const Avatar = ({ size = "normal" }: { size?: "small" | "normal" | "large" }) => (
-  <span className={`striped-avatar app-avatar app-avatar--${size}`} aria-hidden="true" />
-);
+const Avatar = ({ advisor, size = "normal" }: { advisor?: Advisor; size?: "small" | "normal" | "large" }) =>
+  advisor ? (
+    <img className={`app-avatar app-avatar--${size}`} src={advisor.photoUrl} alt={`${advisor.name} profile`} />
+  ) : (
+    <span className={`striped-avatar app-avatar app-avatar--${size}`} aria-hidden="true" />
+  );
 
 const AdvisorCard = ({ advisor, onOpen }: { advisor: Advisor; onOpen: () => void }) => (
   <article className="market-card">
     <div className="market-card__identity">
-      <Avatar />
+      <Avatar advisor={advisor} />
       <div>
         <div className="advisor-name-row">
           <strong>{advisor.name}</strong>
@@ -249,7 +252,7 @@ const ProfileScreen = ({
         <div className="profile-main">
           <section className="app-card profile-header-card">
             <div className="profile-identity">
-              <Avatar size="large" />
+              <Avatar advisor={advisor} size="large" />
               <div>
                 <div className="profile-name-row">
                   <h1>{advisor.name}</h1>
