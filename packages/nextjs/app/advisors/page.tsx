@@ -4,7 +4,7 @@ import { useState } from "react";
 import { usePrivy } from "@privy-io/react-auth";
 import { type Advisor, advisors, formatMoney, getMilestones, getRateColor } from "~~/components/advisa/advisors";
 
-type Screen = "market" | "profile" | "pay" | "case";
+type Screen = "market" | "profile" | "agreement" | "pay" | "case";
 type PaymentMethod = "card" | "crypto";
 
 const filters = ["All", "Work", "Student", "Family", "Tourist", "Permanent residency"];
@@ -50,7 +50,15 @@ const AdvisorCard = ({ advisor, onOpen }: { advisor: Advisor; onOpen: () => void
   </article>
 );
 
-const ProfileScreen = ({ advisor, goBack, goToPay }: { advisor: Advisor; goBack: () => void; goToPay: () => void }) => {
+const ProfileScreen = ({
+  advisor,
+  goBack,
+  goToAgreement,
+}: {
+  advisor: Advisor;
+  goBack: () => void;
+  goToAgreement: () => void;
+}) => {
   const reviews = [
     {
       who: `Client · ${advisor.specialty} visa`,
@@ -72,7 +80,7 @@ const ProfileScreen = ({ advisor, goBack, goToPay }: { advisor: Advisor; goBack:
   return (
     <div className="app-screen app-screen--profile">
       <button className="back-button" type="button" onClick={goBack}>
-        Back to advisers
+        ← Back to advisers
       </button>
       <div className="profile-layout">
         <div className="profile-main">
@@ -109,14 +117,29 @@ const ProfileScreen = ({ advisor, goBack, goToPay }: { advisor: Advisor; goBack:
             </div>
           </section>
 
+          <section className="app-card profile-bio-card">
+            <h2 className="profile-bio-card__heading">About</h2>
+            <p className="profile-bio-card__text">{advisor.bio}</p>
+            <div className="profile-languages">
+              <span className="profile-languages__label">Languages</span>
+              <div className="profile-languages__chips">
+                {advisor.languages.map(lang => (
+                  <span className="language-chip" key={lang}>
+                    {lang}
+                  </span>
+                ))}
+              </div>
+            </div>
+          </section>
+
           <section className="app-card chain-card">
             <div className="chain-card__title">
               <span className="verified-dot" />
               <span>CREDENTIALS VERIFIED ON-CHAIN</span>
             </div>
             <p>
-              These checks are not self-reported. Licence status is read live off-chain, while signed agreement hashes
-              and milestone events are anchored on-chain.
+              Licence status is read live off-chain from the IAA register. Signed agreement hashes and milestone events
+              are anchored on-chain — not self-reported.
             </p>
             <div className="hash-list">
               <span>licence check {advisor.hash1} ✓</span>
@@ -146,17 +169,148 @@ const ProfileScreen = ({ advisor, goBack, goToPay }: { advisor: Advisor; goBack:
             No upfront price. After your consultation, {advisor.first} sends you an invoice — you approve it before any
             money moves.
           </p>
-          <h3>Then paid in 3 protected steps:</h3>
+          <h3>Paid in 3 protected steps:</h3>
           <ol>
             <li>1 · Consultation</li>
             <li>2 · Application lodged</li>
             <li>3 · INZ outcome letter uploaded</li>
           </ol>
-          <button className="app-primary-button app-primary-button--wide" type="button" onClick={goToPay}>
+          <button className="app-primary-button app-primary-button--wide" type="button" onClick={goToAgreement}>
             Request a consultation
           </button>
           <small>🔒 You pay nothing today. Money goes into escrow only after you approve the invoice.</small>
         </aside>
+      </div>
+    </div>
+  );
+};
+
+const AgreementScreen = ({
+  advisor,
+  goBack,
+  goToPay,
+}: {
+  advisor: Advisor;
+  goBack: () => void;
+  goToPay: () => void;
+}) => {
+  const milestones = getMilestones(advisor);
+
+  return (
+    <div className="app-screen app-screen--agreement">
+      <button className="back-button" type="button" onClick={goBack}>
+        ← Back to {advisor.first}&apos;s profile
+      </button>
+
+      <div className="agreement-header">
+        <div>
+          <h1>Fee Agreement</h1>
+          <p className="agreement-header__sub">
+            {advisor.specialty} visa · with {advisor.name}
+          </p>
+        </div>
+        <div className="chain-badge chain-badge--small">
+          <span className="verified-dot" />
+          HASH ANCHORED ON-CHAIN
+        </div>
+      </div>
+
+      {/* Fee Agreement document */}
+      <section className="agreement-doc app-card">
+        <div className="agreement-doc__eyebrow">FEE AGREEMENT · {advisor.hash2} ✓</div>
+
+        <div className="agreement-doc__parties">
+          <div>
+            <span className="agreement-doc__party-label">ADVISER</span>
+            <strong>{advisor.name}</strong>
+            <span>
+              {advisor.title} · Licensed by IAA · {advisor.hash1}
+            </span>
+          </div>
+          <div className="agreement-doc__divider" aria-hidden="true">
+            ↔
+          </div>
+          <div>
+            <span className="agreement-doc__party-label">CLIENT</span>
+            <strong>You (migrant applicant)</strong>
+            <span>Identity verified via Privy</span>
+          </div>
+        </div>
+
+        <div className="agreement-doc__meta">
+          <div>
+            <span>Visa type</span>
+            <strong>{advisor.agreement.visaType}</strong>
+          </div>
+          <div>
+            <span>Total fee</span>
+            <strong>{formatMoney(advisor.fee)} NZD</strong>
+          </div>
+          <div>
+            <span>Lodgement deadline</span>
+            <strong>{advisor.agreement.validityDays} days from signing</strong>
+          </div>
+          <div>
+            <span>Auto-refund</span>
+            <strong>Yes — on missed deadline</strong>
+          </div>
+        </div>
+      </section>
+
+      {/* Payment schedule */}
+      <section className="app-card payment-card">
+        <h2>Payment Schedule</h2>
+        <p className="agreement-section__sub">
+          Funds are held in escrow. Each tranche releases only when the milestone below is completed and verified.
+        </p>
+        <div className="release-list">
+          <div>
+            <span>1</span>
+            <p>Consultation completed · document checklist reviewed</p>
+            <strong>{formatMoney(milestones.consultation)}</strong>
+          </div>
+          <div>
+            <span>2</span>
+            <p>Application lodged with INZ · lodgement receipt uploaded</p>
+            <strong>{formatMoney(milestones.filing)}</strong>
+          </div>
+          <div>
+            <span>3</span>
+            <p>INZ outcome letter uploaded · case closed</p>
+            <strong>{formatMoney(milestones.decision)}</strong>
+          </div>
+        </div>
+      </section>
+
+      {/* AI plain language summary */}
+      <section className="app-card agreement-summary-card">
+        <div className="agreement-summary-card__eyebrow">
+          <span className="verified-dot" />
+          PLAIN LANGUAGE SUMMARY · AI EXTRACTED
+        </div>
+        <p className="agreement-summary-card__text">{advisor.agreement.plainSummary}</p>
+        {advisor.agreement.redFlags.length === 0 ? (
+          <div className="agreement-no-flags">
+            <span>✓</span>
+            No red flags detected — standard milestone-based fee structure.
+          </div>
+        ) : (
+          <ul className="agreement-flags-list">
+            {advisor.agreement.redFlags.map(flag => (
+              <li key={flag}>⚠ {flag}</li>
+            ))}
+          </ul>
+        )}
+      </section>
+
+      <div className="agreement-actions">
+        <button className="app-primary-button app-primary-button--wide" type="button" onClick={goToPay}>
+          Approve agreement &amp; fund escrow →
+        </button>
+        <p className="agreement-actions__sub">
+          By continuing you confirm you have read the fee agreement above. Funds go into escrow — not to {advisor.first}
+          .
+        </p>
       </div>
     </div>
   );
@@ -180,21 +334,20 @@ const PaymentScreen = ({
   return (
     <div className="app-screen app-screen--payment">
       <button className="back-button" type="button" onClick={goBack}>
-        ← Back to {advisor.first}&apos;s profile
+        ← Back to fee agreement
       </button>
-      <h1>Invoice from {advisor.first}</h1>
+      <h1>Fund Escrow</h1>
       <p className="payment-intro">
-        Your consultation is done, and {advisor.first} has sent an invoice for {formatMoney(advisor.fee)}. It goes into
-        escrow held by AdVisa, not to {advisor.first}. Funds are released only when action-based milestones are
-        completed.
+        You&apos;ve approved the invoice. {formatMoney(advisor.fee)} goes into escrow held by AdVisa — not to{" "}
+        {advisor.first}. Funds release only as milestones are completed.
       </p>
 
       <section className="app-card payment-card">
-        <h2>How your money is released</h2>
+        <h2>Escrow breakdown</h2>
         <div className="release-list">
           <div>
             <span>1</span>
-            <p>Consultation — already done, released when you pay</p>
+            <p>Consultation — released immediately on funding</p>
             <strong>{formatMoney(milestones.consultation)}</strong>
           </div>
           <div>
@@ -231,7 +384,7 @@ const PaymentScreen = ({
             onClick={() => setMethod("crypto")}
           >
             <strong>🔗 Crypto wallet</strong>
-            <span>Connect your wallet and pay the demo ERC20 token directly into the escrow contract.</span>
+            <span>Connect your wallet and pay dNZD directly into the escrow contract.</span>
           </button>
         </div>
       </section>
@@ -241,7 +394,7 @@ const PaymentScreen = ({
       </button>
       <div className="payment-reassurance">
         <span>🔒 Held safely until work is done</span>
-        <span>↩ Refund if no consultation happens</span>
+        <span>↩ Auto-refund if deadline missed</span>
       </div>
     </div>
   );
@@ -286,7 +439,7 @@ const CaseScreen = ({ advisor, paid, goToMarket }: { advisor: Advisor; paid: boo
                 <div>
                   <strong>Consultation done</strong>
                   <p>
-                    You met {advisor.first} on July 12 and agreed the plan. {formatMoney(milestones.consultation)}{" "}
+                    You met {advisor.first} on July 21 and agreed the plan. {formatMoney(milestones.consultation)}{" "}
                     released.
                   </p>
                 </div>
@@ -297,7 +450,7 @@ const CaseScreen = ({ advisor, paid, goToMarket }: { advisor: Advisor; paid: boo
                   <span className="timeline__line" />
                 </div>
                 <div>
-                  <strong>Application lodgement - happening now</strong>
+                  <strong>Application lodgement — happening now</strong>
                   <p>{advisor.first} is preparing your documents. Nothing needed from you right now.</p>
                 </div>
               </div>
@@ -317,15 +470,15 @@ const CaseScreen = ({ advisor, paid, goToMarket }: { advisor: Advisor; paid: boo
             <h2>Latest updates</h2>
             <div>
               <p>
-                <time>Jul 21</time>
+                <time>Jul 25</time>
                 <span>{advisor.first} uploaded your draft application for review.</span>
               </p>
               <p>
-                <time>Jul 16</time>
+                <time>Jul 23</time>
                 <span>Employment letter received and checked. ✓</span>
               </p>
               <p>
-                <time>Jul 12</time>
+                <time>Jul 21</time>
                 <span>Consultation completed. {formatMoney(milestones.consultation)} released from escrow.</span>
               </p>
             </div>
@@ -471,6 +624,13 @@ const AdvisorsPage = () => {
         <ProfileScreen
           advisor={selectedAdvisor}
           goBack={() => changeScreen("market")}
+          goToAgreement={() => changeScreen("agreement")}
+        />
+      )}
+      {screen === "agreement" && (
+        <AgreementScreen
+          advisor={selectedAdvisor}
+          goBack={() => changeScreen("profile")}
           goToPay={() => changeScreen("pay")}
         />
       )}
@@ -479,7 +639,7 @@ const AdvisorsPage = () => {
           advisor={selectedAdvisor}
           method={paymentMethod}
           setMethod={setPaymentMethod}
-          goBack={() => changeScreen("profile")}
+          goBack={() => changeScreen("agreement")}
           confirm={() => {
             setPaid(true);
             changeScreen("case");
