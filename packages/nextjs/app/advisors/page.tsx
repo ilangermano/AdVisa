@@ -1,6 +1,7 @@
 "use client";
 
 import { useState } from "react";
+import { usePrivy } from "@privy-io/react-auth";
 import { type Advisor, advisors, formatMoney, getMilestones, getRateColor } from "~~/components/advisa/advisors";
 
 type Screen = "market" | "profile" | "pay" | "case";
@@ -375,11 +376,15 @@ const CaseScreen = ({ advisor, paid, goToMarket }: { advisor: Advisor; paid: boo
 };
 
 const AdvisorsPage = () => {
+  const { logout, user } = usePrivy();
   const [screen, setScreen] = useState<Screen>("market");
   const [filter, setFilter] = useState("All");
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [paid, setPaid] = useState(false);
+
+  const displayEmail =
+    user?.google?.email ?? user?.email?.address ?? (user?.phone?.number ? user.phone.number : null) ?? "Account";
 
   const filteredAdvisors = advisors.filter(advisor => filter === "All" || advisor.specialty === filter);
   const selectedAdvisor = advisors[selectedIndex];
@@ -420,8 +425,11 @@ const AdvisorsPage = () => {
           </button>
         </nav>
         <div className="app-topbar__help">
-          <span>Need help?</span>
+          <span>{displayEmail}</span>
           <Avatar size="small" />
+          <button className="app-signout-button" type="button" onClick={logout}>
+            Sign out
+          </button>
         </div>
       </header>
 
