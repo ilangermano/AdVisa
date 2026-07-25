@@ -186,7 +186,7 @@ button {
 }
 
 .advisa-logo__word {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 21px;
   font-weight: 700;
   line-height: 1;
@@ -228,7 +228,7 @@ button {
   background: #efefef;
   color: #2e2e2e;
   padding: 6px 12px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 12px;
   font-weight: 500;
 }
@@ -261,7 +261,7 @@ button {
   margin-left: auto;
   border-radius: 3px;
   padding: 4px 8px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-weight: 500;
 }
 
@@ -358,7 +358,7 @@ button {
 
 .signin-eyebrow {
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11.5px;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -366,7 +366,7 @@ button {
 }
 
 .signin-heading {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 34px;
   font-weight: 600;
   line-height: 1.15;
@@ -421,7 +421,7 @@ button {
 }
 
 .signin-panel__title {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 22px;
   font-weight: 600;
   line-height: 1.25;
@@ -546,7 +546,7 @@ button {
   background: rgb(255 255 255 / 10%);
   color: #a9a9a9;
   padding: 5px 14px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -636,7 +636,7 @@ button {
 }
 
 .role-modal__title {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 26px;
   font-weight: 600;
   margin-bottom: 6px;
@@ -813,7 +813,7 @@ button {
 .landing-hero h1 {
   max-width: 610px;
   margin-bottom: 22px;
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: clamp(46px, 5vw, 56px);
   font-weight: 600;
   letter-spacing: -0.025em;
@@ -862,7 +862,7 @@ button {
   gap: 10px;
   padding-top: 8px;
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 10.5px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -927,7 +927,7 @@ button {
 }
 
 .stat-row strong {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 27px;
   font-weight: 700;
   line-height: 1.2;
@@ -966,7 +966,7 @@ button {
 .contract-card__eyebrow {
   margin-bottom: 12px;
   color: #a9a9a9;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -1025,7 +1025,7 @@ button {
   width: max-content;
   gap: 48px;
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 13px;
   font-weight: 500;
   white-space: nowrap;
@@ -1055,7 +1055,7 @@ button {
 .section-eyebrow {
   margin-bottom: 10px;
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -1070,7 +1070,7 @@ button {
 .featured-section h2,
 .escrow-section h2,
 .landing-cta h2 {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-weight: 600;
   text-wrap: pretty;
 }
@@ -1104,7 +1104,7 @@ button {
   display: block;
   margin-bottom: 14px;
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 15px;
   font-weight: 700;
 }
@@ -1224,7 +1224,7 @@ button {
 }
 
 .featured-card__stats > div:first-child strong {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 30px;
   font-weight: 700;
 }
@@ -1350,7 +1350,7 @@ button {
 .contract-card__rows > div {
   display: flex;
   justify-content: space-between;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 13.5px;
 }
 
@@ -1386,7 +1386,7 @@ button {
 
 .contract-card__progress small {
   color: #a9a9a9;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11.5px;
 }
 
@@ -1543,7 +1543,7 @@ button {
 
 .app-screen--market > h1 {
   margin-bottom: 6px;
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 34px;
   font-weight: 600;
   line-height: 1.15;
@@ -1643,7 +1643,7 @@ button {
 }
 
 .market-card__stats > div:first-child strong {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 32px;
   font-weight: 700;
   line-height: 1.1;
@@ -1770,7 +1770,7 @@ button {
 }
 
 .profile-name-row h1 {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 26px;
   font-weight: 600;
   line-height: 1.15;
@@ -1805,7 +1805,7 @@ button {
 }
 
 .profile-stats strong {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 26px;
   font-weight: 700;
 }
@@ -1825,7 +1825,7 @@ button {
   gap: 8px;
   margin-bottom: 14px;
   color: #2e2e2e;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 12px;
   font-weight: 500;
   letter-spacing: 0.06em;
@@ -1850,7 +1850,7 @@ button {
   background: #f7f7f7;
   padding: 6px 12px;
   color: #4d4d4d;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 12px;
 }
 
@@ -1860,7 +1860,7 @@ button {
 
 .reviews-card h2 {
   margin-bottom: 16px;
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 19px;
   font-weight: 600;
 }
@@ -1952,7 +1952,7 @@ button {
 
 .app-screen--payment > h1 {
   margin: 18px 0 6px;
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 30px;
   font-weight: 600;
 }
@@ -2077,7 +2077,7 @@ button {
 
 .empty-case h1 {
   margin-bottom: 8px;
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 26px;
   font-weight: 600;
 }
@@ -2098,7 +2098,7 @@ button {
 
 .case-heading h1 {
   margin-bottom: 4px;
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 30px;
   font-weight: 600;
 }
@@ -2313,7 +2313,7 @@ button {
   border-top: 1px solid #3a3a3a;
   padding-top: 10px;
   color: #7a7a7a;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 10.5px;
 }
 
@@ -2372,7 +2372,7 @@ button {
 
 .profile-languages__label {
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -2410,7 +2410,7 @@ button {
 }
 
 .agreement-header h1 {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 30px;
   font-weight: 600;
   margin-bottom: 4px;
@@ -2428,7 +2428,7 @@ button {
 
 .agreement-doc__eyebrow {
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -2453,7 +2453,7 @@ button {
 
 .agreement-doc__party-label {
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -2517,7 +2517,7 @@ button {
   align-items: center;
   gap: 8px;
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -2598,7 +2598,7 @@ button {
 
 .agreement-doc-card__label {
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -2632,7 +2632,7 @@ button {
 
 /* Legal document typography */
 .legal-doc {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   color: #1a1a1a;
 }
 
@@ -2667,7 +2667,7 @@ button {
   text-transform: uppercase;
   margin-bottom: 10px;
   color: #1a1a1a;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
 }
 
 .legal-doc__section p {
@@ -2700,7 +2700,7 @@ button {
 
 .legal-doc__party-label {
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 10px;
   font-weight: 500;
   letter-spacing: 0.1em;
@@ -2716,7 +2716,7 @@ button {
 .legal-doc__parties span {
   color: #767676;
   font-size: 12px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
 }
 
 .legal-doc__table {
@@ -2735,7 +2735,7 @@ button {
   font-size: 11px;
   font-weight: 600;
   color: #4d4d4d;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   letter-spacing: 0.04em;
 }
 
@@ -2836,7 +2836,7 @@ button {
 
 .agreement-signed-state__badge span {
   color: #4d4d4d;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11.5px;
 }
 
@@ -2892,7 +2892,7 @@ button {
   display: block;
   margin-bottom: 10px;
   color: #a9a9a9;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 10.5px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -2930,7 +2930,7 @@ button {
   background: #2e7d32;
   color: #ffffff;
   padding: 2px 8px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 9.5px;
   font-weight: 700;
   letter-spacing: 0.06em;
@@ -3003,7 +3003,7 @@ button {
 .receipt-card__eyebrow {
   margin-bottom: 16px;
   color: #767676;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
   letter-spacing: 0.08em;
@@ -3208,7 +3208,7 @@ button {
 }
 
 .pay-card-preview__brand {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 23px;
   font-weight: 700;
   font-style: italic;
@@ -3218,7 +3218,7 @@ button {
 
 .pay-card-preview__number {
   margin-bottom: 22px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 18px;
   font-weight: 400;
   letter-spacing: 0.12em;
@@ -3237,7 +3237,7 @@ button {
 }
 
 .pay-card-preview__footer span {
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 8px;
   font-weight: 500;
   letter-spacing: 0.14em;
@@ -3245,7 +3245,7 @@ button {
 }
 
 .pay-card-preview__footer strong {
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 13px;
   font-weight: 400;
   letter-spacing: 0.05em;
@@ -3287,7 +3287,7 @@ button {
   background: #f9f9f9;
   padding: 14px 16px;
   font-size: 15.5px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   color: #1a1a1a;
   transition:
     border-color 150ms ease,
@@ -3340,7 +3340,7 @@ button {
   border-radius: 999px;
   background: #ffffff;
   padding: 5px 12px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 12px;
   font-weight: 500;
   color: #767676;
@@ -3365,7 +3365,7 @@ button {
 .pay-crypto-amount__value {
   display: block;
   margin-bottom: 8px;
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 40px;
   font-weight: 700;
   color: #1a1a1a;
@@ -3406,7 +3406,7 @@ button {
 }
 
 .pay-mono {
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 12.5px !important;
   font-weight: 500 !important;
   color: #4d4d4d;
@@ -3470,7 +3470,7 @@ button {
   padding: 0 3px;
   border-radius: 999px;
   background: #9a2525;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 9px;
   font-weight: 700;
   color: #ffffff;
@@ -3494,7 +3494,7 @@ button {
 
 .notif-dropdown__header {
   padding: 12px 18px 11px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 10.5px;
   font-weight: 500;
   color: #767676;
@@ -3562,7 +3562,7 @@ button {
   padding: 0 4px;
   border-radius: 999px;
   background: #9a2525;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 9.5px;
   font-weight: 700;
   color: #ffffff;
@@ -3598,7 +3598,7 @@ button {
 }
 
 .app-screen--applications > h1 {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 30px;
   font-weight: 600;
   margin-bottom: 4px;
@@ -3795,7 +3795,7 @@ button {
   align-items: center;
   gap: 8px;
   margin-bottom: 16px;
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 11px;
   font-weight: 500;
   color: #767676;
@@ -3911,7 +3911,7 @@ button {
   height: 56px;
   border-radius: 50%;
   background: linear-gradient(135deg, #1a1a1a, #5c5c5c);
-  font-family: var(--font-ibm-plex-mono), monospace;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 18px;
   font-weight: 700;
   letter-spacing: -0.02em;
@@ -3920,7 +3920,7 @@ button {
 }
 
 .profile-hero h1 {
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 22px;
   font-weight: 700;
   margin: 0 0 3px;
@@ -4049,7 +4049,7 @@ button {
 
 .transaction-item__amount {
   flex: none;
-  font-family: var(--font-source-serif), Georgia, serif;
+  font-family: var(--font-instrument), system-ui, sans-serif;
   font-size: 15px;
   font-weight: 700;
 }
@@ -4368,4 +4368,303 @@ button {
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
   }
+}
+
+/* ── Document modal ── */
+.doc-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.48);
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+}
+
+.doc-modal {
+  background: #ffffff;
+  border-radius: 16px;
+  border: 1.5px solid #e4e4e4;
+  width: 100%;
+  max-width: 560px;
+  max-height: 90vh;
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;
+}
+
+.doc-modal__header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+  padding: 24px 28px 20px;
+  border-bottom: 1.5px solid #e4e4e4;
+}
+
+.doc-modal__eyebrow {
+  display: block;
+  font-family: var(--font-instrument), system-ui, sans-serif;
+  font-size: 10.5px;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  color: #767676;
+  margin-bottom: 6px;
+}
+
+.doc-modal__title {
+  margin: 0;
+  font-size: 17px;
+  font-weight: 600;
+  color: #1a1a1a;
+  font-family: var(--font-instrument), system-ui, sans-serif;
+}
+
+.doc-modal__close {
+  flex: none;
+  width: 32px;
+  height: 32px;
+  border-radius: 50%;
+  border: 1.5px solid #e4e4e4;
+  background: #f7f7f7;
+  cursor: pointer;
+  font-size: 13px;
+  color: #4d4d4d;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  line-height: 1;
+  padding: 0;
+}
+
+.doc-modal__close:hover {
+  background: #ececec;
+}
+
+.doc-modal__body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 24px 28px;
+}
+
+.doc-modal__meta-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 12px;
+  padding: 9px 0;
+  border-bottom: 1px solid #f0f0f0;
+  font-size: 13.5px;
+}
+
+.doc-modal__meta-row span {
+  color: #767676;
+}
+
+.doc-modal__meta-row strong {
+  color: #1a1a1a;
+  font-weight: 600;
+  text-align: right;
+}
+
+.doc-modal__divider {
+  height: 1.5px;
+  background: #e4e4e4;
+  margin: 20px 0;
+}
+
+.doc-modal__body-text {
+  font-size: 13.5px;
+  line-height: 1.65;
+  color: #4d4d4d;
+  margin: 0 0 14px;
+}
+
+.doc-modal__body-text:last-of-type {
+  margin-bottom: 0;
+}
+
+.doc-modal__stamp {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  margin-top: 20px;
+  padding: 14px 16px;
+  background: #f7f7f7;
+  border-radius: 10px;
+  border: 1.5px solid #e4e4e4;
+}
+
+.doc-modal__stamp-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  border: 2.5px solid #2e7d32;
+  color: #2e7d32;
+  font-weight: 800;
+  font-size: 12px;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  letter-spacing: 0.04em;
+}
+
+.doc-modal__stamp strong {
+  display: block;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #1a1a1a;
+}
+
+.doc-modal__stamp p {
+  margin: 2px 0 0;
+  font-size: 12px;
+  color: #767676;
+}
+
+.doc-modal__footer {
+  display: flex;
+  gap: 12px;
+  padding: 18px 28px;
+  border-top: 1.5px solid #e4e4e4;
+  justify-content: flex-end;
+}
+
+/* ── Blockchain / chain links ── */
+.hash-link {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 11.5px;
+  color: #4d4d4d;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: #c4c4c4;
+  transition: color 0.15s, text-decoration-color 0.15s;
+}
+.hash-link:hover {
+  color: #1a1a1a;
+  text-decoration-color: #1a1a1a;
+}
+
+.chain-explorer-btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  margin-top: 14px;
+  font-size: 12.5px;
+  font-weight: 600;
+  color: #4d4d4d;
+  border: 1.5px solid #e4e4e4;
+  border-radius: 999px;
+  padding: 7px 16px;
+  text-decoration: none;
+  transition: border-color 0.15s, color 0.15s, background 0.15s;
+}
+.chain-explorer-btn:hover {
+  border-color: #1a1a1a;
+  color: #1a1a1a;
+  background: #f7f7f7;
+}
+
+.chain-badge--link {
+  text-decoration: none;
+  cursor: pointer;
+  transition: opacity 0.15s;
+}
+.chain-badge--link:hover {
+  opacity: 0.78;
+}
+
+/* ── Privy topbar branding ── */
+.app-topbar__profile-text {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 1px;
+}
+.privy-sub {
+  font-size: 10px;
+  color: #767676;
+  font-family: var(--font-instrument), system-ui, sans-serif;
+  letter-spacing: 0.03em;
+}
+
+.privy-inline-link {
+  color: #6c47ff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  font-weight: 600;
+}
+.privy-inline-link:hover {
+  opacity: 0.8;
+}
+
+/* ── Approval receipt modal ── */
+.approval-receipt-badge {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  padding: 20px 24px;
+  background: #f0faf0;
+  border-bottom: 1.5px solid #d4edda;
+  border-radius: 14px 14px 0 0;
+}
+.approval-receipt-badge__icon {
+  width: 40px;
+  height: 40px;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #2e7d32, #43a047);
+  color: #ffffff;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 20px;
+  flex: none;
+}
+.approval-receipt-badge strong {
+  display: block;
+  font-size: 15px;
+  font-weight: 600;
+  color: #1a3a1a;
+}
+.approval-receipt-badge p {
+  margin: 3px 0 0;
+  font-size: 13px;
+  color: #2e7d32;
+}
+
+.approval-amount {
+  padding: 18px 28px 16px;
+  border-bottom: 1.5px solid #e4e4e4;
+}
+.approval-amount__figure {
+  font-family: var(--font-instrument), system-ui, sans-serif;
+  font-size: 34px;
+  font-weight: 700;
+  color: #1a1a1a;
+  display: block;
+}
+.approval-amount__label {
+  font-size: 12.5px;
+  color: #767676;
+  margin-top: 3px;
+  display: block;
+}
+
+/* Escrow contract link in case card */
+a.case-contract {
+  display: block;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 11px;
+  color: #767676;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+  text-decoration-color: #c4c4c4;
+  margin-top: 12px;
+}
+a.case-contract:hover {
+  color: #1a1a1a;
+  text-decoration-color: #1a1a1a;
 }

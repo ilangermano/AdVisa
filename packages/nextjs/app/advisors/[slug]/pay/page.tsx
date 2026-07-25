@@ -51,7 +51,7 @@ export default function PayPage() {
       </Link>
       <h1>Fund Escrow</h1>
       <p className="payment-intro">
-        You&apos;ve approved the invoice. {formatMoney(advisor.fee)} goes into escrow held by AdVisa — not to{" "}
+        You&apos;ve approved the invoice. {formatMoney(advisor.fee)} goes into escrow held by AdVisa · not to{" "}
         {advisor.first}. Funds release only as milestones are completed.
       </p>
 
@@ -60,7 +60,7 @@ export default function PayPage() {
         <div className="release-list">
           <div>
             <span>1</span>
-            <p>Consultation — released on payment</p>
+            <p>Consultation · released on payment</p>
             <strong>{formatMoney(milestones.consultation)}</strong>
           </div>
           <div>

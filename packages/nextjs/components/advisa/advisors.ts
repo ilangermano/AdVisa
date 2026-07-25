@@ -14,6 +14,8 @@ export type Advisor = {
   fee: number;
   hash1: string;
   hash2: string;
+  hash1Full?: string;
+  hash2Full?: string;
   languages: string[];
   bio: string;
   agreement: {
@@ -42,7 +44,7 @@ export const advisors: Advisor[] = [
     hash1: "0x91b2…e04a",
     hash2: "0x3fa8…77c1",
     languages: ["English", "Spanish", "Mandarin"],
-    bio: "Daniel specialises in student visa pathways to New Zealand universities and polytechnics. With 148 successful applications across undergraduate, postgraduate, and pathway programmes, he guides clients through the full process from offer letter to visa grant — including health and character requirements.",
+    bio: "Daniel specialises in student visa pathways to New Zealand universities and polytechnics. With 148 successful applications across undergraduate, postgraduate, and pathway programmes, he guides clients through the full process from offer letter to visa grant · including health and character requirements.",
     agreement: {
       visaType: "Student Visa (Specific Purpose)",
       validityDays: 60,
@@ -65,15 +67,17 @@ export const advisors: Advisor[] = [
     reviewCount: 187,
     reply: "~1h",
     fee: 1800,
-    hash1: "0x8f3a…c21e",
-    hash2: "0x6d90…b3f4",
+    hash1: "0x56a4…1d1f",
+    hash2: "0xdb51…4f52",
+    hash1Full: "0x56a4f74c37361be06885f409ddb8cfdc8c19369a0fe3768d2cb36d205bae1d1f",
+    hash2Full: "0xdb5182230dc47567ec1c3e1dbd32ccf458534f52",
     languages: ["English", "French", "Twi"],
-    bio: "Amara holds an LL.M. in immigration law and has handled over 200 work visa cases across Accredited Employer, Essential Skills, and Talent (Accredited Employer) categories. She is known for fast turnaround and clear written communication — her clients consistently report that every milestone was explained before any money moved.",
+    bio: "Amara holds an LL.M. in immigration law and has handled over 200 work visa cases across Accredited Employer, Essential Skills, and Talent (Accredited Employer) categories. She is known for fast turnaround and clear written communication · her clients consistently report that every milestone was explained before any money moved.",
     agreement: {
       visaType: "Accredited Employer Work Visa (AEWV)",
       validityDays: 45,
       plainSummary:
-        "This agreement covers Amara Osei preparing and lodging your Accredited Employer Work Visa application. The total fee is $1,800, paid in three escrow tranches: $360 on consultation completion and document review, $720 after she lodges the application with INZ, and $720 after you receive the INZ decision letter. If lodgement has not occurred within 45 days of your signature, all unfunded amounts are returned to you automatically — no claim or dispute process needed.",
+        "This agreement covers Amara Osei preparing and lodging your Accredited Employer Work Visa application. The total fee is $1,800, paid in three escrow tranches: $360 on consultation completion and document review, $720 after she lodges the application with INZ, and $720 after you receive the INZ decision letter. If lodgement has not occurred within 45 days of your signature, all unfunded amounts are returned to you automatically · no claim or dispute process needed.",
       redFlags: [],
     },
   },
@@ -99,7 +103,7 @@ export const advisors: Advisor[] = [
       visaType: "Partner of a New Zealander (Resident Visa)",
       validityDays: 90,
       plainSummary:
-        "This agreement covers Mei-Lin Chow preparing your Partner of a New Zealander resident visa application, including relationship evidence compilation and character/health clearances. The total fee is $1,200, split across three tranches: $240 released after consultation and document checklist sign-off, $480 after lodgement with INZ, and $480 after the INZ decision. The lodgement deadline is 90 days from the date you both sign — after which, any unfunded balance returns to you without requiring any action on your part.",
+        "This agreement covers Mei-Lin Chow preparing your Partner of a New Zealander resident visa application, including relationship evidence compilation and character/health clearances. The total fee is $1,200, split across three tranches: $240 released after consultation and document checklist sign-off, $480 after lodgement with INZ, and $480 after the INZ decision. The lodgement deadline is 90 days from the date you both sign · after which, any unfunded balance returns to you without requiring any action on your part.",
       redFlags: [],
     },
   },
@@ -197,6 +201,18 @@ export const getRateColor = (rate: number) => {
   const hue = Math.max(0, Math.min(120, (rate - 80) * (120 / 16)));
   return `hsl(${hue}, 62%, 34%)`;
 };
+
+export const fullHash = (partial: string): string => {
+  const [head, tail] = partial.split("…");
+  const pad = "0".repeat(64 - head.slice(2).length - tail.length);
+  return `${head}${pad}${tail}`;
+};
+
+export const basescanTx = (partial: string, full?: string) =>
+  `https://sepolia.basescan.org/tx/${full ?? fullHash(partial)}`;
+
+export const basescanAddr = (partial: string, full?: string) =>
+  `https://sepolia.basescan.org/address/${full ?? fullHash(partial)}`;
 
 export const getMilestones = (advisor: Advisor) => {
   const consultation = Math.round(advisor.fee * 0.2);

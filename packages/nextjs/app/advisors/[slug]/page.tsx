@@ -4,7 +4,13 @@ import { useEffect } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { Avatar } from "~~/components/advisa/Avatar";
-import { getAdvisorBySlug, getAdvisorSlug, getRateColor } from "~~/components/advisa/advisors";
+import {
+  basescanAddr,
+  basescanTx,
+  getAdvisorBySlug,
+  getAdvisorSlug,
+  getRateColor,
+} from "~~/components/advisa/advisors";
 
 export default function AdvisorProfilePage() {
   const { slug } = useParams<{ slug: string }>();
@@ -117,16 +123,38 @@ export default function AdvisorProfilePage() {
                 <span className="verify-item__icon">✓</span>
                 <div>
                   <strong>Identity matches the register</strong>
-                  <p>Name and licence number match the IAA public register exactly — this is the same person.</p>
+                  <p>Name and licence number match the IAA public register exactly · this is the same person.</p>
                 </div>
               </div>
             </div>
             <div className="chain-card__proof">
               <span className="chain-card__proof-label">Technical proof (for your records)</span>
               <div className="hash-list">
-                <span>licence check {advisor.hash1} ✓</span>
-                <span>agreement hash {advisor.hash2} ✓</span>
+                <a
+                  className="hash-link"
+                  href={basescanTx(advisor.hash1, advisor.hash1Full)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  licence check {advisor.hash1} ✓ ↗
+                </a>
+                <a
+                  className="hash-link"
+                  href={basescanAddr(advisor.hash2, advisor.hash2Full)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  escrow contract {advisor.hash2} ✓ ↗
+                </a>
               </div>
+              <a
+                className="chain-explorer-btn"
+                href={basescanAddr(advisor.hash2, advisor.hash2Full)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View on Base Sepolia ↗
+              </a>
             </div>
           </section>
 
@@ -149,7 +177,7 @@ export default function AdvisorProfilePage() {
         <aside className="app-card pricing-card">
           <h2>Pricing</h2>
           <p>
-            No upfront price. After your consultation, {advisor.first} sends you an invoice — you approve it before any
+            No upfront price. After your consultation, {advisor.first} sends you an invoice · you approve it before any
             money moves.
           </p>
           <h3>Paid in 3 protected steps:</h3>

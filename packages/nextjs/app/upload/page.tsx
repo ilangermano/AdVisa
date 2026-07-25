@@ -8,7 +8,7 @@ const UploadPage: NextPage = () => {
         <h1 className="text-3xl font-bold">Fee Agreement Review</h1>
         <p className="mt-2 text-base-content/70">
           Upload your signed fee agreement. AdVisa extracts the payment milestones, flags anything unusual, and
-          summarises the agreement in plain language — including Hindi.
+          summarises the agreement in plain language · including Hindi.
         </p>
       </div>
       <AgreementExtractor />

@@ -74,7 +74,7 @@ export default function DemoCasePage() {
                   <span className="timeline__line" />
                 </div>
                 <div>
-                  <strong>Application lodgement — happening now</strong>
+                  <strong>Application lodgement · happening now</strong>
                   <p>{advisor.first} is preparing your documents. Nothing needed from you right now.</p>
                 </div>
               </div>

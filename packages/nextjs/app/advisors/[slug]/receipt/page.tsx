@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
-import { formatMoney, getAdvisorBySlug, getMilestones } from "~~/components/advisa/advisors";
+import { basescanAddr, basescanTx, formatMoney, getAdvisorBySlug, getMilestones } from "~~/components/advisa/advisors";
 
 export default function ReceiptPage() {
   const { slug } = useParams<{ slug: string }>();
@@ -31,7 +31,7 @@ export default function ReceiptPage() {
       <div className="receipt-badge">
         <span className="receipt-badge__icon">✓</span>
         <div>
-          <strong>Payment confirmed — your money is in escrow</strong>
+          <strong>Payment confirmed · your money is in escrow</strong>
           <p>
             {formatMoney(advisor.fee)} is now held safely by AdVisa. {advisor.first} cannot access it until each step of
             your case is completed.
@@ -55,7 +55,7 @@ export default function ReceiptPage() {
         </div>
         <div className="receipt-divider" />
         <div className="receipt-row">
-          <span>Released now — consultation confirmed</span>
+          <span>Released now · consultation confirmed</span>
           <strong className="receipt-row__released">{formatMoney(milestones.consultation)}</strong>
         </div>
         <div className="receipt-row receipt-row--held">
@@ -68,11 +68,25 @@ export default function ReceiptPage() {
         <div className="receipt-card__eyebrow">TRANSACTION DETAILS</div>
         <div className="receipt-row">
           <span>Transaction</span>
-          <strong className="receipt-mono">{txHash}</strong>
+          <a
+            className="receipt-mono hash-link"
+            href={basescanTx(advisor.hash1, advisor.hash1Full)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {txHash} ↗
+          </a>
         </div>
         <div className="receipt-row">
           <span>Escrow contract</span>
-          <strong className="receipt-mono">{advisor.hash2}</strong>
+          <a
+            className="receipt-mono hash-link"
+            href={basescanAddr(advisor.hash2, advisor.hash2Full)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            {advisor.hash2} ↗
+          </a>
         </div>
         <div className="receipt-row">
           <span>Payment method</span>
@@ -80,7 +94,9 @@ export default function ReceiptPage() {
         </div>
         <div className="receipt-row">
           <span>Network</span>
-          <strong>Base Sepolia</strong>
+          <a className="hash-link" href="https://sepolia.basescan.org" target="_blank" rel="noopener noreferrer">
+            Base Sepolia ↗
+          </a>
         </div>
       </section>
 
@@ -92,7 +108,7 @@ export default function ReceiptPage() {
             <div>
               <strong>Consultation confirmed ✓</strong>
               <p>
-                {formatMoney(milestones.consultation)} has been released to {advisor.first} — your consultation is now
+                {formatMoney(milestones.consultation)} has been released to {advisor.first} · your consultation is now
                 booked. You&apos;ll hear from them within {advisor.reply}.
               </p>
             </div>

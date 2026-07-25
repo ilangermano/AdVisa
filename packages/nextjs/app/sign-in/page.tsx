@@ -30,7 +30,7 @@ const SignInPage: NextPage = () => {
       <main className="signin-main">
         <div className="signin-card">
           <p className="signin-eyebrow">SIGN IN TO ADVISA</p>
-          <h1 className="signin-heading">How are you using Advisa?</h1>
+          <h1 className="signin-heading">How are you using AdVisa?</h1>
 
           {/* Role toggle */}
           <div className="signin-toggle" role="tablist" aria-label="Select role">
@@ -63,7 +63,7 @@ const SignInPage: NextPage = () => {
               </div>
               <h2 className="signin-panel__title">Find a verified adviser and protect your payment.</h2>
               <p className="signin-panel__copy">
-                Compare licensed advisers by real acceptance rates, book a consultation, and pay into escrow — so your
+                Compare licensed advisers by real acceptance rates, book a consultation, and pay into escrow · so your
                 money only moves when your case does.
               </p>
               <ul className="signin-trust-list">
@@ -77,7 +77,7 @@ const SignInPage: NextPage = () => {
                 </li>
                 <li>
                   <span className="signin-trust-check">✓</span>
-                  Funds held in escrow — released only on milestones you approve
+                  Funds held in escrow · released only on milestones you approve
                 </li>
               </ul>
               <button className="pill-button signin-panel__cta" type="button" onClick={login}>

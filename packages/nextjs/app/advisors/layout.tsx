@@ -42,7 +42,7 @@ const Topbar = () => {
     <header className="app-topbar">
       <Link className="advisa-logo app-logo-button" href="/advisors">
         <span className="advisa-logo__mark">A</span>
-        <span className="advisa-logo__word">Advisa</span>
+        <span className="advisa-logo__word">AdVisa</span>
       </Link>
       <nav aria-label="Application navigation">
         <Link className={isMarket ? "app-tab app-tab--active" : "app-tab"} href="/advisors">
@@ -93,7 +93,7 @@ const Topbar = () => {
                   <div>
                     <strong>Action needed</strong>
                     <p>
-                      Amara Osei uploaded your INZ lodgement receipt — approve to release{" "}
+                      Amara Osei uploaded your INZ lodgement receipt · approve to release{" "}
                       {formatMoney(seededMilestones.filing)}.
                     </p>
                   </div>
@@ -103,7 +103,10 @@ const Topbar = () => {
           )}
         </div>
         <Link className="app-topbar__profile-btn" href="/advisors/account">
-          <span>{displayEmail}</span>
+          <div className="app-topbar__profile-text">
+            <span>{displayEmail}</span>
+            <span className="privy-sub">🔐 via Privy</span>
+          </div>
           <Avatar size="small" />
         </Link>
         <button className="app-signout-button" type="button" onClick={handleSignOut}>

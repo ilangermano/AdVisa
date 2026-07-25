@@ -3,7 +3,7 @@
 import { useState } from "react";
 import Link from "next/link";
 import { Avatar } from "~~/components/advisa/Avatar";
-import { advisors, formatMoney, getMilestones } from "~~/components/advisa/advisors";
+import { advisors, basescanAddr, formatMoney, getMilestones } from "~~/components/advisa/advisors";
 import { useAdvisa } from "~~/contexts/AdvisaContext";
 
 const seededAdvisor = advisors[1];
@@ -12,12 +12,15 @@ const seededMilestones = getMilestones(seededAdvisor);
 export default function AmaraPage() {
   const { seededApproved, setSeededApproved } = useAdvisa();
   const [approving, setApproving] = useState(false);
+  const [docOpen, setDocOpen] = useState(false);
+  const [approvalReceiptOpen, setApprovalReceiptOpen] = useState(false);
 
   const handleApprove = () => {
     setApproving(true);
     setTimeout(() => {
       setSeededApproved(true);
       setApproving(false);
+      setApprovalReceiptOpen(true);
     }, 1600);
   };
 
@@ -46,7 +49,7 @@ export default function AmaraPage() {
         <div className="seeded-approval-banner">
           <div className="seeded-approval-banner__icon">!</div>
           <div>
-            <strong>Amara has lodged your application — your approval is needed</strong>
+            <strong>Amara has lodged your application. Your approval is needed.</strong>
             <p>
               Amara uploaded the INZ lodgement receipt on 25 Jul. Review the document below, then approve to release{" "}
               {formatMoney(seededMilestones.filing)} from escrow.
@@ -115,14 +118,14 @@ export default function AmaraPage() {
 
           {!seededApproved && (
             <section className="app-card seeded-approve-panel">
-              <div className="seeded-approve-panel__eyebrow">MILESTONE 2 — APPROVAL REQUIRED</div>
+              <div className="seeded-approve-panel__eyebrow">MILESTONE 2 · APPROVAL REQUIRED</div>
               <div className="seeded-approve-panel__doc">
                 <div className="seeded-approve-panel__doc-icon">📄</div>
                 <div>
                   <strong>INZ Lodgement Receipt</strong>
                   <p>Uploaded by {seededAdvisor.first} · 25 Jul 2026 · PDF, 84 KB</p>
                 </div>
-                <button className="secondary-button" type="button">
+                <button className="secondary-button" type="button" onClick={() => setDocOpen(true)}>
                   View document
                 </button>
               </div>
@@ -193,7 +196,14 @@ export default function AmaraPage() {
                 ? `${formatMoney(seededMilestones.consultation + seededMilestones.filing)} of ${formatMoney(seededAdvisor.fee)} released so far`
                 : `${formatMoney(seededMilestones.consultation)} of ${formatMoney(seededAdvisor.fee)} released so far`}
             </p>
-            <div className="case-contract">escrow contract {seededAdvisor.hash2} ✓</div>
+            <a
+              className="case-contract hash-link"
+              href={basescanAddr(seededAdvisor.hash2, seededAdvisor.hash2Full)}
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              escrow contract {seededAdvisor.hash2} ✓ ↗
+            </a>
           </section>
           <section className="app-card case-advisor-card">
             <div>
@@ -209,6 +219,135 @@ export default function AmaraPage() {
           </section>
         </aside>
       </div>
+
+      {approvalReceiptOpen && (
+        <div className="doc-modal-overlay" role="dialog" aria-modal="true" aria-label="Payment released">
+          <div className="doc-modal">
+            <div className="approval-receipt-badge">
+              <div className="approval-receipt-badge__icon">✓</div>
+              <div>
+                <strong>Payment released on-chain</strong>
+                <p>Funds moved from escrow to {seededAdvisor.first} instantly.</p>
+              </div>
+            </div>
+            <div className="approval-amount">
+              <span className="approval-amount__figure">{formatMoney(seededMilestones.filing)}</span>
+              <span className="approval-amount__label">Milestone 2 · Application lodged with INZ</span>
+            </div>
+            <div className="doc-modal__body">
+              <div className="doc-modal__meta-row">
+                <span>Released to</span>
+                <strong>{seededAdvisor.name}</strong>
+              </div>
+              <div className="doc-modal__meta-row">
+                <span>Remaining in escrow</span>
+                <strong>{formatMoney(seededMilestones.decision)}</strong>
+              </div>
+              <div className="doc-modal__meta-row">
+                <span>Escrow contract</span>
+                <a
+                  className="hash-link"
+                  href={basescanAddr(seededAdvisor.hash2, seededAdvisor.hash2Full)}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                >
+                  {seededAdvisor.hash2} ↗
+                </a>
+              </div>
+              <div className="doc-modal__meta-row">
+                <span>Network</span>
+                <a className="hash-link" href="https://sepolia.basescan.org" target="_blank" rel="noopener noreferrer">
+                  Base Sepolia ↗
+                </a>
+              </div>
+              <div className="doc-modal__meta-row">
+                <span>Time</span>
+                <strong>
+                  {new Date().toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" })}
+                </strong>
+              </div>
+            </div>
+            <div className="doc-modal__footer">
+              <a
+                className="secondary-button"
+                href={basescanAddr(seededAdvisor.hash2, seededAdvisor.hash2Full)}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                View on Base Sepolia ↗
+              </a>
+              <button className="app-primary-button" type="button" onClick={() => setApprovalReceiptOpen(false)}>
+                Done
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {docOpen && (
+        <div className="doc-modal-overlay" role="dialog" aria-modal="true" aria-label="INZ Lodgement Receipt">
+          <div className="doc-modal">
+            <div className="doc-modal__header">
+              <div>
+                <span className="doc-modal__eyebrow">INZ LODGEMENT RECEIPT</span>
+                <h2 className="doc-modal__title">Application Lodgement Confirmation</h2>
+              </div>
+              <button className="doc-modal__close" type="button" aria-label="Close" onClick={() => setDocOpen(false)}>
+                ✕
+              </button>
+            </div>
+
+            <div className="doc-modal__body">
+              <div className="doc-modal__meta-row">
+                <span>Reference number</span>
+                <strong className="receipt-mono">INZ-2026-AKL-447821</strong>
+              </div>
+              <div className="doc-modal__meta-row">
+                <span>Lodgement date</span>
+                <strong>25 July 2026</strong>
+              </div>
+              <div className="doc-modal__meta-row">
+                <span>Visa type</span>
+                <strong>Accredited Employer Work Visa (AEWV)</strong>
+              </div>
+              <div className="doc-modal__meta-row">
+                <span>Applicant</span>
+                <strong>You (the applicant)</strong>
+              </div>
+              <div className="doc-modal__meta-row">
+                <span>Adviser</span>
+                <strong>{seededAdvisor.name}</strong>
+              </div>
+              <div className="doc-modal__divider" />
+              <p className="doc-modal__body-text">
+                This confirms that Immigration New Zealand has received a completed visa application on behalf of the
+                above-named applicant. The application is now under assessment. You will be contacted if further
+                information is required.
+              </p>
+              <p className="doc-modal__body-text">
+                Processing times for Accredited Employer Work Visas are currently <strong>5–8 weeks</strong> from the
+                date of lodgement. Do not make travel arrangements until a decision has been received.
+              </p>
+              <div className="doc-modal__stamp">
+                <span className="doc-modal__stamp-mark">INZ</span>
+                <div>
+                  <strong>Immigration New Zealand</strong>
+                  <p>Auckland Processing Centre · electronically lodged</p>
+                </div>
+              </div>
+            </div>
+
+            <div className="doc-modal__footer">
+              <button className="secondary-button" type="button">
+                Download PDF
+              </button>
+              <button className="app-primary-button" type="button" onClick={() => setDocOpen(false)}>
+                Close
+              </button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

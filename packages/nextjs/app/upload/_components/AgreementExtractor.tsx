@@ -73,7 +73,7 @@ export function AgreementExtractor() {
         <div className="card-body gap-4">
           <h2 className="card-title text-lg">Upload Fee Agreement</h2>
           <p className="text-sm text-base-content/70">
-            Upload the signed fee agreement PDF. AdVisa will extract the milestones and amounts automatically — no
+            Upload the signed fee agreement PDF. AdVisa will extract the milestones and amounts automatically · no
             manual data entry.
           </p>
 
@@ -119,7 +119,7 @@ export function AgreementExtractor() {
       {/* Results */}
       {result && (
         <>
-          {/* Red flags — shown first so they're impossible to miss */}
+          {/* Red flags · shown first so they're impossible to miss */}
           {result.redFlags.length > 0 && (
             <div className="card bg-base-100 border border-error/40 shadow-sm">
               <div className="card-body gap-3">

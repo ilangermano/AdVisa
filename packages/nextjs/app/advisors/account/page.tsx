@@ -128,7 +128,7 @@ export default function AccountPage() {
         <div className="transaction-list">
           <div className="transaction-item">
             <div>
-              <strong>Escrow deposit — {seededAdvisor.name}</strong>
+              <strong>Escrow deposit · {seededAdvisor.name}</strong>
               <span>18 Jul 2026 · {seededAdvisor.agreement.visaType}</span>
             </div>
             <strong className="transaction-item__amount transaction-item__amount--out">
@@ -137,7 +137,7 @@ export default function AccountPage() {
           </div>
           <div className="transaction-item">
             <div>
-              <strong>Milestone 1 released — Consultation</strong>
+              <strong>Milestone 1 released · Consultation</strong>
               <span>18 Jul 2026 · from escrow to {seededAdvisor.first}</span>
             </div>
             <strong className="transaction-item__amount transaction-item__amount--neutral">
@@ -147,7 +147,7 @@ export default function AccountPage() {
           {paid && paidSlug && (
             <div className="transaction-item">
               <div>
-                <strong>Escrow deposit — your adviser</strong>
+                <strong>Escrow deposit · your adviser</strong>
                 <span>
                   Today · via {localStorage.getItem("advisa_last_method") === "crypto" ? "dNZD wallet" : "card"}
                 </span>

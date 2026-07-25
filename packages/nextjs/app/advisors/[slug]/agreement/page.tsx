@@ -5,6 +5,8 @@ import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import {
   type Advisor,
+  basescanAddr,
+  basescanTx,
   formatMoney,
   getAdvisorBySlug,
   getAdvisorSlug,
@@ -29,12 +31,24 @@ const LegalDocument = ({ advisor, milestones }: { advisor: Advisor; milestones: 
           <span className="legal-doc__party-label">IMMIGRATION ADVISER</span>
           <strong>{advisor.name}</strong>
           <span>{advisor.title}</span>
-          <span>IAA Licence · verified {advisor.hash1}</span>
+          <a
+            className="hash-link"
+            href={basescanTx(advisor.hash1, advisor.hash1Full)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
+            IAA Licence · verified {advisor.hash1} ↗
+          </a>
         </div>
         <div>
           <span className="legal-doc__party-label">CLIENT</span>
           <strong>You (the applicant)</strong>
-          <span>Identity verified via Privy</span>
+          <span>
+            Identity verified via{" "}
+            <a href="https://privy.io" target="_blank" rel="noopener noreferrer" className="privy-inline-link">
+              Privy
+            </a>
+          </span>
           <span>Wallet: escrow counterparty</span>
         </div>
       </div>
@@ -49,7 +63,7 @@ const LegalDocument = ({ advisor, milestones }: { advisor: Advisor; milestones: 
       </p>
       <p>
         Services do not include legal representation in any appeal, review, or Tribunal proceeding. Immigration advice
-        does not guarantee a visa outcome — INZ retains sole discretion over all decisions.
+        does not guarantee a visa outcome · INZ retains sole discretion over all decisions.
       </p>
     </div>
     <div className="legal-doc__section">
@@ -110,7 +124,7 @@ const LegalDocument = ({ advisor, milestones }: { advisor: Advisor; milestones: 
       <h3>6. Code of Conduct</h3>
       <p>
         {advisor.name} is bound by the Immigration Advisers Code of Conduct 2014. AdVisa is a payment and verification
-        platform only — it is not an immigration advice service.
+        platform only · it is not an immigration advice service.
       </p>
     </div>
     <div className="legal-doc__section">
@@ -157,10 +171,15 @@ export default function AgreementPage() {
           </p>
         </div>
         {signState === "signed" && (
-          <div className="chain-badge chain-badge--small">
+          <a
+            className="chain-badge chain-badge--small chain-badge--link"
+            href={basescanTx(advisor.hash1, advisor.hash1Full)}
+            target="_blank"
+            rel="noopener noreferrer"
+          >
             <span className="verified-dot" />
-            HASH ANCHORED ON-CHAIN
-          </div>
+            HASH ANCHORED ON-CHAIN ↗
+          </a>
         )}
       </div>
 
@@ -183,7 +202,7 @@ export default function AgreementPage() {
         {advisor.agreement.redFlags.length === 0 ? (
           <div className="agreement-no-flags">
             <span>✓</span>
-            No red flags detected — standard milestone-based fee structure.
+            No red flags detected · standard milestone-based fee structure.
           </div>
         ) : (
           <ul className="agreement-flags-list">
@@ -245,7 +264,7 @@ export default function AgreementPage() {
               <div>
                 <strong>Agreement signed and sealed</strong>
                 <p>
-                  Both you and {advisor.first} have signed. This document is now locked — it cannot be changed by
+                  Both you and {advisor.first} have signed. This document is now locked · it cannot be changed by
                   anyone, including us.
                 </p>
                 <div className="signed-meta">
@@ -253,10 +272,15 @@ export default function AgreementPage() {
                     <span className="signed-meta__pill">Lumin Sign</span>
                     <span>Ref: LMN-{advisor.hash2.slice(2, 6).toUpperCase()}-2026</span>
                   </div>
-                  <div className="signed-meta__hash">
-                    Hash {advisor.hash2} · anchored on Base Sepolia ·{" "}
-                    {new Date().toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" })}
-                  </div>
+                  <a
+                    className="signed-meta__hash hash-link"
+                    href={basescanTx(advisor.hash1, advisor.hash1Full)}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                  >
+                    Hash {advisor.hash2} · Base Sepolia ·{" "}
+                    {new Date().toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" })} ↗
+                  </a>
                 </div>
               </div>
             </div>
@@ -267,7 +291,7 @@ export default function AgreementPage() {
               Fund escrow →
             </Link>
             <p className="agreement-actions__sub">
-              Agreement locked. Funds go to escrow — not to {advisor.first} — until each milestone is verified.
+              Agreement locked. Funds go to escrow · not to {advisor.first} · until each milestone is verified.
             </p>
           </div>
         )}
