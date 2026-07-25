@@ -5,7 +5,16 @@ import { useRouter } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
 import { type Advisor, advisors, formatMoney, getMilestones, getRateColor } from "~~/components/advisa/advisors";
 
-type Screen = "market" | "profile" | "agreement" | "pay" | "receipt" | "case";
+type Screen =
+  | "market"
+  | "profile"
+  | "agreement"
+  | "pay"
+  | "receipt"
+  | "applications"
+  | "case"
+  | "seeded-case"
+  | "user-profile";
 type PaymentMethod = "card" | "crypto";
 
 const filters = ["All", "Work", "Student", "Family", "Tourist", "Permanent residency"];
@@ -792,11 +801,11 @@ const CaseScreen = ({ advisor, paid, goToMarket }: { advisor: Advisor; paid: boo
 const ReceiptScreen = ({
   advisor,
   method,
-  goToCase,
+  goToApplications,
 }: {
   advisor: Advisor;
   method: PaymentMethod;
-  goToCase: () => void;
+  goToApplications: () => void;
 }) => {
   const milestones = getMilestones(advisor);
   const txHash = `0x${advisor.hash1.slice(2, 6)}…${advisor.hash2.slice(-4)}`;
@@ -897,11 +906,437 @@ const ReceiptScreen = ({
         </ol>
       </section>
 
-      <button className="app-primary-button app-primary-button--payment" type="button" onClick={goToCase}>
-        Go to My Case →
+      <button className="app-primary-button app-primary-button--payment" type="button" onClick={goToApplications}>
+        Go to My Applications →
       </button>
       <div className="payment-reassurance">
         <span>🔒 Your money cannot move without a verified milestone</span>
+      </div>
+    </div>
+  );
+};
+
+const seededAdvisor = advisors[1]; // Amara Osei, AEWV, $1,800
+const seededMilestones = getMilestones(seededAdvisor);
+
+const SeededCaseScreen = ({
+  approved,
+  onApprove,
+  goBack,
+}: {
+  approved: boolean;
+  onApprove: () => void;
+  goBack: () => void;
+}) => {
+  const [approving, setApproving] = useState(false);
+
+  const handleApprove = () => {
+    setApproving(true);
+    setTimeout(() => {
+      onApprove();
+      setApproving(false);
+    }, 1600);
+  };
+
+  return (
+    <div className="app-screen app-screen--case">
+      <button className="back-button" type="button" onClick={goBack}>
+        ← Back to My Applications
+      </button>
+      <div className="case-heading">
+        <div>
+          <h1>Your engagement</h1>
+          <p>
+            {seededAdvisor.specialty} visa · {seededAdvisor.countries} · with {seededAdvisor.name}
+          </p>
+        </div>
+        <span
+          className={
+            approved ? "case-status-badge case-status-badge--ok" : "case-status-badge case-status-badge--action"
+          }
+        >
+          {approved ? "Step 2 approved ✓" : "Action needed · step 2 of 3"}
+        </span>
+      </div>
+
+      {!approved && (
+        <div className="seeded-approval-banner">
+          <div className="seeded-approval-banner__icon">!</div>
+          <div>
+            <strong>Amara has lodged your application — your approval is needed</strong>
+            <p>
+              Amara uploaded the INZ lodgement receipt on 25 Jul. Review the document below, then approve to release{" "}
+              {formatMoney(seededMilestones.filing)} from escrow.
+            </p>
+          </div>
+        </div>
+      )}
+
+      <div className="case-layout">
+        <div className="case-main">
+          <section className="app-card progress-card">
+            <h2>Progress</h2>
+            <div className="timeline">
+              <div className="timeline__item">
+                <div className="timeline__rail">
+                  <span className="timeline__dot timeline__dot--done">✓</span>
+                  <span className="timeline__line timeline__line--done" />
+                </div>
+                <div>
+                  <strong>Consultation done</strong>
+                  <p>
+                    You met {seededAdvisor.first} on 18 Jul and agreed the plan.{" "}
+                    {formatMoney(seededMilestones.consultation)} released.
+                  </p>
+                </div>
+              </div>
+              <div className="timeline__item">
+                <div className="timeline__rail">
+                  <span
+                    className={approved ? "timeline__dot timeline__dot--done" : "timeline__dot timeline__dot--action"}
+                  >
+                    {approved ? "✓" : "!"}
+                  </span>
+                  <span className={approved ? "timeline__line timeline__line--done" : "timeline__line"} />
+                </div>
+                <div>
+                  <strong>Application lodged with INZ</strong>
+                  {approved ? (
+                    <p>
+                      Lodgement receipt verified. {formatMoney(seededMilestones.filing)} released to{" "}
+                      {seededAdvisor.first}.
+                    </p>
+                  ) : (
+                    <p>
+                      Amara uploaded the INZ lodgement receipt on 25 Jul.{" "}
+                      <strong className="timeline__action-needed">
+                        Your approval needed to release {formatMoney(seededMilestones.filing)}.
+                      </strong>
+                    </p>
+                  )}
+                </div>
+              </div>
+              <div className="timeline__item timeline__item--future">
+                <div className="timeline__rail">
+                  <span className="timeline__dot timeline__dot--future">3</span>
+                </div>
+                <div>
+                  <strong>INZ outcome letter</strong>
+                  <p>Funds move when the adviser uploads the INZ outcome letter.</p>
+                </div>
+              </div>
+            </div>
+          </section>
+
+          {!approved && (
+            <section className="app-card seeded-approve-panel">
+              <div className="seeded-approve-panel__eyebrow">MILESTONE 2 — APPROVAL REQUIRED</div>
+              <div className="seeded-approve-panel__doc">
+                <div className="seeded-approve-panel__doc-icon">📄</div>
+                <div>
+                  <strong>INZ Lodgement Receipt</strong>
+                  <p>Uploaded by {seededAdvisor.first} · 25 Jul 2026 · PDF, 84 KB</p>
+                </div>
+                <button className="secondary-button" type="button">
+                  View document
+                </button>
+              </div>
+              {approving ? (
+                <div className="pay-processing" style={{ padding: "28px 0 8px" }}>
+                  <div className="pay-processing__spinner" aria-hidden="true" />
+                  <strong>Releasing {formatMoney(seededMilestones.filing)}…</strong>
+                </div>
+              ) : (
+                <>
+                  <button className="app-primary-button app-primary-button--wide" type="button" onClick={handleApprove}>
+                    Approve &amp; release {formatMoney(seededMilestones.filing)} →
+                  </button>
+                  <p className="agreement-actions__sub">
+                    Once approved, {formatMoney(seededMilestones.filing)} is released to {seededAdvisor.first} and your
+                    remaining {formatMoney(seededMilestones.decision)} stays protected until the final outcome.
+                  </p>
+                </>
+              )}
+            </section>
+          )}
+
+          <section className="app-card updates-card">
+            <h2>Latest updates</h2>
+            <div>
+              <p>
+                <time>Jul 25</time>
+                <span>INZ lodgement receipt uploaded. Awaiting your approval.</span>
+              </p>
+              <p>
+                <time>Jul 22</time>
+                <span>All documents reviewed and application submitted to INZ.</span>
+              </p>
+              <p>
+                <time>Jul 18</time>
+                <span>Consultation completed. {formatMoney(seededMilestones.consultation)} released from escrow.</span>
+              </p>
+            </div>
+          </section>
+        </div>
+
+        <aside className="case-sidebar">
+          <section className="case-escrow-card">
+            <div className="dark-eyebrow">YOUR ESCROW · {formatMoney(seededAdvisor.fee)}</div>
+            <div className="case-milestones">
+              <div>
+                <span className="milestone-check milestone-check--gradient">✓</span>
+                Consultation · {formatMoney(seededMilestones.consultation)} released
+              </div>
+              <div>
+                {approved ? (
+                  <span className="milestone-check milestone-check--gradient">✓</span>
+                ) : (
+                  <span className="milestone-empty milestone-empty--action">!</span>
+                )}
+                Filing · {formatMoney(seededMilestones.filing)} {approved ? "released" : "awaiting approval"}
+              </div>
+              <div>
+                <span className="milestone-empty" />
+                Outcome · {formatMoney(seededMilestones.decision)} held
+              </div>
+            </div>
+            <div className="case-progress">
+              <span style={{ width: approved ? "66%" : "33%" }} />
+            </div>
+            <p>
+              {approved
+                ? `${formatMoney(seededMilestones.consultation + seededMilestones.filing)} of ${formatMoney(seededAdvisor.fee)} released so far`
+                : `${formatMoney(seededMilestones.consultation)} of ${formatMoney(seededAdvisor.fee)} released so far`}
+            </p>
+            <div className="case-contract">escrow contract {seededAdvisor.hash2} ✓</div>
+          </section>
+          <section className="app-card case-advisor-card">
+            <div>
+              <Avatar size="small" />
+              <p>
+                <strong>{seededAdvisor.name}</strong>
+                <span>● Usually replies in {seededAdvisor.reply}</span>
+              </p>
+            </div>
+            <button className="secondary-button secondary-button--wide" type="button">
+              Message {seededAdvisor.first}
+            </button>
+          </section>
+        </aside>
+      </div>
+    </div>
+  );
+};
+
+const ApplicationsScreen = ({
+  paid,
+  seededApproved,
+  hasNotif,
+  goToSeeded,
+  goToDemoCase,
+  goToMarket,
+}: {
+  paid: boolean;
+  seededApproved: boolean;
+  hasNotif: boolean;
+  goToSeeded: () => void;
+  goToDemoCase: () => void;
+  goToMarket: () => void;
+}) => (
+  <div className="app-screen app-screen--applications">
+    <h1>My Applications</h1>
+    <p className="market-intro">All your active and recent engagements with immigration advisers.</p>
+
+    <div className="applications-list">
+      {/* Seeded application — always shown */}
+      <article className="app-item" onClick={goToSeeded}>
+        <div className="app-item__left">
+          <Avatar size="small" />
+          <div>
+            <div className="app-item__name-row">
+              <strong>{seededAdvisor.name}</strong>
+              {hasNotif && <span className="app-item__notif-badge">Action needed</span>}
+            </div>
+            <span className="app-item__meta">
+              {seededAdvisor.specialty} visa · {seededAdvisor.countries} · {formatMoney(seededAdvisor.fee)}
+            </span>
+          </div>
+        </div>
+        <div className="app-item__right">
+          <span
+            className={
+              seededApproved ? "app-status-badge app-status-badge--ok" : "app-status-badge app-status-badge--action"
+            }
+          >
+            {seededApproved ? "Step 2 approved" : "Pending approval"}
+          </span>
+          <span className="app-item__chevron">›</span>
+        </div>
+      </article>
+
+      {/* Demo application — shown after payment */}
+      {paid && (
+        <article className="app-item" onClick={goToDemoCase}>
+          <div className="app-item__left">
+            <Avatar size="small" />
+            <div>
+              <div className="app-item__name-row">
+                <strong>{advisors[0].name}</strong>
+              </div>
+              <span className="app-item__meta">
+                {advisors[0].specialty} visa · {advisors[0].countries} · {formatMoney(advisors[0].fee)}
+              </span>
+            </div>
+          </div>
+          <div className="app-item__right">
+            <span className="app-status-badge app-status-badge--progress">In progress · step 2</span>
+            <span className="app-item__chevron">›</span>
+          </div>
+        </article>
+      )}
+    </div>
+
+    <div className="applications-footer">
+      <p>Looking for a new adviser?</p>
+      <button className="secondary-button" type="button" onClick={goToMarket}>
+        Browse advisers →
+      </button>
+    </div>
+  </div>
+);
+
+const UserProfileScreen = ({ displayEmail, goBack }: { displayEmail: string; goBack: () => void }) => {
+  const [name, setName] = useState("Your Name");
+  const [email, setEmail] = useState(displayEmail !== "Account" ? displayEmail : "");
+  const [phone, setPhone] = useState("");
+  const [walletEmail, setWalletEmail] = useState("");
+  const [saved, setSaved] = useState(false);
+
+  const handleSave = () => {
+    setSaved(true);
+    setTimeout(() => setSaved(false), 2000);
+  };
+
+  return (
+    <div className="app-screen app-screen--user-profile">
+      <button className="back-button" type="button" onClick={goBack}>
+        ← Back
+      </button>
+      <div className="user-profile-layout">
+        <div className="user-profile-main">
+          <section className="app-card user-section">
+            <div className="profile-hero">
+              <span className="profile-initials-avatar">
+                {name
+                  .split(" ")
+                  .map(w => w[0])
+                  .join("")
+                  .slice(0, 2)
+                  .toUpperCase() || "?"}
+              </span>
+              <div>
+                <h1>{name || "Your Name"}</h1>
+                <p>{email || displayEmail}</p>
+              </div>
+            </div>
+          </section>
+
+          <section className="app-card user-section">
+            <h2>Personal information</h2>
+            <div className="user-form">
+              <div className="pay-field">
+                <label className="pay-label">Full name</label>
+                <input className="pay-input" value={name} onChange={e => setName(e.target.value)} />
+              </div>
+              <div className="pay-field">
+                <label className="pay-label">Email address</label>
+                <input
+                  className="pay-input"
+                  type="email"
+                  value={email}
+                  onChange={e => setEmail(e.target.value)}
+                  placeholder="you@email.com"
+                />
+              </div>
+              <div className="pay-field">
+                <label className="pay-label">Phone number</label>
+                <input
+                  className="pay-input"
+                  type="tel"
+                  value={phone}
+                  onChange={e => setPhone(e.target.value)}
+                  placeholder="+64 21 000 0000"
+                />
+              </div>
+              <div className="pay-field">
+                <label className="pay-label">Wallet email (for crypto payments)</label>
+                <input
+                  className="pay-input"
+                  type="email"
+                  value={walletEmail}
+                  onChange={e => setWalletEmail(e.target.value)}
+                  placeholder="wallet@email.com"
+                />
+              </div>
+              <button className="app-primary-button" type="button" onClick={handleSave}>
+                {saved ? "Saved ✓" : "Save changes"}
+              </button>
+            </div>
+          </section>
+
+          <section className="app-card user-section">
+            <h2>Payment methods</h2>
+            <div className="saved-methods">
+              <div className="saved-method">
+                <div className="saved-method__icon">💳</div>
+                <div>
+                  <strong>Visa ending 4242</strong>
+                  <span>Expires 12 / 26</span>
+                </div>
+                <span className="saved-method__badge">Default</span>
+              </div>
+              <div className="saved-method">
+                <div className="saved-method__icon">🔗</div>
+                <div>
+                  <strong>Wallet · 0x71C7…3Fd3</strong>
+                  <span>Base Sepolia · dNZD</span>
+                </div>
+              </div>
+            </div>
+            <div className="saved-methods-actions">
+              <button className="secondary-button" type="button">
+                + Add card
+              </button>
+              <button className="secondary-button" type="button">
+                + Add wallet
+              </button>
+            </div>
+          </section>
+
+          <section className="app-card user-section">
+            <h2>Transaction history</h2>
+            <div className="transaction-list">
+              <div className="transaction-item">
+                <div>
+                  <strong>Escrow deposit — {seededAdvisor.name}</strong>
+                  <span>18 Jul 2026 · {seededAdvisor.agreement.visaType}</span>
+                </div>
+                <strong className="transaction-item__amount transaction-item__amount--out">
+                  −{formatMoney(seededAdvisor.fee)}
+                </strong>
+              </div>
+              <div className="transaction-item">
+                <div>
+                  <strong>Milestone 1 released — Consultation</strong>
+                  <span>18 Jul 2026 · from escrow to {seededAdvisor.first}</span>
+                </div>
+                <strong className="transaction-item__amount transaction-item__amount--neutral">
+                  {formatMoney(seededMilestones.consultation)}
+                </strong>
+              </div>
+            </div>
+          </section>
+        </div>
       </div>
     </div>
   );
@@ -915,12 +1350,16 @@ const AdvisorsPage = () => {
   const [selectedIndex, setSelectedIndex] = useState(1);
   const [paymentMethod, setPaymentMethod] = useState<PaymentMethod>("card");
   const [paid, setPaid] = useState(false);
+  const [seededApproved, setSeededApproved] = useState(false);
+  const [notifOpen, setNotifOpen] = useState(false);
+  const [prevScreen, setPrevScreen] = useState<Screen>("market");
 
   const displayEmail =
     user?.google?.email ?? user?.email?.address ?? (user?.phone?.number ? user.phone.number : null) ?? "Account";
 
   const handleSignOut = async () => {
     setPaid(false);
+    setSeededApproved(false);
     setScreen("market");
     await logout();
     router.push("/");
@@ -928,7 +1367,9 @@ const AdvisorsPage = () => {
 
   const filteredAdvisors = advisors.filter(advisor => filter === "All" || advisor.specialty === filter);
   const selectedAdvisor = advisors[selectedIndex];
-  const showMarketTab = screen !== "case" && screen !== "receipt";
+  const showMarketTab =
+    screen !== "case" && screen !== "receipt" && screen !== "applications" && screen !== "seeded-case";
+  const notifCount = seededApproved ? 0 : 1;
 
   const openAdvisor = (advisor: Advisor) => {
     setSelectedIndex(advisors.indexOf(advisor));
@@ -957,16 +1398,81 @@ const AdvisorsPage = () => {
             Find advisers
           </button>
           <button
-            className={screen === "case" || screen === "receipt" ? "app-tab app-tab--active" : "app-tab"}
+            className={
+              screen === "applications" || screen === "case" || screen === "receipt" || screen === "seeded-case"
+                ? "app-tab app-tab--active"
+                : "app-tab"
+            }
             type="button"
-            onClick={() => changeScreen("case")}
+            onClick={() => changeScreen("applications")}
           >
-            My case
+            My Applications
+            {notifCount > 0 && <span className="app-tab__badge">{notifCount}</span>}
           </button>
         </nav>
         <div className="app-topbar__help">
-          <span>{displayEmail}</span>
-          <Avatar size="small" />
+          <div className="notif-wrapper">
+            <button
+              className="notif-bell-button"
+              type="button"
+              aria-label="Notifications"
+              onClick={() => setNotifOpen(o => !o)}
+            >
+              <svg
+                width="18"
+                height="18"
+                viewBox="0 0 24 24"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+                aria-hidden="true"
+              >
+                <path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9" />
+                <path d="M13.73 21a2 2 0 0 1-3.46 0" />
+              </svg>
+              {notifCount > 0 && <span className="notif-badge">{notifCount}</span>}
+            </button>
+            {notifOpen && (
+              <div className="notif-dropdown" role="menu">
+                <div className="notif-dropdown__header">Notifications</div>
+                {notifCount === 0 ? (
+                  <div className="notif-empty">All caught up ✓</div>
+                ) : (
+                  <button
+                    className="notif-item"
+                    type="button"
+                    role="menuitem"
+                    onClick={() => {
+                      setNotifOpen(false);
+                      changeScreen("seeded-case");
+                    }}
+                  >
+                    <div className="notif-item__dot" />
+                    <div>
+                      <strong>Action needed</strong>
+                      <p>
+                        Amara Osei uploaded your INZ lodgement receipt — approve to release{" "}
+                        {formatMoney(seededMilestones.filing)}.
+                      </p>
+                    </div>
+                  </button>
+                )}
+              </div>
+            )}
+          </div>
+          <button
+            className="app-topbar__profile-btn"
+            type="button"
+            onClick={() => {
+              setPrevScreen(screen);
+              changeScreen("user-profile");
+            }}
+          >
+            <span>{displayEmail}</span>
+            <Avatar size="small" />
+          </button>
           <button className="app-signout-button" type="button" onClick={handleSignOut}>
             Sign out
           </button>
@@ -1034,10 +1540,34 @@ const AdvisorsPage = () => {
         />
       )}
       {screen === "receipt" && (
-        <ReceiptScreen advisor={selectedAdvisor} method={paymentMethod} goToCase={() => changeScreen("case")} />
+        <ReceiptScreen
+          advisor={selectedAdvisor}
+          method={paymentMethod}
+          goToApplications={() => changeScreen("applications")}
+        />
+      )}
+      {screen === "applications" && (
+        <ApplicationsScreen
+          paid={paid}
+          seededApproved={seededApproved}
+          hasNotif={!seededApproved}
+          goToSeeded={() => changeScreen("seeded-case")}
+          goToDemoCase={() => changeScreen("case")}
+          goToMarket={() => changeScreen("market")}
+        />
+      )}
+      {screen === "seeded-case" && (
+        <SeededCaseScreen
+          approved={seededApproved}
+          onApprove={() => setSeededApproved(true)}
+          goBack={() => changeScreen("applications")}
+        />
       )}
       {screen === "case" && (
         <CaseScreen advisor={selectedAdvisor} paid={paid} goToMarket={() => changeScreen("market")} />
+      )}
+      {screen === "user-profile" && (
+        <UserProfileScreen displayEmail={displayEmail} goBack={() => changeScreen(prevScreen)} />
       )}
     </div>
   );
