@@ -314,6 +314,267 @@ button {
   box-shadow: 0 10px 28px rgb(0 0 0 / 22%);
 }
 
+/* Sign-in page */
+.signin-page {
+  min-height: 100vh;
+  background: #f7f7f7;
+  display: flex;
+  flex-direction: column;
+}
+
+.signin-nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  border-bottom: 1px solid #e4e4e4;
+  background: rgb(247 247 247 / 96%);
+  padding: 18px 56px;
+  backdrop-filter: blur(12px);
+}
+
+.signin-nav__back {
+  color: #4d4d4d;
+  font-size: 14px;
+  font-weight: 500;
+  transition: color 150ms ease;
+}
+
+.signin-nav__back:hover {
+  color: #111111;
+}
+
+.signin-main {
+  flex: 1;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 56px 24px;
+}
+
+.signin-card {
+  width: 100%;
+  max-width: 480px;
+}
+
+.signin-eyebrow {
+  color: #767676;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 11.5px;
+  font-weight: 500;
+  letter-spacing: 0.1em;
+  margin-bottom: 10px;
+}
+
+.signin-heading {
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-size: 34px;
+  font-weight: 600;
+  line-height: 1.15;
+  margin-bottom: 28px;
+  letter-spacing: -0.02em;
+}
+
+.signin-toggle {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0;
+  border: 1.5px solid #e4e4e4;
+  border-radius: 999px;
+  background: #ffffff;
+  padding: 4px;
+  margin-bottom: 28px;
+}
+
+.signin-toggle__btn {
+  border: 0;
+  border-radius: 999px;
+  background: transparent;
+  color: #767676;
+  padding: 11px 0;
+  font-size: 14.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition:
+    background 180ms ease,
+    color 180ms ease;
+}
+
+.signin-toggle__btn--active {
+  background: #1a1a1a;
+  color: #ffffff;
+}
+
+/* Migrant panel */
+.signin-panel {
+  border-radius: 16px;
+  padding: 28px;
+  animation: fadeUp 0.2s ease;
+}
+
+.signin-panel--migrant {
+  border: 1.5px solid #e4e4e4;
+  background: #ffffff;
+}
+
+.signin-panel--migrant .chain-badge {
+  margin-bottom: 20px;
+}
+
+.signin-panel__title {
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-size: 22px;
+  font-weight: 600;
+  line-height: 1.25;
+  margin-bottom: 12px;
+  letter-spacing: -0.01em;
+}
+
+.signin-panel__title--light {
+  color: #f7f7f7;
+}
+
+.signin-panel__copy {
+  color: #4d4d4d;
+  font-size: 14.5px;
+  line-height: 1.65;
+  margin-bottom: 20px;
+}
+
+.signin-panel__copy--light {
+  color: #a9a9a9;
+}
+
+.signin-trust-list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 24px;
+  display: flex;
+  flex-direction: column;
+  gap: 11px;
+}
+
+.signin-trust-list li {
+  display: flex;
+  align-items: flex-start;
+  gap: 10px;
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.45;
+  color: #2e2e2e;
+}
+
+.signin-trust-list--dark li {
+  color: #c8c8c8;
+}
+
+.signin-trust-check {
+  display: inline-flex;
+  width: 18px;
+  height: 18px;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: 50%;
+  background: #efefef;
+  color: #1a1a1a;
+  font-size: 10px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.signin-trust-check--dark {
+  background: rgb(255 255 255 / 12%);
+  color: #f7f7f7;
+}
+
+.signin-panel__cta {
+  width: 100%;
+  padding: 15px 0;
+  font-size: 15.5px;
+  box-shadow: 0 8px 24px rgb(0 0 0 / 20%);
+}
+
+.signin-panel__cta--outline {
+  border: 1.5px solid rgb(255 255 255 / 20%);
+  background: transparent;
+  color: rgb(255 255 255 / 40%);
+  box-shadow: none;
+  cursor: not-allowed;
+}
+
+.signin-panel__cta--outline:hover {
+  background: transparent;
+}
+
+.signin-panel__sub {
+  text-align: center;
+  color: #767676;
+  font-size: 12.5px;
+  margin-top: 12px;
+}
+
+/* Adviser panel — deliberately dark to be visually distinct */
+.signin-panel--adviser {
+  background: #111111;
+  border: 1.5px solid #2a2a2a;
+}
+
+.signin-panel--adviser .chain-badge {
+  margin-bottom: 20px;
+}
+
+.chain-badge--dark {
+  background: rgb(255 255 255 / 8%);
+  border-color: rgb(255 255 255 / 12%);
+  color: #a9a9a9;
+}
+
+.verified-dot--light {
+  background: #a9a9a9;
+}
+
+.signin-coming-soon {
+  border-top: 1px solid #2a2a2a;
+  padding-top: 20px;
+  margin-top: 4px;
+}
+
+.signin-coming-badge {
+  display: inline-flex;
+  align-items: center;
+  border-radius: 999px;
+  background: rgb(255 255 255 / 10%);
+  color: #a9a9a9;
+  padding: 5px 14px;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.06em;
+  margin-bottom: 10px;
+}
+
+.signin-coming-soon > p {
+  color: #565656;
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin-bottom: 16px;
+}
+
+@media (max-width: 560px) {
+  .signin-nav {
+    padding: 14px 20px;
+  }
+
+  .signin-main {
+    padding: 36px 16px;
+    align-items: flex-start;
+  }
+
+  .signin-heading {
+    font-size: 28px;
+  }
+}
+
 /* Role picker modal */
 .role-modal-backdrop {
   position: fixed;

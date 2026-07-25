@@ -1,6 +1,5 @@
 "use client";
 
-import { useState } from "react";
 import Link from "next/link";
 import { usePrivy } from "@privy-io/react-auth";
 import { AdvisaLogo } from "~~/components/advisa/AdvisaLogo";
@@ -35,52 +34,11 @@ const tickerItems = [
   "CITIZENSHIP",
 ];
 
-const RoleModal = ({ onClose, onMigrant }: { onClose: () => void; onMigrant: () => void }) => (
-  <div className="role-modal-backdrop" onClick={onClose} role="dialog" aria-modal="true" aria-label="Choose your role">
-    <div className="role-modal" onClick={e => e.stopPropagation()}>
-      <div className="role-modal__header">
-        <AdvisaLogo />
-        <button className="role-modal__close" type="button" onClick={onClose} aria-label="Close">
-          ✕
-        </button>
-      </div>
-      <h2 className="role-modal__title">How are you using Advisa?</h2>
-      <p className="role-modal__sub">Choose your role to continue.</p>
-
-      <div className="role-modal__cards">
-        <button className="role-card role-card--migrant" type="button" onClick={onMigrant}>
-          <span className="role-card__icon">🌏</span>
-          <strong>I&apos;m a migrant</strong>
-          <span>Find a licensed adviser, pay in escrow, and track your visa case end-to-end.</span>
-          <span className="role-card__cta">Continue →</span>
-        </button>
-
-        <div className="role-card role-card--adviser" aria-disabled="true">
-          <span className="role-card__icon">📋</span>
-          <strong>I&apos;m an adviser</strong>
-          <span>Manage client engagements, upload documents, and receive milestone payments.</span>
-          <span className="role-card__coming">Coming soon</span>
-        </div>
-      </div>
-    </div>
-  </div>
-);
-
 export const LandingPage = () => {
-  const { login, authenticated } = usePrivy();
-  const [showRoleModal, setShowRoleModal] = useState(false);
-
-  const openRoleModal = () => setShowRoleModal(true);
-  const closeRoleModal = () => setShowRoleModal(false);
-  const handleMigrantLogin = () => {
-    closeRoleModal();
-    login();
-  };
+  const { authenticated } = usePrivy();
 
   return (
     <div className="landing-page">
-      {showRoleModal && <RoleModal onClose={closeRoleModal} onMigrant={handleMigrantLogin} />}
-
       <header className="landing-nav">
         <AdvisaLogo />
         <nav className="landing-nav__links" aria-label="Main navigation">
@@ -95,17 +53,13 @@ export const LandingPage = () => {
               Go to app
             </Link>
           ) : (
-            <button className="landing-nav__signin" onClick={openRoleModal} type="button">
+            <Link className="landing-nav__signin" href="/sign-in">
               Sign in
-            </button>
+            </Link>
           )}
-          <button
-            className="pill-button pill-button--small"
-            onClick={authenticated ? undefined : openRoleModal}
-            type="button"
-          >
+          <Link className="pill-button pill-button--small" href={authenticated ? "/advisors" : "/sign-in"}>
             Get started
-          </button>
+          </Link>
         </div>
       </header>
 
@@ -122,15 +76,9 @@ export const LandingPage = () => {
               and pay into escrow that releases only as your case moves forward.
             </p>
             <div className="landing-hero__actions">
-              {authenticated ? (
-                <Link className="pill-button pill-button--hero" href="/advisors">
-                  Browse advisors
-                </Link>
-              ) : (
-                <button className="pill-button pill-button--hero" onClick={openRoleModal} type="button">
-                  Browse advisors
-                </button>
-              )}
+              <Link className="pill-button pill-button--hero" href={authenticated ? "/advisors" : "/sign-in"}>
+                Browse advisors
+              </Link>
               <Link className="pill-button pill-button--outline pill-button--hero" href="#how-it-works">
                 See how it works
               </Link>
@@ -274,13 +222,9 @@ export const LandingPage = () => {
         <section className="landing-cta">
           <h2>Start with a conversation, not a payment.</h2>
           <p>Browse verified advisors, book a consultation, and only pay once you&apos;ve approved the invoice.</p>
-          <button
-            className="pill-button pill-button--cta"
-            onClick={authenticated ? undefined : openRoleModal}
-            type="button"
-          >
+          <Link className="pill-button pill-button--cta" href={authenticated ? "/advisors" : "/sign-in"}>
             Find your advisor
-          </button>
+          </Link>
         </section>
       </main>
 
