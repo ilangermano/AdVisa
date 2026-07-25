@@ -8,6 +8,7 @@ import {
   isAdvisaChainId,
 } from "~~/services/advisa/chain";
 import { isAdvisaDemoMode } from "~~/services/advisa/demoMode";
+import { privyAuthErrorResponse, requirePrivyEmbeddedWallet } from "~~/services/privy/server";
 import { getSupabaseAdmin } from "~~/services/supabase/server";
 import type { ExtractionResult } from "~~/types/advisa";
 
@@ -113,6 +114,12 @@ export async function POST(request: NextRequest) {
     !body.extractedAgreement?.milestones?.length
   ) {
     return NextResponse.json({ error: "invalid signing request payload" }, { status: 400 });
+  }
+
+  try {
+    await requirePrivyEmbeddedWallet(request, body.migrant.address);
+  } catch (error) {
+    return privyAuthErrorResponse(error);
   }
 
   const pdfBytes = Buffer.from(body.agreementPdfBase64, "base64");

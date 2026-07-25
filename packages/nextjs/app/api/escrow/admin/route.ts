@@ -8,6 +8,7 @@ import {
   isAdvisaChainId,
 } from "~~/services/advisa/chain";
 import { recheckAdviserLicenceForEngagement } from "~~/services/advisa/licence";
+import { privyAuthErrorResponse, requirePrivyAdmin } from "~~/services/privy/server";
 
 export const runtime = "nodejs";
 
@@ -37,6 +38,12 @@ async function writeRelayerTx(chainId: number, functionName: string, args: reado
 }
 
 export async function POST(request: NextRequest) {
+  try {
+    await requirePrivyAdmin(request);
+  } catch (error) {
+    return privyAuthErrorResponse(error);
+  }
+
   const body = (await request.json().catch(() => null)) as AdminRequestBody | null;
   const chainId = body?.chainId;
   const engagementIdRaw = body?.engagementId;

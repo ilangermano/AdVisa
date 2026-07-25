@@ -4,6 +4,7 @@ import { useState } from "react";
 import type { NextPage } from "next";
 import { hardhat } from "viem/chains";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth";
+import { privyFetch } from "~~/services/privy/client";
 import { notification } from "~~/utils/scaffold-eth";
 
 type AdminResponse = {
@@ -26,7 +27,7 @@ const OpsPage: NextPage = () => {
   async function callAdmin(action: string) {
     setBusy(action);
     try {
-      const res = await fetch("/api/escrow/admin", {
+      const res = await privyFetch("/api/escrow/admin", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ action, chainId: targetNetwork.id, engagementId, proofText }),
@@ -46,7 +47,7 @@ const OpsPage: NextPage = () => {
   async function fastForward() {
     setBusy("fastForward");
     try {
-      const res = await fetch("/api/escrow/fast-forward", {
+      const res = await privyFetch("/api/escrow/fast-forward", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ chainId: targetNetwork.id, seconds: 6 * 24 * 60 * 60 }),

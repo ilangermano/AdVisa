@@ -3,12 +3,13 @@ pragma solidity ^0.8.24;
 
 import { IERC20 } from "@openzeppelin/contracts/token/ERC20/IERC20.sol";
 import { SafeERC20 } from "@openzeppelin/contracts/token/ERC20/utils/SafeERC20.sol";
-import { AccessControl } from "@openzeppelin/contracts/access/AccessControl.sol";
+import { AccessControlDefaultAdminRules } from
+    "@openzeppelin/contracts/access/extensions/AccessControlDefaultAdminRules.sol";
 import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.sol";
 
 /// @title VisaEscrow
 /// @notice Milestone escrow for New Zealand immigration adviser fees. Holds a generic
-/// IERC20 token (MockNZDD on testnet, dNZD in production — same code, no hardcoded
+/// IERC20 token (MockNZDD locally, dNZD on public networks — same code, no hardcoded
 /// token address) and releases it in tranches against milestones that a licensed
 /// immigration adviser and their migrant client agree to up front.
 /// @dev No personal data is stored here — only hashes, addresses, amounts, timestamps
@@ -17,8 +18,10 @@ import { ReentrancyGuard } from "@openzeppelin/contracts/utils/ReentrancyGuard.s
 /// after both parties sign in Lumin. Licence status itself is never stored on-chain —
 /// it is checked live off-chain and, on failure, the backend calls `refundAll`.
 /// Every state transition emits an event; the event log is the audit trail.
-contract VisaEscrow is AccessControl, ReentrancyGuard {
+contract VisaEscrow is AccessControlDefaultAdminRules, ReentrancyGuard {
     using SafeERC20 for IERC20;
+
+    uint48 public constant DEFAULT_ADMIN_DELAY = 1 days;
 
     /// @notice Role held by the server-side relayer wallet. Can anchor agreements,
     /// submit proofs, complete milestones, pause/resume the clock, and trigger
@@ -67,7 +70,7 @@ contract VisaEscrow is AccessControl, ReentrancyGuard {
         State state;
     }
 
-    /// @notice The token this escrow holds. MockNZDD on testnet, dNZD in production.
+    /// @notice The token this escrow holds. MockNZDD locally, dNZD on public networks.
     IERC20 public immutable token;
 
     uint256 private _nextEngagementId = 1;
@@ -86,6 +89,11 @@ contract VisaEscrow is AccessControl, ReentrancyGuard {
     event LicenceRevoked(uint256 indexed id, uint256 refunded);
 
     error ZeroAddress();
+    error InvalidToken();
+    error SameParty();
+    error ZeroAmount();
+    error TooManyMilestones();
+    error DeadlineNotFuture();
     error EmptyMilestones();
     error MismatchedArrayLengths();
     error EngagementNotFound();
@@ -94,6 +102,7 @@ contract VisaEscrow is AccessControl, ReentrancyGuard {
     error WrongState(State expected, State actual);
     error AgreementNotAnchored();
     error InvalidAgreementHash();
+    error InvalidProofHash();
     error MilestoneNotPending();
     error NoProofSubmitted();
     error DeadlinePassed();
@@ -103,11 +112,13 @@ contract VisaEscrow is AccessControl, ReentrancyGuard {
     error ClockNotPaused();
     error NotUnresponsiveYet();
 
-    constructor(IERC20 token_) {
-        if (address(token_) == address(0)) revert ZeroAddress();
+    constructor(IERC20 token_, address admin_, address relayer_)
+        AccessControlDefaultAdminRules(DEFAULT_ADMIN_DELAY, admin_)
+    {
+        if (address(token_) == address(0) || address(token_).code.length == 0) revert InvalidToken();
+        if (relayer_ == address(0)) revert ZeroAddress();
         token = token_;
-        _grantRole(DEFAULT_ADMIN_ROLE, msg.sender);
-        _grantRole(RELAYER_ROLE, msg.sender);
+        _grantRole(RELAYER_ROLE, relayer_);
     }
 
     modifier engagementExists(uint256 id) {
@@ -128,7 +139,9 @@ contract VisaEscrow is AccessControl, ReentrancyGuard {
         uint64[] calldata deadlines
     ) external returns (uint256 id) {
         if (adviser == address(0)) revert ZeroAddress();
+        if (adviser == msg.sender) revert SameParty();
         if (amounts.length == 0) revert EmptyMilestones();
+        if (amounts.length > type(uint8).max) revert TooManyMilestones();
         if (amounts.length != deadlines.length) revert MismatchedArrayLengths();
 
         id = _nextEngagementId++;
@@ -142,6 +155,8 @@ contract VisaEscrow is AccessControl, ReentrancyGuard {
         uint256 total = 0;
         Milestone[] storage milestoneList = _milestones[id];
         for (uint256 i = 0; i < amounts.length; i++) {
+            if (amounts[i] == 0) revert ZeroAmount();
+            if (deadlines[i] != 0 && deadlines[i] <= block.timestamp) revert DeadlineNotFuture();
             total += amounts[i];
             milestoneList.push(
                 Milestone({
@@ -192,6 +207,7 @@ contract VisaEscrow is AccessControl, ReentrancyGuard {
     function submitProof(uint256 id, bytes32 proofHash) external engagementExists(id) onlyRole(RELAYER_ROLE) {
         Milestone storage milestone = _currentMilestone(id);
         if (milestone.status != Status.Pending) revert MilestoneNotPending();
+        if (proofHash == bytes32(0)) revert InvalidProofHash();
 
         milestone.proofHash = proofHash;
 

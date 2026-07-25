@@ -8,6 +8,7 @@ import { AppProgressBar as ProgressBar } from "next-nprogress-bar";
 import { useTheme } from "next-themes";
 import { Toaster } from "react-hot-toast";
 import { WagmiProvider } from "wagmi";
+import { PrivyWalletSetupProvider } from "~~/contexts/PrivyWalletSetupContext";
 import { enabledChains, wagmiConfig } from "~~/services/web3/wagmiConfig";
 
 const ScaffoldEthApp = ({ children }: { children: React.ReactNode }) => {
@@ -29,19 +30,24 @@ export const queryClient = new QueryClient({
 
 const AppProviders = ({ children, withPrivy }: { children: React.ReactNode; withPrivy: boolean }) => {
   const WalletProvider = withPrivy ? PrivyWagmiProvider : WagmiProvider;
+  const app = (
+    <>
+      <ProgressBar height="2px" color="#1a1a1a" />
+      <ScaffoldEthApp>{children}</ScaffoldEthApp>
+    </>
+  );
 
   return (
     <QueryClientProvider client={queryClient}>
       <WalletProvider config={wagmiConfig}>
-        <ProgressBar height="2px" color="#1a1a1a" />
-        <ScaffoldEthApp>{children}</ScaffoldEthApp>
+        {withPrivy ? <PrivyWalletSetupProvider>{app}</PrivyWalletSetupProvider> : app}
       </WalletProvider>
     </QueryClientProvider>
   );
 };
 
 /**
- * Auth + wallets for the whole app (docs/INTEGRATIONS.md § 4). Email/SMS login only —
+ * Auth + wallets for the whole app (docs/INTEGRATIONS.md § 4). Email/Google/SMS login —
  * no "connect wallet" picker — with a Privy-managed embedded wallet created silently
  * on first login. The migrant must never see "wallet", "seed phrase", or "gas"; this
  * file is the one place that config lives, so keep it that way.
@@ -63,10 +69,10 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
     <PrivyProvider
       appId={privyAppId}
       config={{
-        loginMethods: ["email", "sms"],
+        loginMethods: ["email", "google", "sms"],
         embeddedWallets: {
           ethereum: {
-            createOnLogin: "users-without-wallets",
+            createOnLogin: "all-users",
           },
         },
         defaultChain: enabledChains[0],

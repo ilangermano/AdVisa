@@ -9,11 +9,12 @@ import { Balance } from "@scaffold-ui/components";
 import { getBlockExplorerAddressLink } from "@scaffold-ui/hooks";
 import { Address } from "viem";
 import { useAccount } from "wagmi";
-import { useNetworkColor, usePrefundEmbeddedWallet } from "~~/hooks/scaffold-eth";
+import { usePrivyWalletSetup } from "~~/contexts/PrivyWalletSetupContext";
+import { useNetworkColor } from "~~/hooks/scaffold-eth";
 import { useTargetNetwork } from "~~/hooks/scaffold-eth/useTargetNetwork";
 
 /**
- * Sign-in entry point for the whole app — email/SMS via Privy, embedded wallet
+ * Sign-in entry point for the whole app — email/Google/SMS via Privy, embedded wallet
  * created silently on first login. Never says "wallet", "seed phrase", or "gas"
  * (docs/INTEGRATIONS.md § 4); the words below are the entire public-facing surface.
  */
@@ -34,7 +35,7 @@ const ConnectedPrivyButton = () => {
   const { address, chain } = useAccount();
   const networkColor = useNetworkColor();
   const { targetNetwork } = useTargetNetwork();
-  usePrefundEmbeddedWallet();
+  const walletSetup = usePrivyWalletSetup();
 
   if (!ready) {
     return (
@@ -58,6 +59,28 @@ const ConnectedPrivyButton = () => {
     return (
       <button className="btn btn-primary btn-sm" disabled>
         Setting up your account...
+      </button>
+    );
+  }
+
+  if (walletSetup.isEmbeddedWallet && walletSetup.status !== "ready") {
+    if (walletSetup.status === "error") {
+      return (
+        <button
+          className="btn btn-warning btn-sm"
+          onClick={walletSetup.retry}
+          title={walletSetup.error ?? undefined}
+          type="button"
+        >
+          Retry account setup
+        </button>
+      );
+    }
+
+    return (
+      <button className="btn btn-primary btn-sm" disabled>
+        <span className="loading loading-spinner loading-xs" />
+        Preparing your account...
       </button>
     );
   }

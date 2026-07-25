@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { privyFetch } from "~~/services/privy/client";
 import type { ExtractionResult, RedFlag } from "~~/types/advisa";
 
 const SEVERITY_CLASS: Record<RedFlag["severity"], string> = {
@@ -47,7 +48,7 @@ export function AgreementExtractor() {
     form.append("pdf", file);
 
     try {
-      const res = await fetch("/api/extract-agreement", { method: "POST", body: form });
+      const res = await privyFetch("/api/extract-agreement", { method: "POST", body: form });
       const data = await res.json();
       if (!res.ok) {
         setError((data as { error?: string }).error ?? "Extraction failed. Please try again.");

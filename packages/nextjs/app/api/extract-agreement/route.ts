@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { isAdvisaDemoMode } from "~~/services/advisa/demoMode";
+import { privyAuthErrorResponse, requirePrivyUser } from "~~/services/privy/server";
 import type { ExtractionResult } from "~~/types/advisa";
 
 export const runtime = "nodejs";
@@ -63,6 +64,12 @@ Field rules:
 Return ONLY the JSON object. Nothing else.`;
 
 export async function POST(request: NextRequest) {
+  try {
+    await requirePrivyUser(request);
+  } catch (error) {
+    return privyAuthErrorResponse(error);
+  }
+
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
     if (isAdvisaDemoMode(["ANTHROPIC_API_KEY"])) {

@@ -29,8 +29,8 @@ invent new ones).
    in Supabase with a timestamp; re-read at every milestone.
 4. **Both sides get protection.** Migrant can reclaim on adviser delay. Adviser can claim
    on migrant non-response. Do not build only the sympathetic half.
-5. **Escrow uses `IERC20`, never a hardcoded token address.** MockNZDD on testnet, real
-   dNZD in production. Same code.
+5. **Escrow uses `IERC20`, never a hardcoded token address.** MockNZDD locally,
+   NewMoney's dNZD on Base Sepolia. Same escrow code.
 
 ## Stack — exact, do not substitute
 | Layer | Choice |
@@ -49,21 +49,16 @@ Do NOT use Remix — all contract work lives in `packages/hardhat` with tests.
 Do NOT use Reown/WalletConnect for our own auth flow — Privy only.
 
 ## Networks
-Deploy identical contracts to both. Never fork contract source per chain.
 
 | Network | Chain ID | RPC |
 |---|---|---|
-| Ethereum Sepolia | 11155111 | `process.env.SEPOLIA_RPC_URL` |
-| Avalanche Fuji | 43113 | `https://api.avax-test.network/ext/bc/C/rpc` |
-
-Fire Eyes prize track ($1000) requires Ethereum; Avalanche track ($500) requires C-Chain.
+| Base Sepolia | 84532 | `process.env.BASE_SEPOLIA_RPC_URL` |
 
 ## Commands
 ```bash
 yarn chain                        # local hardhat node
 yarn deploy                       # deploy to local chain
-yarn deploy --network sepolia     # testnet deploy
-yarn deploy --network fuji
+yarn deploy --network baseSepolia # testnet deploy
 yarn start                        # nextjs dev server, localhost:3000
 yarn test                         # hardhat test suite (packages/hardhat)
 yarn account                      # print/fund deployer address
@@ -73,7 +68,7 @@ yarn account                      # print/fund deployer address
 ```
 CONTEXT.md, SETUP.md, README.md     — root docs
 docs/                               — SCOPE, CONTRACTS, INTEGRATIONS, ARCHITECTURE, PRODUCT
-packages/hardhat/contracts/         — VisaEscrow.sol, MockNZDD.sol
+packages/hardhat/contracts/         — VisaEscrow.sol, DNZD.sol, MockNZDD.sol
 packages/hardhat/deploy/            — rocketh deploy scripts (numbered)
 packages/hardhat/test/              — mocha/chai tests
 packages/nextjs/app/                — Next.js App Router
@@ -83,7 +78,7 @@ packages/nextjs/app/api/webhooks/   — server-only route handlers (Lumin, etc.)
 ## Style
 - TypeScript strict, no `any`
 - Solidity: custom errors not `require` strings, NatSpec on every external function
-- Money in smallest unit (`uint256`, 18 decimals), never floats
+- Money in the token's smallest unit (`uint256`); read token decimals, never assume them
 - Server secrets never in the client bundle — Anthropic and Lumin keys are server-only
 - Commits: `feat:` `fix:` `docs:` `chore:`
 
@@ -92,8 +87,7 @@ packages/nextjs/app/api/webhooks/   — server-only route handlers (Lumin, etc.)
   relayer or multisig, not a single hot key.
 - Advisers holding client money is regulated in NZ. A stablecoin escrow may not satisfy
   the code of conduct's trust-account rules. This is a real blocker, not a detail.
-- MockNZDD is not dNZD. Real dNZD is Ethereum/Base/Solana only, not on testnets or
-  Avalanche — we say so plainly in the pitch.
+- NewMoney's test dNZD has no production monetary value. MockNZDD is local-only.
 - We protect the licensed channel. An employer selling a job for $45k will never onboard.
   We make the unlicensed channel conspicuous; we do not stop it.
 - `create-eth@latest` scaffolded this project on Hardhat 3 + rocketh (not classic

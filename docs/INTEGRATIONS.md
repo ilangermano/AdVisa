@@ -75,12 +75,26 @@ conflict-of-interest declaration, any clause tying payment to visa approval, any
 for payment outside the agreement.
 
 ## 4. Privy
-Email + SMS login, embedded wallet created on first login. The migrant must never see
-the words "wallet", "seed phrase", or "gas". Sponsor gas or pre-fund the embedded wallet
-on testnet — "insufficient funds for gas" during the demo loses a track.
+Email + Google + SMS login, with an Ethereum embedded wallet created for every user on
+first login. The migrant must never see the words "seed phrase" or "gas".
 `PrivyProvider` wraps the app in `packages/nextjs/app/providers.tsx`.
 
+Every protected browser request includes a short-lived Privy access token. Each server
+route verifies that token itself; middleware is not the authorization boundary. Before
+prefunding gas or creating a signing request, the server also confirms that the supplied
+address is the signed-in user's Privy embedded wallet. Operator routes require the user
+DID to appear in `PRIVY_ADMIN_USER_IDS`.
+
+On testnets, the server relayer tops up a verified embedded wallet to a small native-token
+threshold. The endpoint is per-user rate limited and no-ops when the balance is already
+sufficient. Production should use a durable shared rate limiter or sponsored transactions.
+
 ## 5. Tokens
-Real dNZD is issued by NewMoney, 1:1 reserve-backed under a NZ bare trust, live on
-Ethereum, Base and Solana — **not on testnets, not on Avalanche**. We use MockNZDD and
-say so plainly in the pitch. NewMoney dev docs: github.com/GetNewMoney/dev-docs
+NewMoney provides dNZD test tokens for EVM test networks. AdVisa targets Base Sepolia
+(chain ID `84532`) and deploys `VisaEscrow` against the token contract address supplied
+by NewMoney in `DNZD_TOKEN_ADDRESS`. NewMoney transfers test dNZD to the demo migrant
+wallet; it does not need or receive a seed phrase or private key.
+
+Local Hardhat development continues to use `MockNZDD`. The deploy script refuses to
+deploy a public-network escrow unless the configured dNZD address contains contract
+code on that network.

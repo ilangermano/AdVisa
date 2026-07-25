@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { hardhat } from "viem/chains";
+import { privyAuthErrorResponse, requirePrivyAdmin } from "~~/services/privy/server";
 
 export const runtime = "nodejs";
 
@@ -19,6 +20,12 @@ async function rpc(rpcUrl: string, method: string, params: unknown[] = []) {
 }
 
 export async function POST(request: NextRequest) {
+  try {
+    await requirePrivyAdmin(request);
+  } catch (error) {
+    return privyAuthErrorResponse(error);
+  }
+
   const body = (await request.json().catch(() => null)) as { chainId?: number; seconds?: number } | null;
   const chainId = body?.chainId;
   const seconds = body?.seconds ?? DEFAULT_SECONDS;

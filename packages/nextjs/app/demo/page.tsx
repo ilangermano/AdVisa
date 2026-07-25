@@ -9,7 +9,7 @@ const demoSteps = [
   "Fee agreement PDF is reviewed into three action-based milestones",
   "Plain-language Hindi summary is shown",
   "Signed PDF hash is anchored on-chain",
-  "MockNZDD allowance is set, escrow is funded, and first tranche is released",
+  "dNZD allowance is set, escrow is funded, and first tranche is released",
   "Local clock moves beyond deadline plus grace",
   "Migrant reclaims all unreleased funds",
 ];

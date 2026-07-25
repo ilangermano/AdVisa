@@ -52,6 +52,50 @@ async function createFundedEngagement(overrides?: { amounts?: bigint[]; deadline
 }
 
 describe("VisaEscrow", function () {
+  describe("roles and engagement validation", function () {
+    it("separates the default administrator and relayer roles", async function () {
+      const { escrow, relayer, migrant } = await networkHelpers.loadFixture(deployFixture);
+      const relayerRole = await escrow.RELAYER_ROLE();
+
+      expect(await escrow.defaultAdmin()).to.equal(relayer.address);
+      expect(await escrow.hasRole(relayerRole, relayer.address)).to.equal(true);
+      expect(await escrow.hasRole(relayerRole, migrant.address)).to.equal(false);
+    });
+
+    it("rejects relayer operations from an unprivileged wallet", async function () {
+      const { escrow, migrant, adviser, other } = await networkHelpers.loadFixture(deployFixture);
+      await escrow.connect(migrant).createEngagement(adviser.address, LICENCE_REF, [ONE_NZDD], [0]);
+
+      await expect(escrow.connect(other).anchorAgreement(1, AGREEMENT_HASH)).to.revert(ethers);
+    });
+
+    it("rejects zero-value milestones", async function () {
+      const { escrow, migrant, adviser } = await networkHelpers.loadFixture(deployFixture);
+      await expect(escrow.connect(migrant).createEngagement(adviser.address, LICENCE_REF, [0], [0])).to.revert(ethers);
+    });
+
+    it("rejects the same wallet acting as both migrant and adviser", async function () {
+      const { escrow, migrant } = await networkHelpers.loadFixture(deployFixture);
+      await expect(escrow.connect(migrant).createEngagement(migrant.address, LICENCE_REF, [ONE_NZDD], [0])).to.revert(
+        ethers,
+      );
+    });
+
+    it("rejects an already-expired milestone deadline", async function () {
+      const { escrow, migrant, adviser } = await networkHelpers.loadFixture(deployFixture);
+      const now = await networkHelpers.time.latest();
+
+      await expect(escrow.connect(migrant).createEngagement(adviser.address, LICENCE_REF, [ONE_NZDD], [now])).to.revert(
+        ethers,
+      );
+    });
+
+    it("rejects an empty proof hash at submission time", async function () {
+      const { escrow, relayer, id } = await createFundedEngagement();
+      await expect(escrow.connect(relayer).submitProof(id, ethers.ZeroHash)).to.revert(ethers);
+    });
+  });
+
   describe("fund()", function () {
     it("reverts before the agreement is anchored (agreementHash is zero)", async function () {
       const { escrow, token, migrant, adviser } = await networkHelpers.loadFixture(deployFixture);
@@ -174,7 +218,7 @@ describe("VisaEscrow", function () {
       const evilToken = await EvilToken.deploy();
 
       const Escrow = await ethers.getContractFactory("VisaEscrow");
-      const escrow = await Escrow.deploy(await evilToken.getAddress());
+      const escrow = await Escrow.deploy(await evilToken.getAddress(), relayer.address, relayer.address);
       const escrowAddress = await escrow.getAddress();
 
       const amount = 800n * ONE_NZDD;

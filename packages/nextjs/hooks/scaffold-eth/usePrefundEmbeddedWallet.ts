@@ -1,40 +1,76 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useMemo, useRef, useState } from "react";
 import { useWallets } from "@privy-io/react-auth";
 import { useAccount } from "wagmi";
+import { privyFetch } from "~~/services/privy/client";
+
+type WalletSetupStatus = "idle" | "checking" | "ready" | "error";
 
 /**
  * The migrant must never see "insufficient funds for gas" (docs/INTEGRATIONS.md § 4).
  * The moment a Privy embedded wallet is connected, ask the server-held relayer to top
- * it up with a small amount of testnet native currency. The server route re-checks the
- * on-chain balance and no-ops if it's already sufficient, so this is safe to fire once
- * per address/chain pair per session.
+ * it up with a small amount of testnet native currency. The server verifies that the
+ * address belongs to the signed-in user, re-checks the on-chain balance, and no-ops if
+ * it is already sufficient. The returned status keeps the sign-in control in an explicit
+ * "account ready" state instead of silently failing with an opaque gas error later.
  */
 export const usePrefundEmbeddedWallet = () => {
   const { wallets } = useWallets();
   const { address, chainId } = useAccount();
   const requestedFor = useRef<string | null>(null);
+  const [status, setStatus] = useState<WalletSetupStatus>("idle");
+  const [error, setError] = useState<string | null>(null);
+  const [retryNonce, setRetryNonce] = useState(0);
+  const isEmbeddedWallet = useMemo(
+    () =>
+      Boolean(
+        address &&
+        wallets.some(
+          wallet => wallet.walletClientType === "privy" && wallet.address.toLowerCase() === address.toLowerCase(),
+        ),
+      ),
+    [address, wallets],
+  );
 
   useEffect(() => {
-    if (!address || !chainId) return;
-    const isEmbeddedWallet = wallets.some(
-      wallet => wallet.walletClientType === "privy" && wallet.address.toLowerCase() === address.toLowerCase(),
-    );
-    if (!isEmbeddedWallet) return;
+    if (!address || !chainId || !isEmbeddedWallet) {
+      setStatus("idle");
+      setError(null);
+      return;
+    }
 
     const key = `${address}-${chainId}`;
     if (requestedFor.current === key) return;
     requestedFor.current = key;
+    setStatus("checking");
+    setError(null);
 
-    fetch("/api/wallet/prefund", {
+    privyFetch("/api/wallet/prefund", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ address, chainId }),
-    }).catch(() => {
-      // Best-effort — a failed top-up must never block sign-in. Worst case the
-      // migrant's first transaction fails and this fires again on next mount.
-      requestedFor.current = null;
-    });
-  }, [address, chainId, wallets]);
+    })
+      .then(async response => {
+        if (response.ok) {
+          setStatus("ready");
+          return;
+        }
+
+        const body = (await response.json().catch(() => null)) as { error?: string } | null;
+        throw new Error(body?.error || "Could not prepare testnet gas");
+      })
+      .catch(cause => {
+        requestedFor.current = null;
+        setStatus("error");
+        setError(cause instanceof Error ? cause.message : "Could not prepare testnet gas");
+      });
+  }, [address, chainId, isEmbeddedWallet, retryNonce]);
+
+  return {
+    isEmbeddedWallet,
+    status,
+    error,
+    retry: () => setRetryNonce(value => value + 1),
+  };
 };

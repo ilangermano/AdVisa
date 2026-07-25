@@ -1,7 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import crypto from "node:crypto";
 import { Hex } from "viem";
-import { sepolia } from "viem/chains";
+import { baseSepolia } from "viem/chains";
 import { createAdvisaPublicClient, createRelayerWalletClient, getAdvisaContract } from "~~/services/advisa/chain";
 import { getSupabaseAdmin } from "~~/services/supabase/server";
 
@@ -133,7 +133,7 @@ export async function POST(request: NextRequest) {
   const metadata = getWebhookMetadata(payload);
   const luminDocumentId = getWebhookDocumentId(payload);
   const engagementId = metadata?.engagementId;
-  const chainId = Number(metadata?.chainId ?? process.env.NEXT_PUBLIC_CHAIN_ID ?? sepolia.id);
+  const chainId = Number(metadata?.chainId ?? process.env.NEXT_PUBLIC_CHAIN_ID ?? baseSepolia.id);
 
   if (!luminDocumentId || !engagementId || !Number.isInteger(chainId)) {
     return NextResponse.json({ error: "missing documentId or engagementId" }, { status: 400 });

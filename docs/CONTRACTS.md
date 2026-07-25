@@ -6,6 +6,9 @@
 - Deadlines are absolute unix timestamps
 - Every state transition emits an event — **the event log IS the audit trail**
 - Custom errors, not revert strings
+- Separate constructor-supplied administrator and relayer addresses
+- OpenZeppelin's delayed, two-step default-admin transfer
+- Reject zero-value milestones, same-party engagements and expired deadlines
 
 ## Engagement lifecycle
 ```
@@ -89,6 +92,10 @@ function getMilestones(uint256 id) external view returns (Milestone[] memory);
 must NOT be blockable by RELAYER_ROLE. That asymmetry is the point — say it in the
 pitch: "nobody at our company can stop this, including us."
 
+The default administrator can grant or revoke operational roles but cannot move escrowed
+funds. Transferring that administrator uses OpenZeppelin's two-step flow with a one-day
+delay. `RELAYER_ROLE` is assigned separately during deployment.
+
 ## Events — these ARE the audit trail
 ```solidity
 event EngagementCreated(uint256 indexed id, address indexed migrant, address indexed adviser, uint256 total);
@@ -111,7 +118,15 @@ event LicenceRevoked(uint256 indexed id, uint256 refunded);
 6. Non-migrant cannot reclaim; non-adviser cannot claim unresponsive
 7. `refundAll()` returns everything unreleased and ends the engagement
 8. Reentrancy guard holds on every payout path
+9. Unprivileged wallets cannot call relayer operations
+10. Zero-value, same-party and expired engagements revert
+11. Empty proof hashes revert at submission time
 
 ## MockNZDD.sol
 ERC-20, 18 decimals, name "Mock NZ Digital Dollar", symbol "dNZD", open public `mint()`.
-Testnet only — the contract carries a comment saying never deploy to mainnet.
+Local Hardhat only — it is never used for a public-network deployment.
+
+## DNZD.sol
+Abstract ERC-20 metadata ABI declaration for NewMoney's existing dNZD token. It is not
+deployed by AdVisa. The deploy script registers NewMoney's confirmed address and points
+`VisaEscrow` at it.
