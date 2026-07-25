@@ -22,11 +22,17 @@ export type RedFlag = {
   issue: string;
 };
 
+export type TranslatedSummaries = {
+  hi: string;
+  pt: string;
+  fa: string;
+};
+
 export type ExtractionResult = {
   milestones: Milestone[];
   totalFee: number;
   currency: string;
   plainLanguageSummary: string;
-  translatedSummary: string;
+  translatedSummaries: TranslatedSummaries;
   redFlags: RedFlag[];
 };

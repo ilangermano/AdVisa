@@ -29,8 +29,11 @@ const DEMO_EXTRACTION: ExtractionResult = {
   currency: "NZD",
   plainLanguageSummary:
     "The adviser is paid in three stages for defined actions. Funds stay in escrow until signatures are anchored and each action is completed. If a deadline is missed, the migrant can reclaim the unreleased funds.",
-  translatedSummary:
-    "सलाहकार को तय कार्यों के लिए तीन चरणों में भुगतान किया जाता है। हस्ताक्षर ऑन-चेन दर्ज होने तक राशि एस्क्रो में सुरक्षित रहती है। समयसीमा चूकने पर प्रवासी बची हुई राशि वापस मांग सकता है।",
+  translatedSummaries: {
+    hi: "सलाहकार को तय कार्यों के लिए तीन चरणों में भुगतान किया जाता है। हस्ताक्षर ऑन-चेन दर्ज होने तक राशि एस्क्रो में सुरक्षित रहती है। समयसीमा चूकने पर प्रवासी बची हुई राशि वापस मांग सकता है।",
+    pt: "O consultor é pago em três etapas por ações definidas. Os fundos ficam em custódia até que as assinaturas sejam registradas e cada ação seja concluída. Se um prazo for perdido, o migrante pode recuperar os fundos não liberados.",
+    fa: "مشاور در سه مرحله برای اقدامات تعریف‌شده پرداخت دریافت می‌کند. وجوه در امانت باقی می‌ماند تا زمانی که امضاها ثبت شده و هر اقدام تکمیل شود. اگر مهلت از دست برود، مهاجر می‌تواند وجوه آزادنشده را پس بگیرد.",
+  },
   redFlags: [],
 };
 
@@ -43,7 +46,7 @@ Return ONLY a JSON object — no markdown fences, no prose, no explanation befor
   "totalFee": 0,
   "currency": "NZD",
   "plainLanguageSummary": "",
-  "translatedSummary": "",
+  "translatedSummaries": { "hi": "", "pt": "", "fa": "" },
   "redFlags": [{ "severity": "high|medium|low", "issue": "" }]
 }
 
@@ -52,7 +55,9 @@ Field rules:
 - totalFee: total fee in NZD as a number.
 - currency: always the string "NZD".
 - plainLanguageSummary: 3–4 sentence plain-English summary a migrant with no legal background can understand. Focus on what is being paid, when, and what the adviser must do at each stage.
-- translatedSummary: the same plain-language summary translated into Hindi (Devanagari script).
+- translatedSummaries.hi: the plain-language summary translated into Hindi (Devanagari script).
+- translatedSummaries.pt: the plain-language summary translated into Brazilian Portuguese.
+- translatedSummaries.fa: the plain-language summary translated into Dari (Perso-Arabic script, as spoken in Afghanistan).
 - redFlags: flag every instance of the following — include one entry per issue found, or an empty array if none:
   - Total fee below NZ$2,000 or above NZ$6,000 → severity "high"
   - Any milestone or deliverable that is vague or not independently verifiable (e.g. "best efforts", "as required") → severity "medium"

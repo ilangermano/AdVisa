@@ -15,11 +15,13 @@ const SEVERITY_LABEL: Record<RedFlag["severity"], string> = {
   low: "Low",
 };
 
-type Language = "en" | "hi";
+type Language = "en" | "hi" | "pt" | "fa";
 
 const LANG_LABELS: Record<Language, string> = {
   en: "English",
   hi: "हिन्दी",
+  pt: "Português",
+  fa: "دری",
 };
 
 export function AgreementExtractor() {
@@ -61,7 +63,7 @@ export function AgreementExtractor() {
     }
   }
 
-  const summary = result ? (lang === "en" ? result.plainLanguageSummary : result.translatedSummary) : null;
+  const summary = result ? (lang === "en" ? result.plainLanguageSummary : result.translatedSummaries[lang]) : null;
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-3xl mx-auto">
