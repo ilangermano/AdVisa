@@ -98,6 +98,7 @@ export default deployScript(
     const { deployer } = env.namedAccounts;
     const chainId = env.network.chain.id;
     const isLocalNetwork = chainId === 31337;
+    const useMockToken = isLocalNetwork || process.env.DEPLOY_MOCK_TOKEN === "true";
     const configuredAdmin = process.env.ESCROW_ADMIN_ADDRESS || deployer;
     if (!/^0x[a-fA-F0-9]{40}$/.test(configuredAdmin)) {
       throw new Error("ESCROW_ADMIN_ADDRESS must be a valid EVM address");
@@ -107,7 +108,7 @@ export default deployScript(
     const relayerAddress = !isLocalNetwork && relayerPrivateKey ? new Wallet(relayerPrivateKey).address : deployer;
 
     let dnzdAddress: `0x${string}`;
-    if (isLocalNetwork) {
+    if (useMockToken) {
       const mockNZDD = await env.deploy("MockNZDD", {
         account: deployer,
         artifact: artifacts.MockNZDD,

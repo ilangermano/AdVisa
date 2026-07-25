@@ -6,6 +6,165 @@ import { GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
 
 const deployedContracts = {
   31337: {
+    DNZD: {
+      address: "0x5fbdb2315678afecb367f032d93f642f64180aa3",
+      abi: [
+        {
+          type: "function",
+          name: "allowance",
+          stateMutability: "view",
+          inputs: [
+            {
+              name: "owner",
+              type: "address",
+            },
+            {
+              name: "spender",
+              type: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "approve",
+          stateMutability: "nonpayable",
+          inputs: [
+            {
+              name: "spender",
+              type: "address",
+            },
+            {
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "balanceOf",
+          stateMutability: "view",
+          inputs: [
+            {
+              name: "account",
+              type: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "decimals",
+          stateMutability: "view",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint8",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "name",
+          stateMutability: "view",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "symbol",
+          stateMutability: "view",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "totalSupply",
+          stateMutability: "view",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "transfer",
+          stateMutability: "nonpayable",
+          inputs: [
+            {
+              name: "to",
+              type: "address",
+            },
+            {
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "transferFrom",
+          stateMutability: "nonpayable",
+          inputs: [
+            {
+              name: "from",
+              type: "address",
+            },
+            {
+              name: "to",
+              type: "address",
+            },
+            {
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+            },
+          ],
+        },
+      ],
+      inheritedFunctions: {},
+    },
     MockNZDD: {
       address: "0x5fbdb2315678afecb367f032d93f642f64180aa3",
       abi: [
@@ -364,6 +523,16 @@ const deployedContracts = {
               name: "token_",
               type: "address",
             },
+            {
+              internalType: "address",
+              name: "admin_",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "relayer_",
+              type: "address",
+            },
           ],
           stateMutability: "nonpayable",
           type: "constructor",
@@ -371,6 +540,33 @@ const deployedContracts = {
         {
           inputs: [],
           name: "AccessControlBadConfirmation",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint48",
+              name: "schedule",
+              type: "uint48",
+            },
+          ],
+          name: "AccessControlEnforcedDefaultAdminDelay",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "AccessControlEnforcedDefaultAdminRules",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "defaultAdmin",
+              type: "address",
+            },
+          ],
+          name: "AccessControlInvalidDefaultAdmin",
           type: "error",
         },
         {
@@ -406,6 +602,11 @@ const deployedContracts = {
         },
         {
           inputs: [],
+          name: "DeadlineNotFuture",
+          type: "error",
+        },
+        {
+          inputs: [],
           name: "DeadlineNotReached",
           type: "error",
         },
@@ -427,6 +628,16 @@ const deployedContracts = {
         {
           inputs: [],
           name: "InvalidAgreementHash",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "InvalidProofHash",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "InvalidToken",
           type: "error",
         },
         {
@@ -472,12 +683,38 @@ const deployedContracts = {
         {
           inputs: [
             {
+              internalType: "uint8",
+              name: "bits",
+              type: "uint8",
+            },
+            {
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "SafeCastOverflowedUintDowncast",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
               internalType: "address",
               name: "token",
               type: "address",
             },
           ],
           name: "SafeERC20FailedOperation",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "SameParty",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "TooManyMilestones",
           type: "error",
         },
         {
@@ -499,6 +736,11 @@ const deployedContracts = {
         {
           inputs: [],
           name: "ZeroAddress",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "ZeroAmount",
           type: "error",
         },
         {
@@ -574,6 +816,56 @@ const deployedContracts = {
             },
           ],
           name: "ClockResumed",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [],
+          name: "DefaultAdminDelayChangeCanceled",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint48",
+              name: "newDelay",
+              type: "uint48",
+            },
+            {
+              indexed: false,
+              internalType: "uint48",
+              name: "effectSchedule",
+              type: "uint48",
+            },
+          ],
+          name: "DefaultAdminDelayChangeScheduled",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [],
+          name: "DefaultAdminTransferCanceled",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "newAdmin",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint48",
+              name: "acceptSchedule",
+              type: "uint48",
+            },
+          ],
+          name: "DefaultAdminTransferScheduled",
           type: "event",
         },
         {
@@ -797,6 +1089,19 @@ const deployedContracts = {
         },
         {
           inputs: [],
+          name: "DEFAULT_ADMIN_DELAY",
+          outputs: [
+            {
+              internalType: "uint48",
+              name: "",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
           name: "DEFAULT_ADMIN_ROLE",
           outputs: [
             {
@@ -848,6 +1153,13 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "acceptDefaultAdminTransfer",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "uint256",
@@ -861,6 +1173,39 @@ const deployedContracts = {
             },
           ],
           name: "anchorAgreement",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "newAdmin",
+              type: "address",
+            },
+          ],
+          name: "beginDefaultAdminTransfer",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "cancelDefaultAdminTransfer",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint48",
+              name: "newDelay",
+              type: "uint48",
+            },
+          ],
+          name: "changeDefaultAdminDelay",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
@@ -923,6 +1268,45 @@ const deployedContracts = {
             },
           ],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "defaultAdmin",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "defaultAdminDelay",
+          outputs: [
+            {
+              internalType: "uint48",
+              name: "",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "defaultAdminDelayIncreaseWait",
+          outputs: [
+            {
+              internalType: "uint48",
+              name: "",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -1105,6 +1489,19 @@ const deployedContracts = {
           type: "function",
         },
         {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
           inputs: [
             {
               internalType: "uint256",
@@ -1115,6 +1512,42 @@ const deployedContracts = {
           name: "pauseClock",
           outputs: [],
           stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "pendingDefaultAdmin",
+          outputs: [
+            {
+              internalType: "address",
+              name: "newAdmin",
+              type: "address",
+            },
+            {
+              internalType: "uint48",
+              name: "schedule",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "pendingDefaultAdminDelay",
+          outputs: [
+            {
+              internalType: "uint48",
+              name: "newDelay",
+              type: "uint48",
+            },
+            {
+              internalType: "uint48",
+              name: "schedule",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
           type: "function",
         },
         {
@@ -1152,7 +1585,7 @@ const deployedContracts = {
             },
             {
               internalType: "address",
-              name: "callerConfirmation",
+              name: "account",
               type: "address",
             },
           ],
@@ -1188,6 +1621,13 @@ const deployedContracts = {
             },
           ],
           name: "revokeRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "rollbackDefaultAdminDelay",
           outputs: [],
           stateMutability: "nonpayable",
           type: "function",
@@ -1244,13 +1684,31 @@ const deployedContracts = {
         },
       ],
       inheritedFunctions: {
-        DEFAULT_ADMIN_ROLE: "npm/@openzeppelin/contracts@5.6.1/access/AccessControl.sol",
-        getRoleAdmin: "npm/@openzeppelin/contracts@5.6.1/access/AccessControl.sol",
-        grantRole: "npm/@openzeppelin/contracts@5.6.1/access/AccessControl.sol",
-        hasRole: "npm/@openzeppelin/contracts@5.6.1/access/AccessControl.sol",
-        renounceRole: "npm/@openzeppelin/contracts@5.6.1/access/AccessControl.sol",
-        revokeRole: "npm/@openzeppelin/contracts@5.6.1/access/AccessControl.sol",
-        supportsInterface: "npm/@openzeppelin/contracts@5.6.1/access/AccessControl.sol",
+        DEFAULT_ADMIN_ROLE: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        acceptDefaultAdminTransfer:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        beginDefaultAdminTransfer:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        cancelDefaultAdminTransfer:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        changeDefaultAdminDelay:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        defaultAdmin: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        defaultAdminDelay: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        defaultAdminDelayIncreaseWait:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        getRoleAdmin: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        grantRole: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        hasRole: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        owner: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        pendingDefaultAdmin: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        pendingDefaultAdminDelay:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        renounceRole: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        revokeRole: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        rollbackDefaultAdminDelay:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        supportsInterface: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
       },
       deployedOnBlock: 2,
     },
@@ -2503,6 +2961,1714 @@ const deployedContracts = {
         supportsInterface: "npm/@openzeppelin/contracts@5.6.1/access/AccessControl.sol",
       },
       deployedOnBlock: 57277628,
+    },
+  },
+  84532: {
+    DNZD: {
+      address: "0x0735ace361053fead84013fcdaa35b4c2b95b8fc",
+      abi: [
+        {
+          type: "function",
+          name: "allowance",
+          stateMutability: "view",
+          inputs: [
+            {
+              name: "owner",
+              type: "address",
+            },
+            {
+              name: "spender",
+              type: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "approve",
+          stateMutability: "nonpayable",
+          inputs: [
+            {
+              name: "spender",
+              type: "address",
+            },
+            {
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "balanceOf",
+          stateMutability: "view",
+          inputs: [
+            {
+              name: "account",
+              type: "address",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "decimals",
+          stateMutability: "view",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint8",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "name",
+          stateMutability: "view",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "symbol",
+          stateMutability: "view",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "string",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "totalSupply",
+          stateMutability: "view",
+          inputs: [],
+          outputs: [
+            {
+              name: "",
+              type: "uint256",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "transfer",
+          stateMutability: "nonpayable",
+          inputs: [
+            {
+              name: "to",
+              type: "address",
+            },
+            {
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+            },
+          ],
+        },
+        {
+          type: "function",
+          name: "transferFrom",
+          stateMutability: "nonpayable",
+          inputs: [
+            {
+              name: "from",
+              type: "address",
+            },
+            {
+              name: "to",
+              type: "address",
+            },
+            {
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          outputs: [
+            {
+              name: "",
+              type: "bool",
+            },
+          ],
+        },
+      ],
+      inheritedFunctions: {},
+    },
+    MockNZDD: {
+      address: "0x0735ace361053fead84013fcdaa35b4c2b95b8fc",
+      abi: [
+        {
+          inputs: [],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "allowance",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "needed",
+              type: "uint256",
+            },
+          ],
+          name: "ERC20InsufficientAllowance",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "sender",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "balance",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "needed",
+              type: "uint256",
+            },
+          ],
+          name: "ERC20InsufficientBalance",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "approver",
+              type: "address",
+            },
+          ],
+          name: "ERC20InvalidApprover",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "receiver",
+              type: "address",
+            },
+          ],
+          name: "ERC20InvalidReceiver",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "sender",
+              type: "address",
+            },
+          ],
+          name: "ERC20InvalidSender",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+          ],
+          name: "ERC20InvalidSpender",
+          type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "Approval",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "from",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "Transfer",
+          type: "event",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "owner",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+          ],
+          name: "allowance",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "spender",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "approve",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "balanceOf",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "decimals",
+          outputs: [
+            {
+              internalType: "uint8",
+              name: "",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "mint",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "name",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "symbol",
+          outputs: [
+            {
+              internalType: "string",
+              name: "",
+              type: "string",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "totalSupply",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "transfer",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "from",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "to",
+              type: "address",
+            },
+            {
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "transferFrom",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {
+        allowance: "npm/@openzeppelin/contracts@5.6.1/token/ERC20/ERC20.sol",
+        approve: "npm/@openzeppelin/contracts@5.6.1/token/ERC20/ERC20.sol",
+        balanceOf: "npm/@openzeppelin/contracts@5.6.1/token/ERC20/ERC20.sol",
+        decimals: "npm/@openzeppelin/contracts@5.6.1/token/ERC20/ERC20.sol",
+        name: "npm/@openzeppelin/contracts@5.6.1/token/ERC20/ERC20.sol",
+        symbol: "npm/@openzeppelin/contracts@5.6.1/token/ERC20/ERC20.sol",
+        totalSupply: "npm/@openzeppelin/contracts@5.6.1/token/ERC20/ERC20.sol",
+        transfer: "npm/@openzeppelin/contracts@5.6.1/token/ERC20/ERC20.sol",
+        transferFrom: "npm/@openzeppelin/contracts@5.6.1/token/ERC20/ERC20.sol",
+      },
+      deployedOnBlock: 44609996,
+    },
+    VisaEscrow: {
+      address: "0xdb5182230dc47567ec1c3e1dbd32ccf458534f52",
+      abi: [
+        {
+          inputs: [
+            {
+              internalType: "contract IERC20",
+              name: "token_",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "admin_",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "relayer_",
+              type: "address",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "constructor",
+        },
+        {
+          inputs: [],
+          name: "AccessControlBadConfirmation",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint48",
+              name: "schedule",
+              type: "uint48",
+            },
+          ],
+          name: "AccessControlEnforcedDefaultAdminDelay",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "AccessControlEnforcedDefaultAdminRules",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "defaultAdmin",
+              type: "address",
+            },
+          ],
+          name: "AccessControlInvalidDefaultAdmin",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              internalType: "bytes32",
+              name: "neededRole",
+              type: "bytes32",
+            },
+          ],
+          name: "AccessControlUnauthorizedAccount",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "AgreementNotAnchored",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "ClockAlreadyPaused",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "ClockNotPaused",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "DeadlineNotFuture",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "DeadlineNotReached",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "DeadlinePassed",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "EmptyMilestones",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "EngagementNotFound",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "InvalidAgreementHash",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "InvalidProofHash",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "InvalidToken",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "MilestoneNotPending",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "MismatchedArrayLengths",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "NoDeadlineSet",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "NoProofSubmitted",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "NotAdviser",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "NotMigrant",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "NotUnresponsiveYet",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "ReentrancyGuardReentrantCall",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint8",
+              name: "bits",
+              type: "uint8",
+            },
+            {
+              internalType: "uint256",
+              name: "value",
+              type: "uint256",
+            },
+          ],
+          name: "SafeCastOverflowedUintDowncast",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "token",
+              type: "address",
+            },
+          ],
+          name: "SafeERC20FailedOperation",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "SameParty",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "TooManyMilestones",
+          type: "error",
+        },
+        {
+          inputs: [
+            {
+              internalType: "enum VisaEscrow.State",
+              name: "expected",
+              type: "uint8",
+            },
+            {
+              internalType: "enum VisaEscrow.State",
+              name: "actual",
+              type: "uint8",
+            },
+          ],
+          name: "WrongState",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "ZeroAddress",
+          type: "error",
+        },
+        {
+          inputs: [],
+          name: "ZeroAmount",
+          type: "error",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "agreementHash",
+              type: "bytes32",
+            },
+            {
+              indexed: false,
+              internalType: "uint64",
+              name: "at",
+              type: "uint64",
+            },
+          ],
+          name: "AgreementAnchored",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "milestone",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "uint64",
+              name: "at",
+              type: "uint64",
+            },
+          ],
+          name: "ClockPaused",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "milestone",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "uint64",
+              name: "at",
+              type: "uint64",
+            },
+          ],
+          name: "ClockResumed",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [],
+          name: "DefaultAdminDelayChangeCanceled",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: false,
+              internalType: "uint48",
+              name: "newDelay",
+              type: "uint48",
+            },
+            {
+              indexed: false,
+              internalType: "uint48",
+              name: "effectSchedule",
+              type: "uint48",
+            },
+          ],
+          name: "DefaultAdminDelayChangeScheduled",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [],
+          name: "DefaultAdminTransferCanceled",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "address",
+              name: "newAdmin",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint48",
+              name: "acceptSchedule",
+              type: "uint48",
+            },
+          ],
+          name: "DefaultAdminTransferScheduled",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "migrant",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "adviser",
+              type: "address",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "total",
+              type: "uint256",
+            },
+          ],
+          name: "EngagementCreated",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "Funded",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "refunded",
+              type: "uint256",
+            },
+          ],
+          name: "LicenceRevoked",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "milestone",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "MilestoneReleased",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "milestone",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "bytes32",
+              name: "proofHash",
+              type: "bytes32",
+            },
+          ],
+          name: "ProofSubmitted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "previousAdminRole",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "newAdminRole",
+              type: "bytes32",
+            },
+          ],
+          name: "RoleAdminChanged",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "sender",
+              type: "address",
+            },
+          ],
+          name: "RoleGranted",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+            {
+              indexed: true,
+              internalType: "address",
+              name: "sender",
+              type: "address",
+            },
+          ],
+          name: "RoleRevoked",
+          type: "event",
+        },
+        {
+          anonymous: false,
+          inputs: [
+            {
+              indexed: true,
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              indexed: false,
+              internalType: "uint8",
+              name: "milestone",
+              type: "uint8",
+            },
+            {
+              indexed: false,
+              internalType: "uint256",
+              name: "amount",
+              type: "uint256",
+            },
+          ],
+          name: "TrancheReclaimed",
+          type: "event",
+        },
+        {
+          inputs: [],
+          name: "DEFAULT_ADMIN_DELAY",
+          outputs: [
+            {
+              internalType: "uint48",
+              name: "",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "DEFAULT_ADMIN_ROLE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "GRACE_PERIOD",
+          outputs: [
+            {
+              internalType: "uint64",
+              name: "",
+              type: "uint64",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "RELAYER_ROLE",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "UNRESPONSIVE_PERIOD",
+          outputs: [
+            {
+              internalType: "uint64",
+              name: "",
+              type: "uint64",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "acceptDefaultAdminTransfer",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              internalType: "bytes32",
+              name: "agreementHash",
+              type: "bytes32",
+            },
+          ],
+          name: "anchorAgreement",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "newAdmin",
+              type: "address",
+            },
+          ],
+          name: "beginDefaultAdminTransfer",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "cancelDefaultAdminTransfer",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint48",
+              name: "newDelay",
+              type: "uint48",
+            },
+          ],
+          name: "changeDefaultAdminDelay",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+          ],
+          name: "claimUnresponsive",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+          ],
+          name: "completeMilestone",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "address",
+              name: "adviser",
+              type: "address",
+            },
+            {
+              internalType: "bytes32",
+              name: "licenceRef",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256[]",
+              name: "amounts",
+              type: "uint256[]",
+            },
+            {
+              internalType: "uint64[]",
+              name: "deadlines",
+              type: "uint64[]",
+            },
+          ],
+          name: "createEngagement",
+          outputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+          ],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "defaultAdmin",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "defaultAdminDelay",
+          outputs: [
+            {
+              internalType: "uint48",
+              name: "",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "defaultAdminDelayIncreaseWait",
+          outputs: [
+            {
+              internalType: "uint48",
+              name: "",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "",
+              type: "uint256",
+            },
+          ],
+          name: "engagements",
+          outputs: [
+            {
+              internalType: "address",
+              name: "migrant",
+              type: "address",
+            },
+            {
+              internalType: "address",
+              name: "adviser",
+              type: "address",
+            },
+            {
+              internalType: "bytes32",
+              name: "adviserLicenceRef",
+              type: "bytes32",
+            },
+            {
+              internalType: "bytes32",
+              name: "agreementHash",
+              type: "bytes32",
+            },
+            {
+              internalType: "uint256",
+              name: "totalAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint256",
+              name: "releasedAmount",
+              type: "uint256",
+            },
+            {
+              internalType: "uint64",
+              name: "lastMigrantAction",
+              type: "uint64",
+            },
+            {
+              internalType: "uint8",
+              name: "currentMilestone",
+              type: "uint8",
+            },
+            {
+              internalType: "enum VisaEscrow.State",
+              name: "state",
+              type: "uint8",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+          ],
+          name: "fund",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+          ],
+          name: "getMilestones",
+          outputs: [
+            {
+              components: [
+                {
+                  internalType: "uint256",
+                  name: "amount",
+                  type: "uint256",
+                },
+                {
+                  internalType: "uint64",
+                  name: "deadline",
+                  type: "uint64",
+                },
+                {
+                  internalType: "uint64",
+                  name: "pausedAt",
+                  type: "uint64",
+                },
+                {
+                  internalType: "bytes32",
+                  name: "proofHash",
+                  type: "bytes32",
+                },
+                {
+                  internalType: "enum VisaEscrow.Status",
+                  name: "status",
+                  type: "uint8",
+                },
+              ],
+              internalType: "struct VisaEscrow.Milestone[]",
+              name: "",
+              type: "tuple[]",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+          ],
+          name: "getRoleAdmin",
+          outputs: [
+            {
+              internalType: "bytes32",
+              name: "",
+              type: "bytes32",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "grantRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "hasRole",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "owner",
+          outputs: [
+            {
+              internalType: "address",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+          ],
+          name: "pauseClock",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "pendingDefaultAdmin",
+          outputs: [
+            {
+              internalType: "address",
+              name: "newAdmin",
+              type: "address",
+            },
+            {
+              internalType: "uint48",
+              name: "schedule",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "pendingDefaultAdminDelay",
+          outputs: [
+            {
+              internalType: "uint48",
+              name: "newDelay",
+              type: "uint48",
+            },
+            {
+              internalType: "uint48",
+              name: "schedule",
+              type: "uint48",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+          ],
+          name: "reclaimTranche",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+          ],
+          name: "refundAll",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "renounceRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+          ],
+          name: "resumeClock",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes32",
+              name: "role",
+              type: "bytes32",
+            },
+            {
+              internalType: "address",
+              name: "account",
+              type: "address",
+            },
+          ],
+          name: "revokeRole",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "rollbackDefaultAdminDelay",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "uint256",
+              name: "id",
+              type: "uint256",
+            },
+            {
+              internalType: "bytes32",
+              name: "proofHash",
+              type: "bytes32",
+            },
+          ],
+          name: "submitProof",
+          outputs: [],
+          stateMutability: "nonpayable",
+          type: "function",
+        },
+        {
+          inputs: [
+            {
+              internalType: "bytes4",
+              name: "interfaceId",
+              type: "bytes4",
+            },
+          ],
+          name: "supportsInterface",
+          outputs: [
+            {
+              internalType: "bool",
+              name: "",
+              type: "bool",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+        {
+          inputs: [],
+          name: "token",
+          outputs: [
+            {
+              internalType: "contract IERC20",
+              name: "",
+              type: "address",
+            },
+          ],
+          stateMutability: "view",
+          type: "function",
+        },
+      ],
+      inheritedFunctions: {
+        DEFAULT_ADMIN_ROLE: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        acceptDefaultAdminTransfer:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        beginDefaultAdminTransfer:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        cancelDefaultAdminTransfer:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        changeDefaultAdminDelay:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        defaultAdmin: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        defaultAdminDelay: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        defaultAdminDelayIncreaseWait:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        getRoleAdmin: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        grantRole: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        hasRole: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        owner: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        pendingDefaultAdmin: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        pendingDefaultAdminDelay:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        renounceRole: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        revokeRole: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        rollbackDefaultAdminDelay:
+          "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+        supportsInterface: "npm/@openzeppelin/contracts@5.6.1/access/extensions/AccessControlDefaultAdminRules.sol",
+      },
+      deployedOnBlock: 44610076,
     },
   },
   11155111: {
