@@ -27,7 +27,7 @@ export type ExtractedAgreement = {
   totalFee: number;
   currency: string;
   plainLanguageSummary: string;
-  translatedSummary: string;
+  translatedSummaries: { hi: string; pt: string; fa: string };
   redFlags: { severity: "high" | "medium" | "low"; issue: string }[];
 };
 
