@@ -75,13 +75,12 @@ export async function requirePrivyEmbeddedWallet(request: NextRequest, address: 
   const isOwnedEmbeddedWallet =
     user.id === claims.userId &&
     user.linked_accounts.some(account => {
-      if (account.type !== "wallet" || !("address" in account)) return false;
+      if (account.type !== "wallet") return false;
+      const wallet = account as unknown as { address?: string; chain_type?: string; wallet_client_type?: string };
       return (
-        account.address.toLowerCase() === normalizedAddress &&
-        "chain_type" in account &&
-        account.chain_type === "ethereum" &&
-        "wallet_client_type" in account &&
-        account.wallet_client_type === "privy"
+        wallet.address?.toLowerCase() === normalizedAddress &&
+        wallet.chain_type === "ethereum" &&
+        wallet.wallet_client_type === "privy"
       );
     });
 

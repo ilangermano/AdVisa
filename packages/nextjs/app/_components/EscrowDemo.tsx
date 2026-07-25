@@ -53,8 +53,11 @@ const DEMO_EXTRACTION: ExtractionResult = {
   currency: "NZD",
   plainLanguageSummary:
     "The adviser is paid in three stages for defined actions. Funds are held until signatures are anchored and released only when each action is completed. If deadlines are missed, remaining funds can be reclaimed.",
-  translatedSummary:
-    "सलाहकार को तय कार्यों के लिए तीन चरणों में भुगतान किया जाता है। हस्ताक्षर ऑन-चेन दर्ज होने तक राशि सुरक्षित रहती है। समयसीमा चूकने पर बची हुई राशि वापस मांगी जा सकती है।",
+  translatedSummaries: {
+    hi: "सलाहकार को तय कार्यों के लिए तीन चरणों में भुगतान किया जाता है। हस्ताक्षर ऑन-चेन दर्ज होने तक राशि सुरक्षित रहती है। समयसीमा चूकने पर बची हुई राशि वापस मांगी जा सकती है।",
+    pt: "O consultor é pago em três etapas por ações definidas. Os fundos ficam retidos até que as assinaturas sejam registradas e cada ação seja concluída. Se os prazos forem perdidos, os fundos restantes podem ser recuperados.",
+    fa: "مشاور در سه مرحله برای اقدامات تعریف‌شده پرداخت دریافت می‌کند. وجوه تا زمانی که امضاها ثبت شده و هر اقدام تکمیل شود نگه داشته می‌شوند. در صورت از دست دادن مهلت‌ها، وجوه باقی‌مانده قابل استرداد است.",
+  },
   redFlags: [],
 };
 
