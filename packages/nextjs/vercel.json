@@ -1,4 +1,5 @@
 {
+  "framework": "nextjs",
   "installCommand": "corepack yarn install",
   "buildCommand": "corepack yarn run build"
 }
