@@ -574,7 +574,7 @@ const PaymentScreen = ({
             aria-checked={method === "card"}
             onClick={() => setMethod("card")}
           >
-            <strong>💳 Card or bank</strong>
+            <strong>💳 Credit card</strong>
             <span>Pay like any normal purchase. We handle the rest for you.</span>
           </button>
           <button
