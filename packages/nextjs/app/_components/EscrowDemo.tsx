@@ -296,10 +296,11 @@ export const EscrowDemo: NextPage = () => {
   async function fastForward() {
     setBusy("time");
     try {
+      const seconds = reclaimAt > now ? Number(reclaimAt - now + 1n) : GRACE_PERIOD_SECONDS + 24 * 60 * 60;
       const res = await fetch("/api/escrow/fast-forward", {
         method: "POST",
         headers: { "content-type": "application/json" },
-        body: JSON.stringify({ chainId: targetNetwork.id, seconds: GRACE_PERIOD_SECONDS + 24 * 60 * 60 }),
+        body: JSON.stringify({ chainId: targetNetwork.id, seconds }),
       });
       const data = (await res.json()) as { error?: string };
       if (!res.ok) {
@@ -520,7 +521,7 @@ export const EscrowDemo: NextPage = () => {
               {targetNetwork.id === hardhat.id && (
                 <button className="btn btn-warning" disabled={busy !== null} onClick={fastForward}>
                   {busy === "time" && <span className="loading loading-spinner loading-sm" />}
-                  Fast-forward 6 days
+                  Fast-forward to reclaim
                 </button>
               )}
             </div>

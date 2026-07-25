@@ -1,5 +1,13 @@
 import { NextRequest, NextResponse } from "next/server";
-import { isAddress } from "viem";
+import crypto from "node:crypto";
+import { Hex, isAddress } from "viem";
+import {
+  createAdvisaPublicClient,
+  createRelayerWalletClient,
+  getAdvisaContract,
+  isAdvisaChainId,
+} from "~~/services/advisa/chain";
+import { isAdvisaDemoMode } from "~~/services/advisa/demoMode";
 import { getSupabaseAdmin } from "~~/services/supabase/server";
 import type { ExtractionResult } from "~~/types/advisa";
 
@@ -43,14 +51,51 @@ function parseDocumentId(luminResponse: unknown): string | null {
   return null;
 }
 
-export async function POST(request: NextRequest) {
-  const db = getSupabaseAdmin() as any;
-  const luminApiKey = process.env.LUMIN_API_KEY;
-  if (!luminApiKey) {
-    console.error("LUMIN_API_KEY is not set");
-    return NextResponse.json({ error: "server misconfigured" }, { status: 500 });
+function getEngagementState(engagement: unknown) {
+  return Array.isArray(engagement) ? Number(engagement[8]) : undefined;
+}
+
+async function createDemoSigningRequest(body: SigningRequestBody, pdfBytes: Buffer) {
+  if (!isAdvisaChainId(body.chainId)) {
+    return NextResponse.json({ error: "unsupported demo chain" }, { status: 400 });
   }
 
+  const agreementHash = `0x${crypto.createHash("sha256").update(pdfBytes).digest("hex")}` as Hex;
+  const engagementId = BigInt(body.engagementId);
+  const publicClient = createAdvisaPublicClient(body.chainId);
+  const walletClient = createRelayerWalletClient(body.chainId);
+  const visaEscrow = getAdvisaContract(body.chainId, "VisaEscrow");
+
+  const engagement = await publicClient.readContract({
+    address: visaEscrow.address,
+    abi: visaEscrow.abi,
+    functionName: "engagements",
+    args: [engagementId],
+  });
+  const engagementState = getEngagementState(engagement);
+
+  let anchorTxHash: Hex | undefined;
+  if (engagementState === 0) {
+    anchorTxHash = await walletClient.writeContract({
+      address: visaEscrow.address,
+      abi: visaEscrow.abi,
+      functionName: "anchorAgreement",
+      args: [engagementId, agreementHash],
+    });
+    await publicClient.waitForTransactionReceipt({ hash: anchorTxHash });
+  }
+
+  return NextResponse.json({
+    ok: true,
+    demoMode: true,
+    luminDocumentId: `demo-${body.chainId}-${body.engagementId}`,
+    agreementHash,
+    anchorTxHash,
+    alreadyAnchored: engagementState !== 0,
+  });
+}
+
+export async function POST(request: NextRequest) {
   const body = (await request.json().catch(() => null)) as SigningRequestBody | null;
   if (
     !body ||
@@ -73,6 +118,17 @@ export async function POST(request: NextRequest) {
   const pdfBytes = Buffer.from(body.agreementPdfBase64, "base64");
   if (!pdfBytes.length) {
     return NextResponse.json({ error: "agreement PDF is empty" }, { status: 400 });
+  }
+
+  if (isAdvisaDemoMode(["LUMIN_API_KEY", "NEXT_PUBLIC_SUPABASE_URL", "SUPABASE_SERVICE_ROLE_KEY"])) {
+    return createDemoSigningRequest(body, pdfBytes);
+  }
+
+  const db = getSupabaseAdmin() as any;
+  const luminApiKey = process.env.LUMIN_API_KEY;
+  if (!luminApiKey) {
+    console.error("LUMIN_API_KEY is not set");
+    return NextResponse.json({ error: "server misconfigured" }, { status: 500 });
   }
 
   const unsignedBucket = process.env.SUPABASE_AGREEMENTS_BUCKET || "fee-agreements";

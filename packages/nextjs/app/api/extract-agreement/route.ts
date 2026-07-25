@@ -1,7 +1,38 @@
 import { NextRequest, NextResponse } from "next/server";
+import { isAdvisaDemoMode } from "~~/services/advisa/demoMode";
 import type { ExtractionResult } from "~~/types/advisa";
 
 export const runtime = "nodejs";
+
+const DEMO_EXTRACTION: ExtractionResult = {
+  milestones: [
+    {
+      name: "Initial assessment",
+      description: "Review eligibility and confirm the application plan.",
+      amount: 800,
+      dueInWorkingDays: 1,
+    },
+    {
+      name: "Application lodged",
+      description: "Submit the visa application and provide the lodgement receipt.",
+      amount: 2400,
+      dueInWorkingDays: 5,
+    },
+    {
+      name: "RFI response submitted",
+      description: "Submit requested information to INZ if an RFI is issued.",
+      amount: 800,
+      dueInWorkingDays: 0,
+    },
+  ],
+  totalFee: 4000,
+  currency: "NZD",
+  plainLanguageSummary:
+    "The adviser is paid in three stages for defined actions. Funds stay in escrow until signatures are anchored and each action is completed. If a deadline is missed, the migrant can reclaim the unreleased funds.",
+  translatedSummary:
+    "सलाहकार को तय कार्यों के लिए तीन चरणों में भुगतान किया जाता है। हस्ताक्षर ऑन-चेन दर्ज होने तक राशि एस्क्रो में सुरक्षित रहती है। समयसीमा चूकने पर प्रवासी बची हुई राशि वापस मांग सकता है।",
+  redFlags: [],
+};
 
 const EXTRACTION_PROMPT = `You are reviewing a New Zealand immigration adviser fee agreement.
 
@@ -34,6 +65,10 @@ Return ONLY the JSON object. Nothing else.`;
 export async function POST(request: NextRequest) {
   const apiKey = process.env.ANTHROPIC_API_KEY;
   if (!apiKey) {
+    if (isAdvisaDemoMode(["ANTHROPIC_API_KEY"])) {
+      return NextResponse.json(DEMO_EXTRACTION);
+    }
+
     console.error("ANTHROPIC_API_KEY is not set");
     return NextResponse.json({ error: "server misconfigured" }, { status: 500 });
   }
