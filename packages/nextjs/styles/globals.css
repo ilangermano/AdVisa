@@ -2840,6 +2840,236 @@ button {
   font-size: 11.5px;
 }
 
+/* Human-friendly credential verification */
+.verify-checklist {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin-bottom: 20px;
+}
+
+.verify-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 12px;
+}
+
+.verify-item__icon {
+  display: inline-flex;
+  width: 22px;
+  height: 22px;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #ffffff;
+  font-size: 11px;
+  font-weight: 700;
+  margin-top: 1px;
+}
+
+.verify-item > div strong {
+  display: block;
+  font-size: 14px;
+  font-weight: 600;
+  color: #1a1a1a;
+  margin-bottom: 3px;
+}
+
+.verify-item > div p {
+  color: #4d4d4d;
+  font-size: 13px;
+  line-height: 1.55;
+}
+
+.chain-card__proof {
+  border-top: 1px solid #f0f0f0;
+  padding-top: 16px;
+}
+
+.chain-card__proof-label {
+  display: block;
+  margin-bottom: 10px;
+  color: #a9a9a9;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 10.5px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+/* Enhanced signed state */
+.signed-meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+  margin-top: 8px;
+  color: #4d4d4d;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 11px;
+}
+
+.agreement-signed-state__badge p {
+  color: #2e5d2e;
+  font-size: 13.5px;
+  line-height: 1.55;
+  margin-top: 4px;
+}
+
+/* Receipt screen */
+.app-screen--receipt {
+  max-width: 760px;
+  padding-top: 36px;
+}
+
+.receipt-badge {
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  border: 1.5px solid #2e7d32;
+  border-radius: 16px;
+  background: #f1f8f1;
+  padding: 22px 24px;
+  margin-bottom: 20px;
+  animation: riseIn 0.35s ease;
+}
+
+.receipt-badge__icon {
+  display: inline-flex;
+  width: 44px;
+  height: 44px;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: 50%;
+  background: #2e7d32;
+  color: #ffffff;
+  font-size: 20px;
+  font-weight: 700;
+}
+
+.receipt-badge strong {
+  display: block;
+  font-size: 16px;
+  font-weight: 700;
+  color: #1a3d1a;
+  margin-bottom: 5px;
+}
+
+.receipt-badge p {
+  color: #2e5d2e;
+  font-size: 14px;
+  line-height: 1.55;
+}
+
+.receipt-card {
+  padding: 22px 24px;
+  margin-bottom: 16px;
+}
+
+.receipt-card h2 {
+  margin-bottom: 18px;
+  font-size: 15px;
+  font-weight: 600;
+}
+
+.receipt-card__eyebrow {
+  margin-bottom: 16px;
+  color: #767676;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+}
+
+.receipt-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 16px;
+  padding: 10px 0;
+  border-bottom: 1px solid #f4f4f4;
+  font-size: 14px;
+}
+
+.receipt-row:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}
+
+.receipt-row span {
+  color: #4d4d4d;
+}
+
+.receipt-row strong {
+  font-weight: 600;
+  text-align: right;
+}
+
+.receipt-row__released {
+  color: #2e7d32;
+}
+
+.receipt-row--held span {
+  font-weight: 500;
+  color: #1a1a1a;
+}
+
+.receipt-divider {
+  height: 1px;
+  background: #e4e4e4;
+  margin: 6px 0;
+}
+
+.receipt-mono {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 12.5px !important;
+  font-weight: 500 !important;
+  color: #4d4d4d;
+}
+
+.receipt-steps {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+}
+
+.receipt-steps li {
+  display: flex;
+  align-items: flex-start;
+  gap: 14px;
+}
+
+.receipt-steps li > span {
+  display: inline-flex;
+  width: 28px;
+  height: 28px;
+  align-items: center;
+  justify-content: center;
+  flex: none;
+  border-radius: 50%;
+  background: linear-gradient(135deg, #1a1a1a, #5c5c5c);
+  color: #ffffff;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.receipt-steps li > div strong {
+  display: block;
+  font-size: 14.5px;
+  font-weight: 600;
+  margin-bottom: 4px;
+}
+
+.receipt-steps li > div p {
+  color: #4d4d4d;
+  font-size: 13.5px;
+  line-height: 1.6;
+}
+
 .secondary-button {
   border: 1.5px solid #1a1a1a;
   border-radius: 999px;

@@ -1,10 +1,11 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { useRouter } from "next/navigation";
 import { usePrivy } from "@privy-io/react-auth";
 import { type Advisor, advisors, formatMoney, getMilestones, getRateColor } from "~~/components/advisa/advisors";
 
-type Screen = "market" | "profile" | "agreement" | "pay" | "case";
+type Screen = "market" | "profile" | "agreement" | "pay" | "receipt" | "case";
 type PaymentMethod = "card" | "crypto";
 
 const filters = ["All", "Work", "Student", "Family", "Tourist", "Permanent residency"];
@@ -137,13 +138,38 @@ const ProfileScreen = ({
               <span className="verified-dot" />
               <span>CREDENTIALS VERIFIED ON-CHAIN</span>
             </div>
-            <p>
-              Licence status is read live off-chain from the IAA register. Signed agreement hashes and milestone events
-              are anchored on-chain — not self-reported.
-            </p>
-            <div className="hash-list">
-              <span>licence check {advisor.hash1} ✓</span>
-              <span>agreement hash {advisor.hash2} ✓</span>
+            <div className="verify-checklist">
+              <div className="verify-item">
+                <span className="verify-item__icon">✓</span>
+                <div>
+                  <strong>Licence is active</strong>
+                  <p>
+                    We checked the IAA register right now. {advisor.name} is licensed and legally allowed to give
+                    immigration advice in New Zealand.
+                  </p>
+                </div>
+              </div>
+              <div className="verify-item">
+                <span className="verify-item__icon">✓</span>
+                <div>
+                  <strong>No complaints on record</strong>
+                  <p>The IAA complaints register shows no current disciplinary action against this adviser.</p>
+                </div>
+              </div>
+              <div className="verify-item">
+                <span className="verify-item__icon">✓</span>
+                <div>
+                  <strong>Identity matches the register</strong>
+                  <p>Name and licence number match the IAA public register exactly — this is the same person.</p>
+                </div>
+              </div>
+            </div>
+            <div className="chain-card__proof">
+              <span className="chain-card__proof-label">Technical proof (for your records)</span>
+              <div className="hash-list">
+                <span>licence check {advisor.hash1} ✓</span>
+                <span>agreement hash {advisor.hash2} ✓</span>
+              </div>
             </div>
           </section>
 
@@ -436,11 +462,19 @@ const AgreementScreen = ({
             <div className="agreement-signed-state__badge">
               <span>✓</span>
               <div>
-                <strong>Signed by both parties</strong>
-                <span>
-                  Hash {advisor.hash2} anchored on-chain ·{" "}
-                  {new Date().toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" })}
-                </span>
+                <strong>Agreement signed and sealed</strong>
+                <p>
+                  Both you and {advisor.first} have signed. This document is now locked — it cannot be changed by
+                  anyone, including us.
+                </p>
+                <div className="signed-meta">
+                  <span>Lumin ref: LMN-{advisor.hash2.slice(2, 6).toUpperCase()}-2026</span>
+                  <span>·</span>
+                  <span>
+                    Hash {advisor.hash2} anchored ·{" "}
+                    {new Date().toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" })}
+                  </span>
+                </div>
               </div>
             </div>
             <button className="app-primary-button app-primary-button--wide" type="button" onClick={goToPay}>
@@ -668,8 +702,127 @@ const CaseScreen = ({ advisor, paid, goToMarket }: { advisor: Advisor; paid: boo
   );
 };
 
+const ReceiptScreen = ({
+  advisor,
+  method,
+  goToCase,
+}: {
+  advisor: Advisor;
+  method: PaymentMethod;
+  goToCase: () => void;
+}) => {
+  const milestones = getMilestones(advisor);
+  const txHash = `0x${advisor.hash1.slice(2, 6)}…${advisor.hash2.slice(-4)}`;
+  const date = new Date().toLocaleDateString("en-NZ", { day: "numeric", month: "long", year: "numeric" });
+
+  return (
+    <div className="app-screen app-screen--receipt">
+      <div className="receipt-badge">
+        <span className="receipt-badge__icon">✓</span>
+        <div>
+          <strong>Payment confirmed — your money is in escrow</strong>
+          <p>
+            {formatMoney(advisor.fee)} is now held safely by AdVisa. {advisor.first} cannot access it until each step of
+            your case is completed.
+          </p>
+        </div>
+      </div>
+
+      <section className="app-card receipt-card">
+        <div className="receipt-card__eyebrow">PAYMENT RECEIPT · {date}</div>
+        <div className="receipt-row">
+          <span>Adviser</span>
+          <strong>{advisor.name}</strong>
+        </div>
+        <div className="receipt-row">
+          <span>Visa type</span>
+          <strong>{advisor.agreement.visaType}</strong>
+        </div>
+        <div className="receipt-row">
+          <span>Total deposited into escrow</span>
+          <strong>{formatMoney(advisor.fee)}</strong>
+        </div>
+        <div className="receipt-divider" />
+        <div className="receipt-row">
+          <span>Released now — consultation confirmed</span>
+          <strong className="receipt-row__released">{formatMoney(milestones.consultation)}</strong>
+        </div>
+        <div className="receipt-row receipt-row--held">
+          <span>Protected in escrow until next milestone</span>
+          <strong>{formatMoney(advisor.fee - milestones.consultation)}</strong>
+        </div>
+      </section>
+
+      <section className="app-card receipt-card">
+        <div className="receipt-card__eyebrow">TRANSACTION DETAILS</div>
+        <div className="receipt-row">
+          <span>Transaction</span>
+          <strong className="receipt-mono">{txHash}</strong>
+        </div>
+        <div className="receipt-row">
+          <span>Escrow contract</span>
+          <strong className="receipt-mono">{advisor.hash2}</strong>
+        </div>
+        <div className="receipt-row">
+          <span>Payment method</span>
+          <strong>{method === "card" ? "Card / bank transfer" : "Crypto wallet (dNZD)"}</strong>
+        </div>
+        <div className="receipt-row">
+          <span>Network</span>
+          <strong>Base Sepolia</strong>
+        </div>
+      </section>
+
+      <section className="app-card receipt-card">
+        <h2>What happens next</h2>
+        <ol className="receipt-steps">
+          <li>
+            <span>1</span>
+            <div>
+              <strong>{advisor.first} books your consultation</strong>
+              <p>
+                You&apos;ll hear from them within {advisor.reply}. {formatMoney(milestones.consultation)} is released
+                when your consultation happens — you do not need to do anything.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>2</span>
+            <div>
+              <strong>Application lodged with INZ</strong>
+              <p>
+                {advisor.first} prepares and submits your application. {formatMoney(milestones.filing)} releases
+                automatically when they upload the INZ lodgement receipt.
+              </p>
+            </div>
+          </li>
+          <li>
+            <span>3</span>
+            <div>
+              <strong>INZ decision received</strong>
+              <p>
+                When INZ issues a decision, {advisor.first} uploads the letter. The final{" "}
+                {formatMoney(milestones.decision)} releases automatically. If the deadline is missed, all remaining
+                funds return to you.
+              </p>
+            </div>
+          </li>
+        </ol>
+      </section>
+
+      <button className="app-primary-button app-primary-button--payment" type="button" onClick={goToCase}>
+        Go to My Case →
+      </button>
+      <div className="payment-reassurance">
+        <span>🔒 Your money cannot move without a verified milestone</span>
+      </div>
+    </div>
+  );
+};
+
 const AdvisorsPage = () => {
   const { logout, user } = usePrivy();
+  const router = useRouter();
   const [screen, setScreen] = useState<Screen>("market");
   const [filter, setFilter] = useState("All");
   const [selectedIndex, setSelectedIndex] = useState(1);
@@ -679,9 +832,16 @@ const AdvisorsPage = () => {
   const displayEmail =
     user?.google?.email ?? user?.email?.address ?? (user?.phone?.number ? user.phone.number : null) ?? "Account";
 
+  const handleSignOut = async () => {
+    setPaid(false);
+    setScreen("market");
+    await logout();
+    router.push("/");
+  };
+
   const filteredAdvisors = advisors.filter(advisor => filter === "All" || advisor.specialty === filter);
   const selectedAdvisor = advisors[selectedIndex];
-  const showMarketTab = screen !== "case";
+  const showMarketTab = screen !== "case" && screen !== "receipt";
 
   const openAdvisor = (advisor: Advisor) => {
     setSelectedIndex(advisors.indexOf(advisor));
@@ -710,7 +870,7 @@ const AdvisorsPage = () => {
             Find advisers
           </button>
           <button
-            className={screen === "case" ? "app-tab app-tab--active" : "app-tab"}
+            className={screen === "case" || screen === "receipt" ? "app-tab app-tab--active" : "app-tab"}
             type="button"
             onClick={() => changeScreen("case")}
           >
@@ -720,7 +880,7 @@ const AdvisorsPage = () => {
         <div className="app-topbar__help">
           <span>{displayEmail}</span>
           <Avatar size="small" />
-          <button className="app-signout-button" type="button" onClick={logout}>
+          <button className="app-signout-button" type="button" onClick={handleSignOut}>
             Sign out
           </button>
         </div>
@@ -782,9 +942,12 @@ const AdvisorsPage = () => {
           goBack={() => changeScreen("agreement")}
           confirm={() => {
             setPaid(true);
-            changeScreen("case");
+            changeScreen("receipt");
           }}
         />
+      )}
+      {screen === "receipt" && (
+        <ReceiptScreen advisor={selectedAdvisor} method={paymentMethod} goToCase={() => changeScreen("case")} />
       )}
       {screen === "case" && (
         <CaseScreen advisor={selectedAdvisor} paid={paid} goToMarket={() => changeScreen("market")} />
