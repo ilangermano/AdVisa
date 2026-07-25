@@ -185,6 +185,14 @@ export const advisors: Advisor[] = [
 
 export const formatMoney = (amount: number) => `$${amount.toLocaleString("en-US")}`;
 
+export const getAdvisorSlug = (advisor: Advisor): string =>
+  advisor.name
+    .toLowerCase()
+    .replace(/[^a-z0-9]+/g, "-")
+    .replace(/^-|-$/g, "");
+
+export const getAdvisorBySlug = (slug: string): Advisor | undefined => advisors.find(a => getAdvisorSlug(a) === slug);
+
 export const getRateColor = (rate: number) => {
   const hue = Math.max(0, Math.min(120, (rate - 80) * (120 / 16)));
   return `hsl(${hue}, 62%, 34%)`;
