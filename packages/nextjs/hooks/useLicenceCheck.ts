@@ -2,6 +2,7 @@
 
 import { useCallback, useState } from "react";
 import type { LicenceCheckResult } from "~~/services/licence-check/types";
+import { privyFetch } from "~~/services/privy/client";
 
 type LicenceCheckState = {
   result: LicenceCheckResult | null;
@@ -24,7 +25,7 @@ export const useLicenceCheck = () => {
     }));
 
     try {
-      const response = await fetch("/api/licence-check", {
+      const response = await privyFetch("/api/licence-check", {
         method: "POST",
         headers: {
           "content-type": "application/json",

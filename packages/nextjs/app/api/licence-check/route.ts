@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from "next/server";
 import { checkIaaLicenceLive, getNegativeLookupRef } from "~~/services/licence-check/iaa";
 import { cacheLicenceCheck, getFreshCachedLicenceCheck } from "~~/services/licence-check/supabase";
+import { privyAuthErrorResponse, requirePrivyUser } from "~~/services/privy/server";
 
 export const runtime = "nodejs";
 
@@ -16,6 +17,12 @@ const getRequestedName = (body: LicenceCheckRequest) => {
 };
 
 export async function POST(request: NextRequest) {
+  try {
+    await requirePrivyUser(request);
+  } catch (error) {
+    return privyAuthErrorResponse(error);
+  }
+
   let body: LicenceCheckRequest;
 
   try {

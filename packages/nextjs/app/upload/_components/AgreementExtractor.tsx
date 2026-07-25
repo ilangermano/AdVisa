@@ -1,6 +1,7 @@
 "use client";
 
 import { useRef, useState } from "react";
+import { privyFetch } from "~~/services/privy/client";
 import type { ExtractionResult, RedFlag } from "~~/types/advisa";
 
 const SEVERITY_CLASS: Record<RedFlag["severity"], string> = {
@@ -15,11 +16,13 @@ const SEVERITY_LABEL: Record<RedFlag["severity"], string> = {
   low: "Low",
 };
 
-type Language = "en" | "hi";
+type Language = "en" | "hi" | "pt" | "fa";
 
 const LANG_LABELS: Record<Language, string> = {
   en: "English",
   hi: "हिन्दी",
+  pt: "Português",
+  fa: "دری",
 };
 
 export function AgreementExtractor() {
@@ -47,7 +50,7 @@ export function AgreementExtractor() {
     form.append("pdf", file);
 
     try {
-      const res = await fetch("/api/extract-agreement", { method: "POST", body: form });
+      const res = await privyFetch("/api/extract-agreement", { method: "POST", body: form });
       const data = await res.json();
       if (!res.ok) {
         setError((data as { error?: string }).error ?? "Extraction failed. Please try again.");
@@ -61,7 +64,7 @@ export function AgreementExtractor() {
     }
   }
 
-  const summary = result ? (lang === "en" ? result.plainLanguageSummary : result.translatedSummary) : null;
+  const summary = result ? (lang === "en" ? result.plainLanguageSummary : result.translatedSummaries[lang]) : null;
 
   return (
     <div className="flex flex-col gap-8 w-full max-w-3xl mx-auto">
@@ -161,7 +164,7 @@ export function AgreementExtractor() {
                 {result.milestones.map((m, i) => (
                   <div key={i} className="flex items-start gap-4 p-4 rounded-lg bg-base-200">
                     <div className="flex-shrink-0 w-8 h-8 rounded-full bg-primary text-primary-content flex items-center justify-center text-sm font-bold">
-                      {i}
+                      {i + 1}
                     </div>
                     <div className="flex-1 min-w-0">
                       <div className="flex items-baseline justify-between gap-2 flex-wrap">

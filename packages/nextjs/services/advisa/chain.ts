@@ -1,6 +1,6 @@
 import { createPublicClient, createWalletClient, http } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
-import { avalancheFuji, hardhat, sepolia } from "viem/chains";
+import { avalancheFuji, baseSepolia, hardhat, sepolia } from "viem/chains";
 import deployedContracts from "~~/contracts/deployedContracts";
 import { isAdvisaDemoMode } from "~~/services/advisa/demoMode";
 import type { GenericContract, GenericContractsDeclaration } from "~~/utils/scaffold-eth/contract";
@@ -11,6 +11,10 @@ export const ADVISA_CHAINS = {
   [hardhat.id]: {
     chain: hardhat,
     rpcUrl: () => process.env.HARDHAT_RPC_URL || "http://127.0.0.1:8545",
+  },
+  [baseSepolia.id]: {
+    chain: baseSepolia,
+    rpcUrl: () => process.env.BASE_SEPOLIA_RPC_URL || process.env.NEXT_PUBLIC_BASE_SEPOLIA_RPC_URL,
   },
   [sepolia.id]: {
     chain: sepolia,
@@ -23,7 +27,7 @@ export const ADVISA_CHAINS = {
 } as const;
 
 export type AdvisaChainId = keyof typeof ADVISA_CHAINS;
-export type AdvisaContractName = "VisaEscrow" | "MockNZDD";
+export type AdvisaContractName = "VisaEscrow" | "DNZD" | "MockNZDD";
 
 const HARDHAT_DEFAULT_DEPLOYER_PRIVATE_KEY = "0xac0974bec39a17e36ba4a6b4d238ff944bacb478cbed5efcae784d7bf4f2ff80";
 

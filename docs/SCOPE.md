@@ -7,13 +7,13 @@ deadline **Sunday 10:30am**. See `CONTEXT.md` for the project summary and rules.
 1. IAA register check — entering an adviser name returns Licensed / Not Licensed
 2. PDF → AI extracts milestones, dates, amounts → escrow terms
 3. Lumin sign → webhook → hash anchored on-chain
-4. Escrow funded in MockNZDD, milestone releases
+4. Escrow funded in NewMoney test dNZD on Base Sepolia, milestone releases
 5. **Auto-refund on missed deadline** ← the closing demo beat, must work
 
 ## SHOULD — nearly free, do after MUST
 6. Plain-language summary + translation (same Anthropic call as #2)
 7. Re-check licence at each milestone (reuses #1)
-8. Deploy to Sepolia + Fuji (config from hour one, deploy at the end)
+8. Deploy to Base Sepolia against NewMoney's confirmed dNZD token address
 9. Tribunal audit trail export (read event log → PDF; only if 1–5 green)
 
 ## CUT — roadmap slide only, DO NOT BUILD
@@ -30,7 +30,7 @@ deadline **Sunday 10:30am**. See `CONTEXT.md` for the project summary and rules.
 3. Upload fee agreement PDF → AI extracts 3 milestones live
 4. Show plain-language summary in Hindi
 5. Both sign in Lumin → hash appears on-chain
-6. Fund $4,000 MockNZDD → 20% releases
+6. Fund NZ$4,000 test dNZD → 20% releases
 7. **Advance clock past lodgement deadline → reclaim button lights up**
 8. Migrant reclaims → remaining funds return
 
@@ -59,7 +59,7 @@ advisers taking payment and claiming to have lodged when they have not.
 
 ## Order of work
 1. Docs first (this file and its siblings) so the team has context immediately
-2. `MockNZDD.sol` and `VisaEscrow.sol`
+2. `MockNZDD.sol`, `DNZD.sol`, and `VisaEscrow.sol`
 3. Deploy script and tests
 4. Lumin webhook handler stub with TODOs
 5. Stop. Frontend features wait until explicitly requested.

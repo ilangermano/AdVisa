@@ -15,12 +15,14 @@ import {
 } from "viem";
 import { hardhat } from "viem/chains";
 import { useAccount, useBlock, usePublicClient } from "wagmi";
+import { usePrivyWalletSetup } from "~~/contexts/PrivyWalletSetupContext";
 import {
   useDeployedContractInfo,
   useScaffoldReadContract,
   useScaffoldWriteContract,
   useTargetNetwork,
 } from "~~/hooks/scaffold-eth";
+import { privyFetch } from "~~/services/privy/client";
 import type { ExtractionResult, Milestone } from "~~/types/advisa";
 import { AllowedChainIds, notification } from "~~/utils/scaffold-eth";
 
@@ -51,8 +53,11 @@ const DEMO_EXTRACTION: ExtractionResult = {
   currency: "NZD",
   plainLanguageSummary:
     "The adviser is paid in three stages for defined actions. Funds are held until signatures are anchored and released only when each action is completed. If deadlines are missed, remaining funds can be reclaimed.",
-  translatedSummary:
-    "सलाहकार को तय कार्यों के लिए तीन चरणों में भुगतान किया जाता है। हस्ताक्षर ऑन-चेन दर्ज होने तक राशि सुरक्षित रहती है। समयसीमा चूकने पर बची हुई राशि वापस मांगी जा सकती है।",
+  translatedSummaries: {
+    hi: "सलाहकार को तय कार्यों के लिए तीन चरणों में भुगतान किया जाता है। हस्ताक्षर ऑन-चेन दर्ज होने तक राशि सुरक्षित रहती है। समयसीमा चूकने पर बची हुई राशि वापस मांगी जा सकती है।",
+    pt: "O consultor é pago em três etapas por ações definidas. Os fundos ficam retidos até que as assinaturas sejam registradas e cada ação seja concluída. Se os prazos forem perdidos, os fundos restantes podem ser recuperados.",
+    fa: "مشاور در سه مرحله برای اقدامات تعریف‌شده پرداخت دریافت می‌کند. وجوه تا زمانی که امضاها ثبت شده و هر اقدام تکمیل شود نگه داشته می‌شوند. در صورت از دست دادن مهلت‌ها، وجوه باقی‌مانده قابل استرداد است.",
+  },
   redFlags: [],
 };
 
@@ -98,6 +103,7 @@ async function fileToBase64(file: File) {
 }
 
 export const EscrowDemo: NextPage = () => {
+  const walletSetup = usePrivyWalletSetup();
   const fileInputRef = useRef<HTMLInputElement>(null);
   const { address: migrantAddress } = useAccount();
   const { targetNetwork } = useTargetNetwork();
@@ -152,6 +158,12 @@ export const EscrowDemo: NextPage = () => {
     query: { enabled: Boolean(migrantAddress) },
   });
 
+  const { data: tokenDecimals } = useScaffoldReadContract({
+    contractName: "MockNZDD",
+    functionName: "decimals",
+    chainId,
+  });
+
   const escrowWrite = useScaffoldWriteContract({ contractName: "VisaEscrow", chainId });
   const tokenWrite = useScaffoldWriteContract({ contractName: "MockNZDD", chainId });
 
@@ -171,8 +183,11 @@ export const EscrowDemo: NextPage = () => {
     engagementState === 2 && currentMilestone?.status === 0 && currentMilestone.deadline > 0n && now > reclaimAt;
 
   const plannedAmounts = useMemo(
-    () => extraction.milestones.map(milestone => parseUnits(String(milestone.amount), 18)),
-    [extraction.milestones],
+    () =>
+      tokenDecimals === undefined
+        ? []
+        : extraction.milestones.map(milestone => parseUnits(String(milestone.amount), tokenDecimals)),
+    [extraction.milestones, tokenDecimals],
   );
 
   const plannedDeadlines = useMemo(() => {
@@ -195,6 +210,10 @@ export const EscrowDemo: NextPage = () => {
       notification.error("Contract client is not ready");
       return;
     }
+    if (tokenDecimals === undefined) {
+      notification.error("dNZD token details are not ready");
+      return;
+    }
 
     setBusy("create");
     try {
@@ -209,7 +228,8 @@ export const EscrowDemo: NextPage = () => {
         eventName: "EngagementCreated",
         logs: receipt.logs,
       });
-      const id = logs[0]?.args?.id;
+      const createdLog = logs[0] as { args?: { id?: bigint } } | undefined;
+      const id = createdLog?.args?.id;
       if (id === undefined) {
         notification.error("Could not read engagement id from transaction");
         return;
@@ -229,7 +249,7 @@ export const EscrowDemo: NextPage = () => {
 
     setBusy("signing");
     try {
-      const res = await fetch("/api/lumin/signing-requests", {
+      const res = await privyFetch("/api/lumin/signing-requests", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({
@@ -267,6 +287,19 @@ export const EscrowDemo: NextPage = () => {
     }
   }
 
+  async function mintTestToken() {
+    if (!migrantAddress || tokenDecimals === undefined) return;
+    setBusy("mint");
+    try {
+      await tokenWrite.writeContractAsync({
+        functionName: "mint",
+        args: [migrantAddress, parseUnits("5000", tokenDecimals)],
+      });
+    } finally {
+      setBusy(null);
+    }
+  }
+
   async function fundEngagement() {
     if (!parsedEngagementId) return;
     setBusy("fund");
@@ -297,7 +330,7 @@ export const EscrowDemo: NextPage = () => {
     setBusy("time");
     try {
       const seconds = reclaimAt > now ? Number(reclaimAt - now + 1n) : GRACE_PERIOD_SECONDS + 24 * 60 * 60;
-      const res = await fetch("/api/escrow/fast-forward", {
+      const res = await privyFetch("/api/escrow/fast-forward", {
         method: "POST",
         headers: { "content-type": "application/json" },
         body: JSON.stringify({ chainId: targetNetwork.id, seconds }),
@@ -324,12 +357,34 @@ export const EscrowDemo: NextPage = () => {
     }));
   }
 
+  if (walletSetup.isEmbeddedWallet && walletSetup.status !== "ready") {
+    return (
+      <div className="w-full max-w-2xl mx-auto px-4 py-12">
+        <div role="status" className="alert alert-info">
+          {walletSetup.status === "error" ? (
+            <>
+              <span>{walletSetup.error ?? "We could not prepare your account."}</span>
+              <button className="btn btn-sm btn-warning" onClick={walletSetup.retry} type="button">
+                Retry setup
+              </button>
+            </>
+          ) : (
+            <>
+              <span className="loading loading-spinner loading-sm" />
+              <span>Preparing your account for secure test payments…</span>
+            </>
+          )}
+        </div>
+      </div>
+    );
+  }
+
   return (
     <div className="w-full max-w-6xl mx-auto px-4 py-8 flex flex-col gap-6">
       <section className="flex flex-col gap-2">
         <h1 className="text-3xl font-bold">AdVisa Escrow Console</h1>
         <p className="text-sm text-base-content/70 max-w-3xl">
-          Create the on-chain engagement, send the agreement to Lumin, fund MockNZDD after the signed hash is anchored,
+          Create the on-chain engagement, send the agreement to Lumin, fund test dNZD after the signed hash is anchored,
           and exercise the deadline reclaim path.
         </p>
       </section>
@@ -454,7 +509,9 @@ export const EscrowDemo: NextPage = () => {
                 </div>
                 <div className="flex justify-between gap-3">
                   <span className="text-base-content/60">dNZD balance</span>
-                  <span>{balance === undefined ? "-" : formatUnits(balance, 18)}</span>
+                  <span>
+                    {balance === undefined || tokenDecimals === undefined ? "-" : formatUnits(balance, tokenDecimals)}
+                  </span>
                 </div>
               </div>
 
@@ -496,11 +553,19 @@ export const EscrowDemo: NextPage = () => {
 
               <button
                 className="btn btn-outline"
+                disabled={busy !== null || !migrantAddress || tokenDecimals === undefined}
+                onClick={mintTestToken}
+              >
+                {busy === "mint" && <span className="loading loading-spinner loading-sm" />}
+                Mint 5,000 test dNZD
+              </button>
+              <button
+                className="btn btn-outline"
                 disabled={busy !== null || !anchored || !needsApproval}
                 onClick={approveToken}
               >
                 {busy === "approve" && <span className="loading loading-spinner loading-sm" />}
-                Approve MockNZDD
+                Approve test dNZD
               </button>
               <button
                 className="btn btn-primary"
@@ -540,7 +605,9 @@ export const EscrowDemo: NextPage = () => {
                 <div className="stat">
                   <div className="stat-title">Total</div>
                   <div className="stat-value text-lg">
-                    {totalAmount === undefined ? "-" : `NZ$${formatUnits(totalAmount, 18)}`}
+                    {totalAmount === undefined || tokenDecimals === undefined
+                      ? "-"
+                      : `NZ$${formatUnits(totalAmount, tokenDecimals)}`}
                   </div>
                 </div>
                 <div className="stat">
@@ -558,7 +625,9 @@ export const EscrowDemo: NextPage = () => {
                       <span className="font-semibold">Milestone {index + 1}</span>
                       <span className="badge">{STATUS_LABELS[milestone.status]}</span>
                     </div>
-                    <span>Amount: NZ${formatUnits(milestone.amount, 18)}</span>
+                    <span>
+                      Amount: {tokenDecimals === undefined ? "-" : `NZ$${formatUnits(milestone.amount, tokenDecimals)}`}
+                    </span>
                     <span>
                       Deadline:{" "}
                       {milestone.deadline === 0n

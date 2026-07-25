@@ -18,6 +18,7 @@ Built for the Web3NZ Hackathon, University of Canterbury, Christchurch, 24–26 
 - [`docs/SCOPE.md`](./docs/SCOPE.md) — MVP scope and the demo path
 - [`docs/CONTRACTS.md`](./docs/CONTRACTS.md) — `VisaEscrow` design
 - [`docs/INTEGRATIONS.md`](./docs/INTEGRATIONS.md) — Lumin, IAA register, Anthropic, Privy, tokens
+- [`docs/NEWMONEY_TESTNET.md`](./docs/NEWMONEY_TESTNET.md) — dNZD request template and deployment inputs
 - [`docs/ARCHITECTURE.md`](./docs/ARCHITECTURE.md) — on-chain vs off-chain, and why a chain at all
 - [`docs/PRODUCT.md`](./docs/PRODUCT.md) — market facts, competitors, pitch
 - [`SETUP.md`](./SETUP.md) — step-by-step environment setup
@@ -39,13 +40,15 @@ Solidity ^0.8.24 + Hardhat (Scaffold-ETH 2) · OpenZeppelin Contracts v5 · Next
 Router + TypeScript · wagmi/viem · Privy · Supabase · Anthropic API · Lumin Sign ·
 Vercel. See `CONTEXT.md` for the full table and the non-negotiable rules.
 
-## Testnet deployments
-Filled in after `yarn deploy --network sepolia` / `yarn deploy --network fuji`.
+## Testnet deployment
 
-| Network | Chain ID | VisaEscrow | MockNZDD |
-|---|---|---|---|
-| Ethereum Sepolia | 11155111 | `0x0ff3d7aff507d96a085cc1e0b707b48973a3bf50` | `0x4e81c7b074c0cdf3176f4294f5f699a8cd823253` |
-| Avalanche Fuji | 43113 | `0x0ff3d7aff507d96a085cc1e0b707b48973a3bf50` | `0x4e81c7b074c0cdf3176f4294f5f699a8cd823253` |
+AdVisa targets Base Sepolia and uses NewMoney's test dNZD token. Set
+`DNZD_TOKEN_ADDRESS` to the address confirmed by NewMoney, then deploy with
+`yarn deploy --network baseSepolia`.
+
+| Network | Chain ID | VisaEscrow | dNZD |
+|---|---:|---|---|
+| Base Sepolia | 84532 | Pending | [`0x63ee…1853`](https://sepolia.basescan.org/token/0x63ee4b77d3912DC7bCe711c3BE7bF12D532F1853) |
 
 ## License
 MIT — see [`LICENCE`](./LICENCE).
