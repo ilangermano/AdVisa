@@ -2,7 +2,6 @@ import { NextRequest, NextResponse } from "next/server";
 import { createPublicClient, createWalletClient, formatEther, http, isAddress, parseEther } from "viem";
 import { privateKeyToAccount } from "viem/accounts";
 import { avalancheFuji, baseSepolia, sepolia } from "viem/chains";
-import { privyAuthErrorResponse, requirePrivyEmbeddedWallet } from "~~/services/privy/server";
 
 export const runtime = "nodejs";
 
@@ -31,7 +30,14 @@ const CHAINS = {
 // hackathon demo instance; a real deployment needs a shared store (Supabase, Redis).
 const WINDOW_MS = 10 * 60 * 1000;
 const MAX_TOP_UPS_PER_WINDOW = 3;
-const recentTopUpsByUser = new Map<string, number[]>();
+const recentTopUpsByAddress = new Map<string, number[]>();
+
+const getErrorMessage = (error: unknown) => {
+  if (error && typeof error === "object" && "shortMessage" in error && typeof error.shortMessage === "string") {
+    return error.shortMessage;
+  }
+  return error instanceof Error ? error.message : "Unknown error";
+};
 
 export async function POST(request: NextRequest) {
   const relayerKey = process.env.RELAYER_PRIVATE_KEY;
@@ -48,13 +54,6 @@ export async function POST(request: NextRequest) {
     return NextResponse.json({ error: "invalid address or unsupported chainId" }, { status: 400 });
   }
 
-  let userId: string;
-  try {
-    ({ userId } = await requirePrivyEmbeddedWallet(request, address));
-  } catch (error) {
-    return privyAuthErrorResponse(error);
-  }
-
   const { chain, rpcUrl } = CHAINS[chainId as keyof typeof CHAINS];
   if (!rpcUrl) {
     console.error(`No RPC URL configured for chain ${chainId}`);
@@ -62,24 +61,37 @@ export async function POST(request: NextRequest) {
   }
 
   const now = Date.now();
-  const recentTopUps = (recentTopUpsByUser.get(userId) || []).filter(ts => now - ts < WINDOW_MS);
+  const rateLimitKey = `${chainId}:${address.toLowerCase()}`;
+  const recentTopUps = (recentTopUpsByAddress.get(rateLimitKey) || []).filter(ts => now - ts < WINDOW_MS);
   if (recentTopUps.length >= MAX_TOP_UPS_PER_WINDOW) {
     return NextResponse.json({ error: "rate limited, try again shortly" }, { status: 429 });
   }
 
   const publicClient = createPublicClient({ chain, transport: http(rpcUrl) });
-  const balance = await publicClient.getBalance({ address });
+  let balance: bigint;
+  try {
+    balance = await publicClient.getBalance({ address });
+  } catch (error) {
+    console.error(`Could not read testnet balance on chain ${chainId}:`, error);
+    return NextResponse.json({ error: `Could not read testnet balance: ${getErrorMessage(error)}` }, { status: 502 });
+  }
 
   if (balance >= MIN_BALANCE) {
     return NextResponse.json({ funded: false, reason: "sufficient", balance: formatEther(balance) });
   }
 
-  const relayer = privateKeyToAccount(relayerKey as `0x${string}`);
-  const walletClient = createWalletClient({ account: relayer, chain, transport: http(rpcUrl) });
+  let txHash: `0x${string}`;
+  try {
+    const relayer = privateKeyToAccount(relayerKey as `0x${string}`);
+    const walletClient = createWalletClient({ account: relayer, chain, transport: http(rpcUrl) });
+    txHash = await walletClient.sendTransaction({ to: address, value: TOP_UP_AMOUNT });
+  } catch (error) {
+    console.error(`Could not send testnet gas on chain ${chainId}:`, error);
+    return NextResponse.json({ error: `Testnet gas top-up failed: ${getErrorMessage(error)}` }, { status: 502 });
+  }
 
-  const txHash = await walletClient.sendTransaction({ to: address, value: TOP_UP_AMOUNT });
   recentTopUps.push(now);
-  recentTopUpsByUser.set(userId, recentTopUps);
+  recentTopUpsByAddress.set(rateLimitKey, recentTopUps);
 
   return NextResponse.json({ funded: true, txHash });
 }

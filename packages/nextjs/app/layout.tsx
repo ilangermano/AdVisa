@@ -25,7 +25,7 @@ const ibmPlexMono = IBM_Plex_Mono({
 });
 
 export const metadata = getMetadata({
-  title: "Advisa",
+  title: "AdVisa",
   description: "Verified visa advice, protected by milestone escrow.",
   imageRelativePath: "/og.png",
 });

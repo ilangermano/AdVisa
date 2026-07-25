@@ -344,12 +344,19 @@ export const getParsedErrorWithAllAbis = (error: any, chainId: AllowedChainIds):
   const originalParsedError = getParsedError(error);
 
   // Check if this is an unrecognized error signature
-  if (/Encoded error signature.*not found on ABI/i.test(originalParsedError)) {
+  if (
+    /Encoded error signature.*not found on ABI|Unable to decode signature.*not found on the provided ABI/i.test(
+      originalParsedError,
+    )
+  ) {
     const signatureMatch = originalParsedError.match(/0x[a-fA-F0-9]{8}/);
-    const signature = signatureMatch ? signatureMatch[0] : "";
+    const signature = signatureMatch ? signatureMatch[0].toLowerCase() : "";
 
     if (!signature) {
       return originalParsedError;
+    }
+    if (signature === "0xfb8f41b2") {
+      return "The token approval was not available when escrow funding ran. Wait for the current payment to finish before retrying.";
     }
 
     try {

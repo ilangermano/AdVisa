@@ -3,16 +3,15 @@
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useWallets } from "@privy-io/react-auth";
 import { useAccount } from "wagmi";
-import { privyFetch } from "~~/services/privy/client";
 
 type WalletSetupStatus = "idle" | "checking" | "ready" | "error";
 
 /**
  * The migrant must never see "insufficient funds for gas" (docs/INTEGRATIONS.md § 4).
  * The moment a Privy embedded wallet is connected, ask the server-held relayer to top
- * it up with a small amount of testnet native currency. The server verifies that the
- * address belongs to the signed-in user, re-checks the on-chain balance, and no-ops if
- * it is already sufficient. The returned status keeps the sign-in control in an explicit
+ * it up with a small amount of testnet native currency. The server rate-limits the
+ * address, re-checks the on-chain balance, and no-ops if it is already sufficient.
+ * The returned status keeps the control in an explicit
  * "account ready" state instead of silently failing with an opaque gas error later.
  */
 export const usePrefundEmbeddedWallet = () => {
@@ -46,7 +45,7 @@ export const usePrefundEmbeddedWallet = () => {
     setStatus("checking");
     setError(null);
 
-    privyFetch("/api/wallet/prefund", {
+    fetch("/api/wallet/prefund", {
       method: "POST",
       headers: { "content-type": "application/json" },
       body: JSON.stringify({ address, chainId }),

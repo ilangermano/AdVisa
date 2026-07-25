@@ -62,6 +62,16 @@ export async function requirePrivyUser(request: NextRequest): Promise<PrivyUserC
 
 export async function requirePrivyEmbeddedWallet(request: NextRequest, address: string) {
   const claims = await requirePrivyUser(request);
+  const wallet = await requirePrivyAppWallet(address);
+
+  if (wallet.userId !== claims.userId) {
+    throw new PrivyAuthError("Wallet is not the signed-in user's Privy embedded wallet", 403);
+  }
+
+  return claims;
+}
+
+export async function requirePrivyAppWallet(address: string) {
   const client = getPrivyClient();
 
   let user;
@@ -72,23 +82,21 @@ export async function requirePrivyEmbeddedWallet(request: NextRequest, address: 
   }
 
   const normalizedAddress = address.toLowerCase();
-  const isOwnedEmbeddedWallet =
-    user.id === claims.userId &&
-    user.linked_accounts.some(account => {
-      if (account.type !== "wallet") return false;
-      const wallet = account as unknown as { address?: string; chain_type?: string; wallet_client_type?: string };
-      return (
-        wallet.address?.toLowerCase() === normalizedAddress &&
-        wallet.chain_type === "ethereum" &&
-        wallet.wallet_client_type === "privy"
-      );
-    });
+  const isAppEmbeddedWallet = user.linked_accounts.some(account => {
+    if (account.type !== "wallet") return false;
+    const wallet = account as unknown as { address?: string; chain_type?: string; wallet_client_type?: string };
+    return (
+      wallet.address?.toLowerCase() === normalizedAddress &&
+      wallet.chain_type === "ethereum" &&
+      wallet.wallet_client_type === "privy"
+    );
+  });
 
-  if (!isOwnedEmbeddedWallet) {
-    throw new PrivyAuthError("Wallet is not the signed-in user's Privy embedded wallet", 403);
+  if (!isAppEmbeddedWallet) {
+    throw new PrivyAuthError("Wallet is not a Privy embedded wallet for this app", 403);
   }
 
-  return claims;
+  return { userId: user.id };
 }
 
 export async function requirePrivyAdmin(request: NextRequest) {

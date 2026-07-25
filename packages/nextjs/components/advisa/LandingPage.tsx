@@ -3,8 +3,12 @@
 import Link from "next/link";
 import { usePrivy } from "@privy-io/react-auth";
 import { AdvisaLogo } from "~~/components/advisa/AdvisaLogo";
+import { ExplorerLink } from "~~/components/advisa/ExplorerLink";
 import { ParticleGlobe } from "~~/components/advisa/ParticleGlobe";
 import { advisors, getRateColor } from "~~/components/advisa/advisors";
+import deployedContracts from "~~/contracts/deployedContracts";
+
+const escrowAddress = deployedContracts[84532].VisaEscrow.address;
 
 const steps = [
   {
@@ -17,7 +21,7 @@ const steps = [
   },
   {
     title: "Pay into escrow",
-    copy: "Approve the invoice and pay by card or crypto. Advisa holds it — your advisor is paid in steps, not upfront.",
+    copy: "Approve the invoice and pay by card or crypto. AdVisa holds it — your advisor is paid in steps, not upfront.",
   },
   {
     title: "Track to decision",
@@ -35,7 +39,7 @@ const tickerItems = [
 ];
 
 export const LandingPage = () => {
-  const { login, authenticated } = usePrivy();
+  const { authenticated } = usePrivy();
 
   return (
     <div className="landing-page">
@@ -49,17 +53,17 @@ export const LandingPage = () => {
         </nav>
         <div className="landing-nav__actions">
           {authenticated ? (
-            <Link className="landing-nav__signin" href="/demo">
+            <Link className="landing-nav__signin" href="/advisors">
               Go to app
             </Link>
           ) : (
-            <button className="landing-nav__signin" onClick={login} type="button">
+            <Link className="landing-nav__signin" href="/sign-in">
               Sign in
-            </button>
+            </Link>
           )}
-          <button className="pill-button pill-button--small" onClick={login} type="button">
+          <Link className="pill-button pill-button--small" href={authenticated ? "/advisors" : "/sign-in"}>
             Get started
-          </button>
+          </Link>
         </div>
       </header>
 
@@ -76,7 +80,7 @@ export const LandingPage = () => {
               and pay into escrow that releases only as your case moves forward.
             </p>
             <div className="landing-hero__actions">
-              <Link className="pill-button pill-button--hero" href="/advisors">
+              <Link className="pill-button pill-button--hero" href={authenticated ? "/advisors" : "/sign-in"}>
                 Browse advisors
               </Link>
               <Link className="pill-button pill-button--outline pill-button--hero" href="#how-it-works">
@@ -194,7 +198,9 @@ export const LandingPage = () => {
             </div>
             <div className="contract-card">
               <span className="sweep-line" />
-              <div className="contract-card__eyebrow">ESCROW CONTRACT · 0x6d90…b3f4</div>
+              <div className="contract-card__eyebrow">
+                ESCROW CONTRACT · <ExplorerLink type="address" value={escrowAddress} />
+              </div>
               <div className="contract-card__rows">
                 <div>
                   <span>deposited</span>
@@ -222,16 +228,16 @@ export const LandingPage = () => {
         <section className="landing-cta">
           <h2>Start with a conversation, not a payment.</h2>
           <p>Browse verified advisors, book a consultation, and only pay once you&apos;ve approved the invoice.</p>
-          <button className="pill-button pill-button--cta" onClick={login} type="button">
+          <Link className="pill-button pill-button--cta" href={authenticated ? "/advisors" : "/sign-in"}>
             Find your advisor
-          </button>
+          </Link>
         </section>
       </main>
 
       <footer className="landing-footer">
         <div className="landing-footer__brand">
           <AdvisaLogo compact />
-          Advisa — verified visa advice
+          AdVisa — verified visa advice
         </div>
         <nav aria-label="Legal links">
           <a href="#privacy">Privacy</a>

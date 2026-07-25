@@ -59,6 +59,18 @@ export const Providers = ({ children }: { children: React.ReactNode }) => {
 
   useEffect(() => {
     setMounted(true);
+
+    // Privy's transaction dialog currently forwards this presentation-only prop in development.
+    const originalConsoleError = console.error;
+    console.error = (...args: unknown[]) => {
+      const message = args.map(String).join(" ");
+      if (message.includes("React does not recognize") && message.includes("isActive")) return;
+      originalConsoleError(...args);
+    };
+
+    return () => {
+      console.error = originalConsoleError;
+    };
   }, []);
 
   if (!privyAppId) {
