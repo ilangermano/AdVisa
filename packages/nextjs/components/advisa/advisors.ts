@@ -4,6 +4,8 @@ export type Advisor = {
   title: string;
   specialty: string;
   countries: string;
+  flag: string;
+  origin: string;
   rate: number;
   rating: number;
   cases: number;
@@ -29,6 +31,8 @@ export const advisors: Advisor[] = [
     title: "Licensed immigration adviser",
     specialty: "Student",
     countries: "New Zealand",
+    flag: "🇲🇽",
+    origin: "Mexico",
     rate: 96,
     rating: 4.8,
     cases: 148,
@@ -53,6 +57,8 @@ export const advisors: Advisor[] = [
     title: "Licensed immigration adviser",
     specialty: "Work",
     countries: "New Zealand",
+    flag: "🇬🇭",
+    origin: "Ghana",
     rate: 94,
     rating: 4.9,
     cases: 212,
@@ -77,6 +83,8 @@ export const advisors: Advisor[] = [
     title: "Licensed immigration adviser",
     specialty: "Family",
     countries: "New Zealand",
+    flag: "🇭🇰",
+    origin: "Hong Kong",
     rate: 91,
     rating: 4.7,
     cases: 176,
@@ -101,6 +109,8 @@ export const advisors: Advisor[] = [
     title: "Licensed immigration adviser",
     specialty: "Permanent residency",
     countries: "New Zealand",
+    flag: "🇨🇿",
+    origin: "Czech Republic",
     rate: 89,
     rating: 4.8,
     cases: 231,
@@ -125,6 +135,8 @@ export const advisors: Advisor[] = [
     title: "Licensed immigration adviser",
     specialty: "Tourist",
     countries: "New Zealand",
+    flag: "🇮🇹",
+    origin: "Italy",
     rate: 88,
     rating: 4.6,
     cases: 94,
@@ -149,6 +161,8 @@ export const advisors: Advisor[] = [
     title: "Licensed immigration adviser",
     specialty: "Work",
     countries: "New Zealand",
+    flag: "🇳🇬",
+    origin: "Nigeria",
     rate: 87,
     rating: 4.7,
     cases: 165,

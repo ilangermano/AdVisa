@@ -23,7 +23,7 @@ const AdvisorCard = ({ advisor, onOpen }: { advisor: Advisor; onOpen: () => void
           <span className="verified-chip">✓ Verified</span>
         </div>
         <span>
-          {advisor.specialty} · {advisor.countries}
+          {advisor.specialty} · {advisor.flag} {advisor.origin}
         </span>
       </div>
     </div>
@@ -42,7 +42,7 @@ const AdvisorCard = ({ advisor, onOpen }: { advisor: Advisor; onOpen: () => void
       </div>
     </div>
     <div className="market-card__footer">
-      <p>Price by invoice, after your consultation</p>
+      <p className="market-card__langs">{advisor.languages.join(" · ")}</p>
       <button className="app-primary-button app-primary-button--small" type="button" onClick={onOpen}>
         View adviser
       </button>
@@ -93,7 +93,7 @@ const ProfileScreen = ({
                   <span className="verified-chip verified-chip--profile">✓ Licensed adviser</span>
                 </div>
                 <p>
-                  {advisor.title} · {advisor.specialty} visas · {advisor.countries}
+                  {advisor.title} · {advisor.specialty} visas · {advisor.flag} {advisor.origin}
                 </p>
               </div>
             </div>
