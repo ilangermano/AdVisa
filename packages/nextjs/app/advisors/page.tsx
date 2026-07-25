@@ -504,6 +504,22 @@ const PaymentScreen = ({
   confirm: () => void;
 }) => {
   const milestones = getMilestones(advisor);
+  const [payStep, setPayStep] = useState<"details" | "processing">("details");
+
+  const handlePay = () => {
+    setPayStep("processing");
+    setTimeout(() => confirm(), 1800);
+  };
+
+  if (payStep === "processing") {
+    return (
+      <div className="app-screen app-screen--payment pay-processing">
+        <div className="pay-processing__spinner" aria-hidden="true" />
+        <strong>Processing your payment…</strong>
+        <p>Sending {formatMoney(advisor.fee)} into escrow on Base Sepolia. This takes just a moment.</p>
+      </div>
+    );
+  }
 
   return (
     <div className="app-screen app-screen--payment">
@@ -521,7 +537,7 @@ const PaymentScreen = ({
         <div className="release-list">
           <div>
             <span>1</span>
-            <p>Consultation — released immediately on funding</p>
+            <p>Consultation — released on payment</p>
             <strong>{formatMoney(milestones.consultation)}</strong>
           </div>
           <div>
@@ -563,7 +579,56 @@ const PaymentScreen = ({
         </div>
       </section>
 
-      <button className="app-primary-button app-primary-button--payment" type="button" onClick={confirm}>
+      {method === "card" && (
+        <section className="app-card payment-card pay-card-form">
+          <h2>Card details</h2>
+          <div className="pay-field">
+            <label className="pay-label">Card number</label>
+            <input className="pay-input" defaultValue="4242 4242 4242 4242" />
+          </div>
+          <div className="pay-field-row">
+            <div className="pay-field">
+              <label className="pay-label">Expiry</label>
+              <input className="pay-input" defaultValue="12 / 26" />
+            </div>
+            <div className="pay-field">
+              <label className="pay-label">CVV</label>
+              <input className="pay-input" defaultValue="123" />
+            </div>
+          </div>
+          <div className="pay-field">
+            <label className="pay-label">Name on card</label>
+            <input className="pay-input" placeholder="Your name" />
+          </div>
+        </section>
+      )}
+
+      {method === "crypto" && (
+        <section className="app-card payment-card pay-crypto-card">
+          <h2>Wallet details</h2>
+          <div className="pay-crypto-row">
+            <span>Connected wallet</span>
+            <strong>0x71C7…3Fd3</strong>
+          </div>
+          <div className="pay-crypto-row">
+            <span>Amount</span>
+            <strong>{formatMoney(advisor.fee)} dNZD</strong>
+          </div>
+          <div className="pay-crypto-row">
+            <span>Escrow contract</span>
+            <strong className="pay-mono">{advisor.hash2}</strong>
+          </div>
+          <div className="pay-crypto-row">
+            <span>Network</span>
+            <strong>Base Sepolia</strong>
+          </div>
+          <div className="pay-crypto-note">
+            dNZD is a NZ dollar stablecoin. 1 dNZD = $1 NZD. Your wallet has been pre-approved to send this amount.
+          </div>
+        </section>
+      )}
+
+      <button className="app-primary-button app-primary-button--payment" type="button" onClick={handlePay}>
         Pay {formatMoney(advisor.fee)} into escrow
       </button>
       <div className="payment-reassurance">
@@ -777,12 +842,12 @@ const ReceiptScreen = ({
         <h2>What happens next</h2>
         <ol className="receipt-steps">
           <li>
-            <span>1</span>
+            <span className="receipt-step__done">✓</span>
             <div>
-              <strong>{advisor.first} books your consultation</strong>
+              <strong>Consultation confirmed ✓</strong>
               <p>
-                You&apos;ll hear from them within {advisor.reply}. {formatMoney(milestones.consultation)} is released
-                when your consultation happens — you do not need to do anything.
+                {formatMoney(milestones.consultation)} has been released to {advisor.first} — your consultation is now
+                booked. You&apos;ll hear from them within {advisor.reply}.
               </p>
             </div>
           </li>
