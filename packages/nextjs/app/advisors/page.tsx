@@ -468,12 +468,14 @@ const AgreementScreen = ({
                   anyone, including us.
                 </p>
                 <div className="signed-meta">
-                  <span>Lumin ref: LMN-{advisor.hash2.slice(2, 6).toUpperCase()}-2026</span>
-                  <span>·</span>
-                  <span>
-                    Hash {advisor.hash2} anchored ·{" "}
+                  <div className="signed-meta__ref">
+                    <span className="signed-meta__pill">Lumin Sign</span>
+                    <span>Ref: LMN-{advisor.hash2.slice(2, 6).toUpperCase()}-2026</span>
+                  </div>
+                  <div className="signed-meta__hash">
+                    Hash {advisor.hash2} · anchored on Base Sepolia ·{" "}
                     {new Date().toLocaleDateString("en-NZ", { day: "numeric", month: "short", year: "numeric" })}
-                  </span>
+                  </div>
                 </div>
               </div>
             </div>
@@ -580,50 +582,70 @@ const PaymentScreen = ({
       </section>
 
       {method === "card" && (
-        <section className="app-card payment-card pay-card-form">
-          <h2>Card details</h2>
-          <div className="pay-field">
-            <label className="pay-label">Card number</label>
-            <input className="pay-input" defaultValue="4242 4242 4242 4242" />
+        <section className="app-card pay-card-form">
+          <div className="pay-card-preview">
+            <div className="pay-card-preview__top">
+              <div className="pay-card-preview__chip" aria-hidden="true" />
+              <span className="pay-card-preview__brand">VISA</span>
+            </div>
+            <div className="pay-card-preview__number">4242&nbsp;&nbsp;4242&nbsp;&nbsp;4242&nbsp;&nbsp;4242</div>
+            <div className="pay-card-preview__footer">
+              <div>
+                <span>CARDHOLDER</span>
+                <strong>YOUR NAME</strong>
+              </div>
+              <div>
+                <span>EXPIRES</span>
+                <strong>12 / 26</strong>
+              </div>
+            </div>
           </div>
-          <div className="pay-field-row">
+          <div className="pay-card-fields">
             <div className="pay-field">
-              <label className="pay-label">Expiry</label>
-              <input className="pay-input" defaultValue="12 / 26" />
+              <label className="pay-label">Card number</label>
+              <input className="pay-input" defaultValue="4242 4242 4242 4242" />
+            </div>
+            <div className="pay-field-row">
+              <div className="pay-field">
+                <label className="pay-label">Expiry</label>
+                <input className="pay-input" defaultValue="12 / 26" />
+              </div>
+              <div className="pay-field">
+                <label className="pay-label">CVV</label>
+                <input className="pay-input" defaultValue="123" />
+              </div>
             </div>
             <div className="pay-field">
-              <label className="pay-label">CVV</label>
-              <input className="pay-input" defaultValue="123" />
+              <label className="pay-label">Name on card</label>
+              <input className="pay-input" placeholder="Your name" />
             </div>
-          </div>
-          <div className="pay-field">
-            <label className="pay-label">Name on card</label>
-            <input className="pay-input" placeholder="Your name" />
           </div>
         </section>
       )}
 
       {method === "crypto" && (
-        <section className="app-card payment-card pay-crypto-card">
-          <h2>Wallet details</h2>
-          <div className="pay-crypto-row">
-            <span>Connected wallet</span>
-            <strong>0x71C7…3Fd3</strong>
+        <section className="app-card pay-crypto-card">
+          <div className="pay-crypto-header">
+            <div className="pay-crypto-status">
+              <span className="pay-crypto-dot" />
+              Wallet connected
+            </div>
+            <span className="pay-crypto-addr">0x71C7…3Fd3</span>
           </div>
-          <div className="pay-crypto-row">
-            <span>Amount</span>
-            <strong>{formatMoney(advisor.fee)} dNZD</strong>
+          <div className="pay-crypto-amount">
+            <span className="pay-crypto-amount__label">Amount to send</span>
+            <strong className="pay-crypto-amount__value">{formatMoney(advisor.fee)} dNZD</strong>
+            <span className="pay-crypto-amount__sub">1 dNZD = $1.00 NZD · New Zealand dollar stablecoin</span>
           </div>
-          <div className="pay-crypto-row">
-            <span>Escrow contract</span>
-            <strong className="pay-mono">{advisor.hash2}</strong>
-          </div>
-          <div className="pay-crypto-row">
-            <span>Network</span>
-            <strong>Base Sepolia</strong>
-          </div>
-          <div className="pay-crypto-note">
-            dNZD is a NZ dollar stablecoin. 1 dNZD = $1 NZD. Your wallet has been pre-approved to send this amount.
+          <div className="pay-crypto-details">
+            <div className="pay-crypto-row">
+              <span>Escrow contract</span>
+              <strong className="pay-mono">{advisor.hash2}</strong>
+            </div>
+            <div className="pay-crypto-row">
+              <span>Network</span>
+              <strong>Base Sepolia</strong>
+            </div>
           </div>
         </section>
       )}

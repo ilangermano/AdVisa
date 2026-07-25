@@ -2899,21 +2899,48 @@ button {
 }
 
 /* Enhanced signed state */
-.signed-meta {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-  margin-top: 8px;
-  color: #4d4d4d;
-  font-family: var(--font-ibm-plex-mono), monospace;
-  font-size: 11px;
-}
-
 .agreement-signed-state__badge p {
   color: #2e5d2e;
   font-size: 13.5px;
   line-height: 1.55;
   margin-top: 4px;
+}
+
+.signed-meta {
+  display: flex;
+  flex-direction: column;
+  gap: 5px;
+  margin-top: 12px;
+}
+
+.signed-meta__ref {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13px;
+  font-weight: 500;
+  color: #2e5d2e;
+}
+
+.signed-meta__pill {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+  border-radius: 4px;
+  background: #2e7d32;
+  color: #ffffff;
+  padding: 2px 8px;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 9.5px;
+  font-weight: 700;
+  letter-spacing: 0.06em;
+}
+
+.signed-meta__hash {
+  color: #7aaa7a;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 10.5px;
+  line-height: 1.55;
 }
 
 /* Receipt screen */
@@ -3117,23 +3144,123 @@ button {
   line-height: 1.6;
 }
 
-/* Card & crypto payment forms */
+/* Card payment form */
 .pay-card-form {
+  overflow: hidden;
   margin-bottom: 20px;
 }
 
-.pay-card-form h2,
-.pay-crypto-card h2 {
-  margin-bottom: 18px;
-  font-size: 15px;
-  font-weight: 600;
+.pay-card-preview {
+  position: relative;
+  overflow: hidden;
+  padding: 26px 28px 22px;
+  background: linear-gradient(135deg, #1c1c1c 0%, #2e2e2e 60%, #1a1a1a 100%);
+  color: #ffffff;
+}
+
+.pay-card-preview::before {
+  content: "";
+  position: absolute;
+  top: -50px;
+  right: -50px;
+  width: 200px;
+  height: 200px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 4%);
+  pointer-events: none;
+}
+
+.pay-card-preview::after {
+  content: "";
+  position: absolute;
+  bottom: -70px;
+  left: 30px;
+  width: 220px;
+  height: 220px;
+  border-radius: 50%;
+  background: rgb(255 255 255 / 3%);
+  pointer-events: none;
+}
+
+.pay-card-preview__top {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  margin-bottom: 28px;
+}
+
+.pay-card-preview__chip {
+  position: relative;
+  overflow: hidden;
+  width: 40px;
+  height: 30px;
+  border-radius: 6px;
+  background: linear-gradient(135deg, #c9962a, #f0c040, #c49a22);
+}
+
+.pay-card-preview__chip::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(90deg, transparent 33%, rgb(0 0 0 / 12%) 33%, rgb(0 0 0 / 12%) 66%, transparent 66%),
+    linear-gradient(0deg, transparent 33%, rgb(0 0 0 / 10%) 33%, rgb(0 0 0 / 10%) 66%, transparent 66%);
+}
+
+.pay-card-preview__brand {
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-size: 23px;
+  font-weight: 700;
+  font-style: italic;
+  letter-spacing: -0.02em;
+  color: #d8d8d8;
+}
+
+.pay-card-preview__number {
+  margin-bottom: 22px;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 18px;
+  font-weight: 400;
+  letter-spacing: 0.12em;
+  color: #ffffff;
+}
+
+.pay-card-preview__footer {
+  display: flex;
+  gap: 32px;
+}
+
+.pay-card-preview__footer > div {
+  display: flex;
+  flex-direction: column;
+  gap: 3px;
+}
+
+.pay-card-preview__footer span {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 8px;
+  font-weight: 500;
+  letter-spacing: 0.14em;
+  color: #7a7a7a;
+}
+
+.pay-card-preview__footer strong {
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 13px;
+  font-weight: 400;
+  letter-spacing: 0.05em;
+  color: #d8d8d8;
+}
+
+.pay-card-fields {
+  padding: 22px 24px 26px;
 }
 
 .pay-field {
   display: flex;
   flex-direction: column;
-  gap: 6px;
-  margin-bottom: 14px;
+  gap: 7px;
+  margin-bottom: 16px;
 }
 
 .pay-field:last-child {
@@ -3147,30 +3274,112 @@ button {
 }
 
 .pay-label {
-  font-size: 12.5px;
+  font-size: 11.5px;
   font-weight: 600;
-  color: #4d4d4d;
+  color: #767676;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
 }
 
 .pay-input {
-  border: 1.5px solid #e4e4e4;
-  border-radius: 10px;
-  background: #fafafa;
-  padding: 12px 14px;
-  font-size: 15px;
+  border: 1.5px solid #e8e8e8;
+  border-radius: 12px;
+  background: #f9f9f9;
+  padding: 14px 16px;
+  font-size: 15.5px;
   font-family: var(--font-ibm-plex-mono), monospace;
   color: #1a1a1a;
-  transition: border-color 150ms ease;
+  transition:
+    border-color 150ms ease,
+    background 150ms ease,
+    box-shadow 150ms ease;
   outline: none;
 }
 
 .pay-input:focus {
   border-color: #1a1a1a;
   background: #ffffff;
+  box-shadow: 0 0 0 3px rgb(0 0 0 / 6%);
 }
 
+/* Crypto wallet card */
 .pay-crypto-card {
+  overflow: hidden;
   margin-bottom: 20px;
+}
+
+.pay-crypto-header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 14px 24px;
+  background: #f7f7f7;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.pay-crypto-status {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  font-size: 13.5px;
+  font-weight: 600;
+  color: #2e7d32;
+}
+
+.pay-crypto-dot {
+  width: 8px;
+  height: 8px;
+  flex: none;
+  border-radius: 50%;
+  background: #2e7d32;
+  animation: pulseRing 2s infinite;
+}
+
+.pay-crypto-addr {
+  border: 1px solid #e4e4e4;
+  border-radius: 999px;
+  background: #ffffff;
+  padding: 5px 12px;
+  font-family: var(--font-ibm-plex-mono), monospace;
+  font-size: 12px;
+  font-weight: 500;
+  color: #767676;
+}
+
+.pay-crypto-amount {
+  padding: 28px 24px;
+  text-align: center;
+  border-bottom: 1px solid #f0f0f0;
+}
+
+.pay-crypto-amount__label {
+  display: block;
+  margin-bottom: 8px;
+  font-size: 11.5px;
+  font-weight: 600;
+  color: #767676;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+}
+
+.pay-crypto-amount__value {
+  display: block;
+  margin-bottom: 8px;
+  font-family: var(--font-source-serif), Georgia, serif;
+  font-size: 40px;
+  font-weight: 700;
+  color: #1a1a1a;
+  line-height: 1.1;
+}
+
+.pay-crypto-amount__sub {
+  display: block;
+  font-size: 13px;
+  color: #767676;
+}
+
+.pay-crypto-details {
+  padding: 4px 24px 8px;
 }
 
 .pay-crypto-row {
@@ -3178,12 +3387,12 @@ button {
   justify-content: space-between;
   align-items: center;
   gap: 16px;
-  padding: 11px 0;
+  padding: 13px 0;
   border-bottom: 1px solid #f4f4f4;
   font-size: 14px;
 }
 
-.pay-crypto-row:last-of-type {
+.pay-crypto-row:last-child {
   border-bottom: 0;
 }
 
@@ -3201,15 +3410,6 @@ button {
   font-size: 12.5px !important;
   font-weight: 500 !important;
   color: #4d4d4d;
-}
-
-.pay-crypto-note {
-  border-top: 1px solid #f0f0f0;
-  margin-top: 4px;
-  padding-top: 12px;
-  color: #767676;
-  font-size: 12.5px;
-  line-height: 1.5;
 }
 
 .secondary-button {
